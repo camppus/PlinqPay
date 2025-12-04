@@ -1,10 +1,10 @@
 generator client {
-  provider = "prisma-client"            // Required
-  output   = "../src/generated/prisma"  // Required
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Config {
@@ -16,7 +16,7 @@ model Config {
 
 model Companies {
   id                String             @id @default(uuid())
-  cursor            Int                @default(autoincrement())
+  cursor            Int                @default(autoincrement()) @unique
   title             String
   email             String             @unique
   phone             String             @unique

@@ -236,6 +236,9 @@ CREATE TABLE "Notification" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Companies_cursor_key" ON "Companies"("cursor");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Companies_email_key" ON "Companies"("email");
 
 -- CreateIndex

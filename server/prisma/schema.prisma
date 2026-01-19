@@ -1,0 +1,261 @@
+generator client {
+  provider = "prisma-client"            // Required
+  output   = "../src/generated/prisma"  // Required
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Config {
+  id        String   @id @default(uuid())
+  percent   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Companies {
+  id                String             @id @default(uuid())
+  cursor            Int                @default(autoincrement())
+  title             String
+  email             String             @unique
+  phone             String             @unique
+  password          String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  role              Role               @default(COMPANIE)
+  isActive          Boolean            @default(true)
+  isProfileVeried   Boolean            @default(false)
+  isEmailVerfied    Boolean            @default(false)
+  keys              ApiSecretKeys[]
+  emailVerification EmailVerification?
+  kycValidation     KycValidation?
+  notification      Notification[]
+  transaction       Transaction[]
+  wallet            Wallet?
+  webHooks          WebHooks[]
+  withdrawls        Withdrawls[]
+}
+
+model EmailVerification {
+  id         String            @id @default(uuid())
+  companieID String            @unique
+  token      String
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  expiredAt  DateTime
+  verfiedAt  DateTime
+  used       Boolean           @default(false)
+  status     VeriicationStatus @default(PENDING)
+  companie   Companies         @relation(fields: [companieID], references: [id], onDelete: Cascade)
+}
+
+model KycValidation {
+  id                 String            @id @default(uuid())
+  companieID         String            @unique
+  documentFrontalUrl String
+  documentBackUrl    String
+  bi                 String            @unique
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  expiredAt          DateTime
+  verfiedAt          DateTime
+  status             VeriicationStatus @default(PENDING)
+  notes              String?
+  verified           Boolean           @default(false)
+  companie           Companies         @relation(fields: [companieID], references: [id], onDelete: Cascade)
+}
+
+model ApiSecretKeys {
+  id          String    @id @default(uuid())
+  title       String
+  companieID  String
+  callbackURl String
+  publicKey   String
+  secretKey   String
+  ips         String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  expiredAt   DateTime
+  verfiedAt   DateTime
+  isActive    Boolean   @default(true)
+  companie    Companies @relation(fields: [companieID], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id                       String                  @id @default(uuid())
+  companieID               String
+  status                   PaymentStatus           @default(PAID)
+  ammount                  Int
+  total                    Int
+  subtotal                 Int
+  tax                      Int
+  taxtype                  TaxType                 @default(PERCENT)
+  method                   PaymentMethod           @default(REFERENCE)
+  currency                 String                  @default("AOA")
+  clientEmail              String
+  signature                String
+  entitie                  String?
+  reference                String?
+  qrdCodeUrl               String?
+  paymentUrl               String?
+  wasCreationWebhookCalled Boolean                 @default(false)
+  wasSucessWebeHookCalled  Boolean                 @default(true)
+  createdAt                DateTime                @default(now())
+  updatedAt                DateTime                @updatedAt
+  companie                 Companies               @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  client                   TransactionClientInfo[]
+  items                    TransactiontItem[]
+}
+
+model TransactiontItem {
+  id            String      @id @default(uuid())
+  transactionId String
+  title         String
+  price         Int
+  qtd           Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+}
+
+model TransactionClientInfo {
+  id            String      @id @default(uuid())
+  transactionId String
+  name          String
+  email         String?
+  phone         String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+}
+
+model WebHooks {
+  id         String           @id @default(uuid())
+  url        String
+  title      String
+  body       Json?
+  headers    Json?
+  method     WebHooksMethod
+  scope      WebhooksScope
+  events     WebHooksEvents[]
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  companieID String
+  companie   Companies        @relation(fields: [companieID], references: [id], onDelete: Cascade)
+}
+
+model Wallet {
+  id           String       @id @default(uuid())
+  companieID   String       @unique
+  walletHolder String
+  iban         String
+  bank         String
+  isVerified   Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  companie     Companies    @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  withdrawls   Withdrawls[]
+}
+
+model Withdrawls {
+  id                 String                  @id @default(uuid())
+  walletId           String
+  companieId         String
+  total              Int
+  tax                Int
+  taxtype            TaxType                 @default(NONE)
+  status             PaymentStatus           @default(PENDING)
+  wasVerifiedByOwner Boolean                 @default(false)
+  fileUrl            String?
+  notes              String?
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  aprovedAt          DateTime?
+  revokedAt          DateTime?
+  companie           Companies               @relation(fields: [companieId], references: [id], onDelete: Cascade)
+  wallet             Wallet                  @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  verfication        WithdrawlsVerification?
+}
+
+model WithdrawlsVerification {
+  id          String     @id @default(uuid())
+  withdrallId String     @unique
+  used        Boolean    @default(false)
+  verified    Boolean    @default(false)
+  token       String     @unique
+  expiresAt   DateTime
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  Withdrawls  Withdrawls @relation(fields: [withdrallId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  companieId String
+  message    String
+  type       NotificationType
+  isRead     Boolean          @default(false)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  deeplink   String?
+  companie   Companies        @relation(fields: [companieId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  COMPANIE
+  SUPERCOMPANIE
+}
+
+enum VeriicationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum PaymentStatus {
+  PAID
+  PENDING
+  FAILD
+  APROVED
+  REJECTED
+}
+
+enum PaymentMethod {
+  PAYPAY
+  REFERENCE
+}
+
+enum WebhooksScope {
+  PAYMENTS
+  WITHDRWALS
+  ALL
+}
+
+enum WebHooksEvents {
+  SUCESS
+  ERROR
+  CREATED
+  REJECTED
+}
+
+enum NotificationType {
+  PAYMENT
+  WITHDRWALS
+  SECURITY
+  OTHERS
+}
+
+enum WebHooksMethod {
+  GET
+  POST
+  PUT
+  PATCH
+}
+
+enum TaxType {
+  PERCENT
+  FIXED
+  IVA
+  NONE
+}

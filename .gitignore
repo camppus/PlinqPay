@@ -68,3 +68,5 @@ desktop.ini
 # Mac / Linux hidden
 *.DS_Store
 *.directory
+
+/server/src/generated/prisma

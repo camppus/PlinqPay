@@ -15,3 +15,8 @@ export interface IRepository<T> {
   update(data: any, id: string): Promise<T>;
   delete(id: string): Promise<T>;
 }
+
+export interface IToken {
+  role: string;
+  sub: string;
+}

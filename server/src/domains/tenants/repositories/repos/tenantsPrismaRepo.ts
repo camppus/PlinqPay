@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ITenantDefaultReturnType, ITenatsRepositories } from '../@type';
-import { Companies } from '@prisma/client';
+import { Tenants } from '@prisma/client';
 import { IPAginationGet } from '@/types/interface';
 import PrismaRepositorie from '@/infra/database/Prisma';
 import { CreateCompanieDTo } from '../../dto/create.dto';
@@ -12,7 +12,7 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
   public async create(
     data: CreateCompanieDTo,
   ): Promise<ITenantDefaultReturnType> {
-    const createdCompanie = await this.prisma.companies.create({
+    const createdCompanie = await this.prisma.tenants.create({
       data: {
         email: data.email,
         password: data.password,
@@ -32,7 +32,7 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
     if (!oldComanie) {
       return null;
     }
-    const companie = await this.prisma.companies.update({
+    const companie = await this.prisma.tenants.update({
       where: {
         id,
       },
@@ -49,8 +49,8 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
   public async get(
     cursor: number,
     limit: number,
-  ): Promise<IPAginationGet<Companies>> {
-    const companies = await this.prisma.companies.findMany({
+  ): Promise<IPAginationGet<Tenants>> {
+    const tenants = await this.prisma.tenants.findMany({
       take: limit,
       skip: cursor ? 1 : 0,
       cursor: { cursor: cursor },
@@ -60,8 +60,8 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
       },
     });
     return {
-      data: companies,
-      total: companies.length,
+      data: tenants,
+      total: tenants.length,
       pagination: {
         cursor,
         limit,
@@ -72,7 +72,7 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
   public async getByUnique(
     unique: string,
   ): Promise<ITenantDefaultReturnType | null> {
-    const companie = await this.prisma.companies.findFirst({
+    const companie = await this.prisma.tenants.findFirst({
       where: {
         OR: [
           {
@@ -100,7 +100,7 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
     if (!oldComanie) {
       return null;
     }
-    const companie = await this.prisma.companies.update({
+    const companie = await this.prisma.tenants.update({
       where: {
         id,
       },
@@ -122,7 +122,7 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
     if (!oldComanie) {
       return null;
     }
-    const companie = await this.prisma.companies.update({
+    const companie = await this.prisma.tenants.update({
       where: {
         id,
       },

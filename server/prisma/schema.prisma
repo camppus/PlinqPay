@@ -14,7 +14,7 @@ model Config {
   updatedAt DateTime @updatedAt
 }
 
-model Companies {
+model Tenants {
   id                String             @id @default(uuid())
   cursor            Int                @default(autoincrement()) @unique
   title             String
@@ -25,29 +25,14 @@ model Companies {
   updatedAt         DateTime           @updatedAt
   role              Role               @default(COMPANIE)
   isActive          Boolean            @default(true)
-  isProfileVeried   Boolean            @default(false)
-  isEmailVerfied    Boolean            @default(false)
+  isVerified   Boolean            @default(false)
   keys              ApiSecretKeys[]
-  emailVerification EmailVerification?
   kycValidation     KycValidation?
   notification      Notification[]
   transaction       Transaction[]
   wallet            Wallet?
   webHooks          WebHooks[]
   withdrawls        Withdrawls[]
-}
-
-model EmailVerification {
-  id         String            @id @default(uuid())
-  companieID String            @unique
-  token      String
-  createdAt  DateTime          @default(now())
-  updatedAt  DateTime          @updatedAt
-  expiredAt  DateTime
-  verfiedAt  DateTime
-  used       Boolean           @default(false)
-  status     VeriicationStatus @default(PENDING)
-  companie   Companies         @relation(fields: [companieID], references: [id], onDelete: Cascade)
 }
 
 model KycValidation {
@@ -63,7 +48,7 @@ model KycValidation {
   status             VeriicationStatus @default(PENDING)
   notes              String?
   verified           Boolean           @default(false)
-  companie           Companies         @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  companie           Tenants         @relation(fields: [companieID], references: [id], onDelete: Cascade)
 }
 
 model ApiSecretKeys {
@@ -79,7 +64,7 @@ model ApiSecretKeys {
   expiredAt   DateTime
   verfiedAt   DateTime
   isActive    Boolean   @default(true)
-  companie    Companies @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  companie    Tenants @relation(fields: [companieID], references: [id], onDelete: Cascade)
 }
 
 model Transaction {
@@ -103,7 +88,7 @@ model Transaction {
   wasSucessWebeHookCalled  Boolean                 @default(true)
   createdAt                DateTime                @default(now())
   updatedAt                DateTime                @updatedAt
-  companie                 Companies               @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  companie                 Tenants               @relation(fields: [companieID], references: [id], onDelete: Cascade)
   client                   TransactionClientInfo[]
   items                    TransactiontItem[]
 }
@@ -142,7 +127,7 @@ model WebHooks {
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
   companieID String
-  companie   Companies        @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  companie   Tenants        @relation(fields: [companieID], references: [id], onDelete: Cascade)
 }
 
 model Wallet {
@@ -154,7 +139,7 @@ model Wallet {
   isVerified   Boolean      @default(false)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-  companie     Companies    @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  companie     Tenants    @relation(fields: [companieID], references: [id], onDelete: Cascade)
   withdrawls   Withdrawls[]
 }
 
@@ -173,7 +158,7 @@ model Withdrawls {
   updatedAt          DateTime                @updatedAt
   aprovedAt          DateTime?
   revokedAt          DateTime?
-  companie           Companies               @relation(fields: [companieId], references: [id], onDelete: Cascade)
+  companie           Tenants               @relation(fields: [companieId], references: [id], onDelete: Cascade)
   wallet             Wallet                  @relation(fields: [walletId], references: [id], onDelete: Cascade)
   verfication        WithdrawlsVerification?
 }
@@ -199,7 +184,7 @@ model Notification {
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
   deeplink   String?
-  companie   Companies        @relation(fields: [companieId], references: [id], onDelete: Cascade)
+  companie   Tenants        @relation(fields: [companieId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

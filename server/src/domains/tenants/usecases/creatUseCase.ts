@@ -1,12 +1,12 @@
 import Password from '@/objectValues/Password';
 import { CreateCompanieDTo } from '../dto/create.dto';
-import { TenantsPrismaRepositorie } from '../repositories/repos/tenantsPrismaRepo';
 import Email from '@/objectValues/Email';
 import PhoneNumber from '@/objectValues/Phone';
 import { BadRequestException } from '@nestjs/common';
+import { ITenatsRepositories } from '../repositories/@type';
 
 export default class CreateCompanieUseCase {
-  constructor(private readonly repo: TenantsPrismaRepositorie) {}
+  constructor(private readonly repo: ITenatsRepositories) {}
   public async execute(dto: CreateCompanieDTo) {
     const password = new Password(dto.password);
     const email = new Email(dto.email);

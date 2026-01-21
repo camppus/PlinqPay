@@ -1,3 +1,8 @@
+import z from 'zod';
+
+const envSchema = z.object({});
+
+export default envSchema;
 export interface IPAginationGet<T> {
   data: T[];
   total: number;
@@ -15,6 +20,7 @@ export interface IRepository<T> {
   update(data: any, id: string): Promise<T>;
   delete(id: string): Promise<T>;
 }
+
 
 export interface IToken {
   role: string;

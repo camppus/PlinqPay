@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ITenantDefaultReturnType, ITenatsRepositories } from '../@type';
 import { Tenants } from '@prisma/client';
-import { IPAginationGet } from '@/types/interface';
+import { IPAginationGet } from '@/types';
 import PrismaRepositorie from '@/infra/database/Prisma';
 import { CreateCompanieDTo } from '../../dto/create.dto';
+import { UpdateTenantDTO } from '../../dto/updtae.dto';
 
 @Injectable()
 export class TenantsPrismaRepositorie implements ITenatsRepositories {
@@ -39,10 +40,22 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
       data: {
         isActive: false,
       },
+
+      select: {
+        createdAt: true,
+        id: true,
+        updatedAt: true,
+        title: true,
+        email: true,
+        phone: true,
+        isActive: true,
+        isVerified: true,
+        cursor: true,
+      },
     });
 
     return {
-      data: companie,
+      data: companie as Tenants,
     };
   }
 
@@ -52,15 +65,26 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
   ): Promise<IPAginationGet<Tenants>> {
     const tenants = await this.prisma.tenants.findMany({
       take: limit,
-      skip: cursor ? 1 : 0,
+      select: {
+        createdAt: true,
+        id: true,
+        updatedAt: true,
+        title: true,
+        email: true,
+        phone: true,
+        isActive: true,
+        isVerified: true,
+        cursor: true,
+      },
       cursor: { cursor: cursor },
       orderBy: { cursor: 'asc' },
       where: {
         isActive: true,
+        role: 'COMPANIE',
       },
     });
     return {
-      data: tenants,
+      data: tenants as Tenants[],
       total: tenants.length,
       pagination: {
         cursor,
@@ -86,10 +110,21 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
           },
         ],
       },
+      select: {
+        createdAt: true,
+        id: true,
+        updatedAt: true,
+        title: true,
+        email: true,
+        phone: true,
+        isActive: true,
+        isVerified: true,
+        cursor: true,
+      },
     });
     return companie
       ? {
-          data: companie,
+          data: companie as Tenants,
         }
       : null;
   }
@@ -107,15 +142,27 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
       data: {
         isActive: !oldComanie.data.isActive,
       },
+
+      select: {
+        createdAt: true,
+        id: true,
+        updatedAt: true,
+        title: true,
+        email: true,
+        phone: true,
+        isActive: true,
+        isVerified: true,
+        cursor: true,
+      },
     });
 
     return {
-      data: companie,
+      data: companie as Tenants,
     };
   }
 
   public async update(
-    data: Omit<CreateCompanieDTo, 'password'>,
+    data: UpdateTenantDTO,
     id: string,
   ): Promise<ITenantDefaultReturnType | null> {
     const oldComanie = await this.getByUnique(id);
@@ -131,9 +178,21 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
         email: data.title,
         phone: data.phone,
       },
+
+      select: {
+        createdAt: true,
+        id: true,
+        updatedAt: true,
+        title: true,
+        email: true,
+        phone: true,
+        isActive: true,
+        isVerified: true,
+        cursor: true,
+      },
     });
     return {
-      data: companie,
+      data: companie as Tenants,
     };
   }
 }

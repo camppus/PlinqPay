@@ -55,14 +55,10 @@ model ApiSecretKeys {
   id          String    @id @default(uuid())
   title       String
   companieID  String
-  callbackURl String
   publicKey   String
   secretKey   String
-  ips         String[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  expiredAt   DateTime
-  verfiedAt   DateTime
   isActive    Boolean   @default(true)
   companie    Tenants @relation(fields: [companieID], references: [id], onDelete: Cascade)
 }
@@ -84,6 +80,7 @@ model Transaction {
   reference                String?
   qrdCodeUrl               String?
   paymentUrl               String?
+  callbackURl String
   wasCreationWebhookCalled Boolean                 @default(false)
   wasSucessWebeHookCalled  Boolean                 @default(true)
   createdAt                DateTime                @default(now())

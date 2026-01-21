@@ -4,7 +4,7 @@ Plinqpag é uma **plataforma SaaS de gateway de pagamento** que permite aos clie
 
 - Criação e gestão de **API Keys**
 - Registro e validação de usuários (KYC)
-- Criação de transações com referência ou QR (PayPay)
+- Criação de transações com referência ou QR ()
 - Webhooks para notificações em tempo real
 - Integrações externas de notificações (Pushcut, Pushover, etc.)
 - Controle de wallets e saques
@@ -62,7 +62,7 @@ Plinqpag é uma **plataforma SaaS de gateway de pagamento** que permite aos clie
 
 ## 4️⃣ Módulo de Transações
 
-- Tipos de pagamento: **Referência** e **PayPay**
+- Tipos de pagamento: **Referência** 
 - Dados necessários para cada transação:
   - `amount` → Valor da transação
   - `wallet_id` → Carteira de destino do cliente

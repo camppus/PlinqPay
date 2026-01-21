@@ -1,6 +1,6 @@
-# 🍍 Voluttis – Plataforma SaaS de Pagamentos Angolanos
+# 🍍 Plinqpag – Plataforma SaaS de Pagamentos Angolanos
 
-Voluttis é uma **plataforma SaaS de gateway de pagamento** que permite aos clientes integrar pagamentos angolanos de forma segura, rastreável e escalável. A plataforma oferece:
+Plinqpag é uma **plataforma SaaS de gateway de pagamento** que permite aos clientes integrar pagamentos angolanos de forma segura, rastreável e escalável. A plataforma oferece:
 
 - Criação e gestão de **API Keys**
 - Registro e validação de usuários (KYC)
@@ -27,11 +27,8 @@ Voluttis é uma **plataforma SaaS de gateway de pagamento** que permite aos clie
 
 | Campo          | Descrição                                            |
 | -------------- | ---------------------------------------------------- |
-| `reference`    | Identificador único da API Key (ID da chave)         |
 | `title`        | Nome da API Key fornecido pelo usuário               |
-| `callback_url` | URL segura (HTTPS) para receber notificações         |
-| `wallet_id`    | Carteira de destino onde os fundos serão creditados  |
-| `ips`          | Lista de IPs autorizados a usar a API Key            |
+| `publick`      | Chave publica usada para assinar e validar callbacks |
 | `secret`       | Chave privada usada para assinar e validar callbacks |
 
 ### Criação e Gestão
@@ -154,7 +151,7 @@ flowchart TD
 
 ---
 
-> Este README resume o projeto **Voluttis**, fornecendo visão completa do sistema, fluxos, módulos e práticas de segurança para integração de pagamentos e notificações.
+> Este README resume o projeto **Plinqpag**, fornecendo visão completa do sistema, fluxos, módulos e práticas de segurança para integração de pagamentos e notificações.
 
 
 

@@ -20,10 +20,7 @@ export default class ReferencePayment implements PaymentStrategie {
   private readonly paternId = process.env.PATHERID as string;
   private readonly privateKey = process.env.PRIVATE_KEY as string;
 
-  public async pay(
-    amount: string,
-    asignature: string,
-  ): Promise<IGetawayReponse> {
+  public async pay(amount: string): Promise<IGetawayReponse> {
     const bizContentData = {
       cashier_type: 'SDK',
       payer_ip: '123.25.68.9',
@@ -31,7 +28,7 @@ export default class ReferencePayment implements PaymentStrategie {
       timeout_express: '15m',
       trade_info: {
         currency: 'AOA',
-        out_trade_no: asignature,
+        out_trade_no: this.genIdentifier(),
         payee_identity: this.paternId,
         payee_identity_type: '1',
         price: parseFloat(amount),
@@ -50,7 +47,7 @@ export default class ReferencePayment implements PaymentStrategie {
       this.privateKey,
     );
     const requestBody = {
-      request_no: asignature,
+      request_no: this.genIdentifier(),
       service: 'instant_trade',
       version: '1.0',
       partner_id: this.paternId,
@@ -61,7 +58,7 @@ export default class ReferencePayment implements PaymentStrategie {
       format: 'JSON',
       biz_content: encryptedBizContent,
     };
-    this.generateSignature(requestBody);
+    const asignature = this.generateSignature(requestBody);
     for (const key in requestBody) {
       if (
         requestBody.hasOwnProperty(key) &&
@@ -87,6 +84,7 @@ export default class ReferencePayment implements PaymentStrategie {
       reference: data.reference_id,
       payUrl: data.dynamic_link,
       id: data.out_trade_no,
+      asignature,
     };
   }
 
@@ -139,5 +137,9 @@ export default class ReferencePayment implements PaymentStrategie {
     }
 
     return Buffer.concat(encryptedChunks).toString('base64');
+  }
+
+  private genIdentifier() {
+    return `PLIQPAG-${Date.now()}`;
   }
 }

@@ -47,8 +47,6 @@ export class UpdatePayment {
         message: 'Transação nẽo encontrada',
       });
     }
-
-    const assignedText = data.out_trade_no;
     const apikey = await this.aikeyRepo.getKeyByTenantId(
       transaction.companieId,
     );
@@ -58,25 +56,7 @@ export class UpdatePayment {
       });
     }
 
-    if (
-      !this.asign.verifySignature(
-        {
-          amount: Number(transaction.amount.toFixed(2)),
-          callbackUrl: transaction.callbackUrl,
-          client: transaction.client,
-          externalId: transaction.externId,
-          items: transaction.items.map((item) => {
-            return {
-              ...item,
-              price: Number(item.price.toFixed(2)),
-            };
-          }),
-          method: transaction.method,
-          sign: assignedText,
-        },
-        apikey?.secretKey,
-      )
-    ) {
+    if (transaction.signature != data.sign) {
       throw new BadRequestException({
         message: 'Assinatura inválida',
       });

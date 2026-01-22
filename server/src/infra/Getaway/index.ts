@@ -6,10 +6,11 @@ export interface IGetawayReponse {
   entitie: string;
   payUrl: string;
   id: string;
+  asignature: string;
 }
 
 export interface PaymentStrategie {
-  pay(amount: string, asignature: string): Promise<IGetawayReponse>;
+  pay(amount: string): Promise<IGetawayReponse>;
 }
 
 export class Paymentprocessor implements PaymentStrategie {
@@ -21,12 +22,9 @@ export class Paymentprocessor implements PaymentStrategie {
   };
   constructor(private readonly method: PaymentMethod) {}
 
-  public async pay(
-    amount: string,
-    asignature: string,
-  ): Promise<IGetawayReponse> {
+  public async pay(amount: string): Promise<IGetawayReponse> {
     const strategie = this.paymentStrategieMap[this.method];
-    const data = await strategie.pay(amount, asignature);
+    const data = await strategie.pay(amount);
     return data;
   }
   public getMethod(): PaymentMethod {

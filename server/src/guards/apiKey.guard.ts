@@ -14,7 +14,6 @@ export default class IsApiKeyAbleToProcessPaymentGuard implements CanActivate {
   private readonly logger = new Logger('ApiKeyVerifier');
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    this.logger.debug(request.headers);
     const headers = Object.keys(request.headers).reduce<Record<string, string>>(
       (acc, key) => {
         const value = request.headers[key];
@@ -27,7 +26,7 @@ export default class IsApiKeyAbleToProcessPaymentGuard implements CanActivate {
       },
       {},
     );
-    const apiKey = headers['api-key'] || headers['x-api-key'];
+    const apiKey = headers['api-key'];
     const ip = headers['x-forwarded-for']?.split(',')[0] || request.ip;
     return await this.validateIfIsAdmin(apiKey, ip as string);
   }

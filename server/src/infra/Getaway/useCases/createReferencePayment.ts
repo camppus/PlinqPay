@@ -140,6 +140,6 @@ export default class ReferencePayment implements PaymentStrategie {
   }
 
   private genIdentifier() {
-    return `PLIQPAG-${Date.now()}`;
+    return `PLIQPAG_API_${Date.now()}`;
   }
 }

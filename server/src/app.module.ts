@@ -59,7 +59,7 @@ export class AppModule implements NestModule {
       })
       .exclude({
         method: RequestMethod.POST,
-        path: '/v1/notify',
+        path: '/v1/transaction/notify',
       })
       .forRoutes('*');
   }

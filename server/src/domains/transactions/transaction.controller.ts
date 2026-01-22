@@ -75,6 +75,9 @@ export class TransactionController {
   }
 
   @Post('notify')
+  @ApiOperation({
+    summary: 'Callback para getaway interno',
+  })
   @HttpCode(200)
   @Header('Content-Type', 'text/plain')
   async update(@Body() data: any, @Query('key') key: string) {

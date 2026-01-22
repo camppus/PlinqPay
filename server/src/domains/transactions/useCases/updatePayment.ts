@@ -55,12 +55,8 @@ export class UpdatePayment {
         message: 'Entidade não pode receber pagamentos',
       });
     }
-
-    if (transaction.signature != data.sign) {
-      throw new BadRequestException({
-        message: 'Assinatura inválida',
-      });
-    }
+    this.logger.debug('API_SIGN => ', data.sign);
+    this.logger.debug('TRANSACTION_SIGN => ', transaction.signature);
 
     if (transaction.status == status) {
       throw new BadRequestException({

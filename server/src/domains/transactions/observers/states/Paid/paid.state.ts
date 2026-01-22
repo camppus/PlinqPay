@@ -1,6 +1,5 @@
-import { Transaction, WebHooks } from '@prisma/client';
+import { Transaction } from '@prisma/client';
 import PrismaRepositorie from '@/infra/database/Prisma';
-import { ExecuteWebHook } from '@/lib/shared/Webhooks';
 import { CallBackHandler } from '../../sub/callback.sub';
 import { ITransactionState } from '../state.interface';
 import { BadGatewayException } from '@nestjs/common';
@@ -23,16 +22,7 @@ export class Paid implements ITransactionState {
     });
   }
   private async handleWebHooks(data: Transaction): Promise<void> {
-    const [paidWebhooks, hasPaidNotification] = await Promise.all([
-      this.repo.webHooks.findFirst({
-        where: {
-          companieId: data.companieId,
-          scope: 'PAYMENTS',
-          events: {
-            hasSome: 'SUCCESS',
-          },
-        },
-      }),
+    const [hasPaidNotification] = await Promise.all([
       this.repo.webhookDelivery.findFirst({
         where: {
           transactionId: data.id,
@@ -41,12 +31,10 @@ export class Paid implements ITransactionState {
         },
       }),
     ]);
-    if (hasPaidNotification || !paidWebhooks) {
+    if (hasPaidNotification) {
       return;
     }
-    const handler = new ExecuteWebHook();
-    await handler.execute(paidWebhooks);
-    await this.createDeliveryWebhok(data, paidWebhooks);
+    await this.createDeliveryWebhok(data);
   }
   private async updateStatus(data: Transaction): Promise<void> {
     await this.repo.transaction.update({
@@ -76,15 +64,12 @@ export class Paid implements ITransactionState {
       },
     });
   }
-  private async createDeliveryWebhok(
-    data: Transaction,
-    webHook: WebHooks,
-  ): Promise<void> {
+  private async createDeliveryWebhok(data: Transaction): Promise<void> {
     const created = await this.repo.webhookDelivery.create({
       data: {
         event: 'SUCCESS',
         payload: JSON.stringify(data),
-        url: webHook.url,
+        url: data.callbackUrl,
         transactionId: data.id,
       },
     });

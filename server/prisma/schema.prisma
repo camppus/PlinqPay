@@ -36,7 +36,6 @@ model Tenants {
   notifications Notification[]
   transactions  Transaction[]
   wallet        Wallet?
-  webHooks      WebHooks[]
   withdrawals   Withdrawals[]
 
   @@index([email])
@@ -142,23 +141,6 @@ model TransactionClientInfo {
   transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
-model WebHooks {
-  id         String          @id @default(uuid())
-  url        String
-  title      String
-  body       Json?
-  headers    Json?
-  method     WebHooksMethod
-  scope      WebhooksScope
-  events     WebHooksEvents[]
-  companieId String
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-
-  companie   Tenants         @relation(fields: [companieId], references: [id], onDelete: Cascade)
-
-  @@index([companieId])
-}
 
 
 model WebhookDelivery {

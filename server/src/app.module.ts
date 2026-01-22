@@ -12,7 +12,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import AuthModule from './domains/auth/auth.module';
 import AuthMiddleare from './middlewares/auth.middleware';
 import { TransactionModule } from './domains/transactions/transaction.module';
-import { WebHookModule } from './domains/webhooks/webhook.module';
 import { envSchema } from './types';
 import { WalletModule } from './domains/wallets/wallets.module';
 @Module({
@@ -21,7 +20,6 @@ import { WalletModule } from './domains/wallets/wallets.module';
     TenantsModule,
     AuthModule,
     TransactionModule,
-    WebHookModule,
     APikeyModule,
     WalletModule,
     ConfigModule.forRoot({

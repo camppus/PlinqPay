@@ -14,6 +14,7 @@ import AuthMiddleare from './middlewares/auth.middleware';
 import { TransactionModule } from './domains/transactions/transaction.module';
 import { WebHookModule } from './domains/webhooks/webhook.module';
 import { envSchema } from './types';
+import { WalletModule } from './domains/wallets/wallets.module';
 @Module({
   imports: [
     DatabaseModule,
@@ -22,6 +23,7 @@ import { envSchema } from './types';
     TransactionModule,
     WebHookModule,
     APikeyModule,
+    WalletModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate(config) {

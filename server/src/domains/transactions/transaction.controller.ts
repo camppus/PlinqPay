@@ -20,6 +20,7 @@ import { IsPositiveNumberPipe } from '@/pipes/isPositive.pipe';
 import { CurrentUser } from '@/decorators/currentUser.decorator';
 import IsAdminGuard from '@/guards/isAdmin.guard';
 import IsActiveTenantGuard from '@/guards/isTenantVerified.guard';
+import { UpdatePaymentDTO } from './dto/update.dto';
 
 @ApiTags('Pagamentos')
 @Controller('v1/transaction')
@@ -80,7 +81,7 @@ export class TransactionController {
   })
   @HttpCode(200)
   @Header('Content-Type', 'text/plain')
-  async update(@Body() data: any, @Query('key') key: string) {
+  async update(@Body() data: UpdatePaymentDTO, @Query('key') key: string) {
     if (key !== this.notifySecret) {
       throw new ForbiddenException(
         'Aceso negado informa o query key com a chave secreta',

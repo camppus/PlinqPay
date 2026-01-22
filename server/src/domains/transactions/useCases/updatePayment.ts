@@ -32,8 +32,7 @@ export class UpdatePayment {
   ) {}
 
   public async execute(data: UpdatePaymentDTO) {
-    const status = this.mapPaypayStatus(data.status);
-
+    const status = this.mapPaypayStatus(data.status) ?? 'FAILED';
     if (status == 'PENDING') {
       throw new BadRequestException({
         message: 'Pagamento pendente não sofre mudanças manuais',

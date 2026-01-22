@@ -11,18 +11,22 @@ import { APikeyModule } from './domains/keys/key.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import AuthModule from './domains/auth/auth.module';
 import AuthMiddleare from './middlewares/auth.middleware';
+import { TransactionModule } from './domains/transactions/transaction.module';
+import { WebHookModule } from './domains/webhooks/webhook.module';
 @Module({
   imports: [
     DatabaseModule,
     TenantsModule,
     AuthModule,
+    TransactionModule,
+    WebHookModule,
+    APikeyModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate(config) {
         return config;
       },
     }),
-    APikeyModule,
     ThrottlerModule.forRoot({
       throttlers: [
         {
@@ -46,6 +50,14 @@ export class AppModule implements NestModule {
       .exclude({
         method: RequestMethod.POST,
         path: '/v1/tenants',
+      })
+      .exclude({
+        method: RequestMethod.POST,
+        path: '/v1/transaction',
+      })
+      .exclude({
+        method: RequestMethod.POST,
+        path: '/v1/notify',
       })
       .forRoutes('*');
   }

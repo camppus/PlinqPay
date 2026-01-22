@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Tenants" ADD COLUMN     "totalDisponible" DECIMAL(12,2) NOT NULL DEFAULT 0,
+ADD COLUMN     "totalErned" DECIMAL(12,2) NOT NULL DEFAULT 0,
+ADD COLUMN     "totalErnedWithTax" DECIMAL(12,2) NOT NULL DEFAULT 0;

@@ -11,12 +11,10 @@ import { Observable } from 'rxjs';
 export default class IsAdminGuard implements CanActivate {
   private readonly prisma = PrismaRepositorie.getInstance();
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const userId = request.headers['x-user-id'];
-    return this.validateIfIsAdmin(userId);
+    return await this.validateIfIsAdmin(userId);
   }
 
   private async validateIfIsAdmin(userId: string) {

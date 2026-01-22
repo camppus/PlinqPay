@@ -1,3 +1,4 @@
+import { ApiSecretKeys, TaxType, Tenants } from '@prisma/client';
 import z from 'zod';
 
 const envSchema = z.object({});
@@ -21,8 +22,25 @@ export interface IRepository<T> {
   delete(id: string): Promise<T>;
 }
 
-
 export interface IToken {
   role: string;
   sub: string;
+}
+
+export interface ITaxCalculator {
+  amount: number;
+  subtotal: number;
+  tax: number;
+  total: number;
+  taxtType: TaxType;
+}
+
+export interface TaxCalculatorStrategie {
+  calc(amount: number): number;
+  getTax(): number;
+}
+
+export interface ICompaniesInfo {
+  apikey: ApiSecretKeys;
+  companie: Tenants;
 }

@@ -1,9 +1,5 @@
 import PrismaRepositorie from '@/infra/database/Prisma';
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ApiKeyRepositorie, APiReturnDefaultType } from '../@types';
 import Assignature from '@/lib/shared/Assignature';
 import { IPAginationGet } from '@/types';
@@ -16,10 +12,10 @@ export class PrismaAPiKeyRepositorie implements ApiKeyRepositorie {
   public async create(tenantId: string): Promise<APiReturnDefaultType> {
     const newApiKey = await this.prisma.apiSecretKeys.create({
       data: {
-        title: this.assignature.genApiTitle(),
+        title: 'api_',
         publicKey: this.assignature.genPublicKey(),
         secretKey: this.assignature.genSecretKey(),
-        companieID: tenantId,
+        companieId: tenantId,
         isActive: true,
       },
     });
@@ -30,7 +26,7 @@ export class PrismaAPiKeyRepositorie implements ApiKeyRepositorie {
   public async getKeyByTenantId(tenantId: string) {
     return this.prisma.apiSecretKeys.findFirst({
       where: {
-        companieID: tenantId,
+        companieId: tenantId,
       },
       include: {
         companie: {
@@ -47,19 +43,19 @@ export class PrismaAPiKeyRepositorie implements ApiKeyRepositorie {
     limit: number,
   ): Promise<IPAginationGet<Omit<ApiSecretKeys, 'secretKey'>>> {
     const offest = (page - 1) * limit;
-    const apikeys = await this.prisma.apiSecretKeys.findMany({
+    const apikeys = (await this.prisma.apiSecretKeys.findMany({
       take: limit,
       skip: offest,
       select: {
         title: true,
         publicKey: true,
-        companieID: true,
+        companieId: true,
         id: true,
         isActive: true,
         updatedAt: true,
         createdAt: true,
       },
-    });
+    })) as any as ApiSecretKeys[];
     return {
       data: apikeys,
       pagination: {
@@ -70,22 +66,29 @@ export class PrismaAPiKeyRepositorie implements ApiKeyRepositorie {
     };
   }
   public async getById(
-    id: string,
+    unique: string,
   ): Promise<Omit<ApiSecretKeys, 'secretKey'> | null> {
-    const apikey = await this.prisma.apiSecretKeys.findFirst({
+    const apikey = (await this.prisma.apiSecretKeys.findFirst({
       where: {
-        id,
+        OR: [
+          {
+            id: unique,
+          },
+          {
+            publicKey: unique,
+          },
+        ],
       },
       select: {
         title: true,
         publicKey: true,
-        companieID: true,
         id: true,
         isActive: true,
         updatedAt: true,
         createdAt: true,
+        companieId: true,
       },
-    });
+    })) as Omit<ApiSecretKeys, 'secretKey'>;
     if (!apikey) {
       return null;
     }
@@ -110,5 +113,17 @@ export class PrismaAPiKeyRepositorie implements ApiKeyRepositorie {
     return {
       status: updated?.isActive,
     };
+  }
+
+  public async getByPublickKey(unique: string): Promise<ApiSecretKeys | null> {
+    const apikey = await this.prisma.apiSecretKeys.findFirst({
+      where: {
+        publicKey: unique,
+      },
+    });
+    if (!apikey) {
+      return null;
+    }
+    return apikey;
   }
 }

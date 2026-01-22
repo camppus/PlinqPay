@@ -25,6 +25,8 @@ async function bootstrap() {
     apiReference({
       content: document,
       theme: 'bluePlanet',
+      title: 'PligPag Doc',
+      pageTitle: 'PligPag Doc',
     }),
   );
   app.enableCors();

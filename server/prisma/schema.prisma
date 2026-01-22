@@ -9,111 +9,141 @@ datasource db {
 
 model Config {
   id        String   @id @default(uuid())
-  percent   Int
+  percent   Decimal  @db.Decimal(5,2)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Tenants {
-  id                String             @id @default(uuid())
-  cursor            Int                @default(autoincrement()) @unique
-  title             String
-  email             String             @unique
-  phone             String             @unique
-  password          String
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  role              Role               @default(COMPANIE)
-  isActive          Boolean            @default(true)
-  isVerified   Boolean            @default(false)
-  keys              ApiSecretKeys[]
-  kycValidation     KycValidation?
-  notification      Notification[]
-  transaction       Transaction[]
-  wallet            Wallet?
-  webHooks          WebHooks[]
-  withdrawls        Withdrawls[]
+  id            String   @id @default(uuid())
+  cursor        Int      @default(autoincrement()) @unique
+  title         String
+  email         String   @unique
+  phone         String   @unique
+  password      String
+  role          Role     @default(COMPANIE)
+  isActive      Boolean  @default(true)
+  isVerified    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  totalErned Decimal        @db.Decimal(12,2) @default(0)
+  totalDisponible Decimal        @db.Decimal(12,2)  @default(0)
+  totalErnedWithTax Decimal        @db.Decimal(12,2)  @default(0)
+
+  keys          ApiSecretKeys[]
+  kycValidation KycValidation?
+  notifications Notification[]
+  transactions  Transaction[]
+  wallet        Wallet?
+  webHooks      WebHooks[]
+  withdrawals   Withdrawals[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([isActive])
 }
 
 model KycValidation {
-  id                 String            @id @default(uuid())
-  companieID         String            @unique
-  documentFrontalUrl String
+  id                 String               @id @default(uuid())
+  companieId         String               @unique
+  documentFrontUrl   String
   documentBackUrl    String
-  bi                 String            @unique
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
-  expiredAt          DateTime
-  verfiedAt          DateTime
-  status             VeriicationStatus @default(PENDING)
+  bi                 String               @unique
+  status             VerificationStatus   @default(PENDING)
   notes              String?
-  verified           Boolean           @default(false)
-  companie           Tenants         @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  verified           Boolean              @default(false)
+  verifiedAt         DateTime?
+  expiredAt          DateTime
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  companie           Tenants               @relation(fields: [companieId], references: [id], onDelete: Cascade)
 }
 
 model ApiSecretKeys {
-  id          String    @id @default(uuid())
-  title       String
-  companieID  String
-  publicKey   String
-  secretKey   String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  isActive    Boolean   @default(true)
-  companie    Tenants @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  title      String
+  companieId String
+  publicKey  String  @unique
+  secretKey  String
+  isActive   Boolean @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  companie   Tenants @relation(fields: [companieId], references: [id], onDelete: Cascade)
+
+  @@index([companieId])
+  @@index([isActive])
 }
 
 model Transaction {
-  id                       String                  @id @default(uuid())
-  companieID               String
-  status                   PaymentStatus           @default(PAID)
-  ammount                  Int
-  total                    Int
-  subtotal                 Int
-  tax                      Int
-  taxtype                  TaxType                 @default(PERCENT)
-  method                   PaymentMethod           @default(REFERENCE)
-  currency                 String                  @default("AOA")
-  clientEmail              String
-  signature                String
-  entitie                  String?
-  reference                String?
-  qrdCodeUrl               String?
-  paymentUrl               String?
-  callbackURl String
-  wasCreationWebhookCalled Boolean                 @default(false)
-  wasSucessWebeHookCalled  Boolean                 @default(true)
-  createdAt                DateTime                @default(now())
-  updatedAt                DateTime                @updatedAt
-  companie                 Tenants               @relation(fields: [companieID], references: [id], onDelete: Cascade)
-  client                   TransactionClientInfo[]
-  items                    TransactiontItem[]
+  id           String        @id @default(uuid())
+  companieId   String
+  externId String
+  getawayIdentifier String
+  status       PaymentStatus @default(PENDING)
+
+  amount       Decimal       @db.Decimal(12,2)
+  subtotal     Decimal       @db.Decimal(12,2)
+  tax          Decimal       @db.Decimal(12,2)
+  total        Decimal       @db.Decimal(12,2)
+
+  taxType      TaxType       @default(PERCENT)
+  method       PaymentMethod @default(REFERENCE)
+  currency     String        @default("AOA")
+
+  signature    String
+  entity       String?
+  reference    String?       @unique
+  qrCodeUrl    String?
+  paymentUrl   String?
+  callbackUrl  String
+
+  paidAt       DateTime?
+  failureReason String?
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  companie     Tenants       @relation(fields: [companieId], references: [id], onDelete: Cascade)
+  client       TransactionClientInfo?
+  items        TransactionItem[]
+  webhooksDelivery WebhookDelivery[]
+
+  @@index([companieId])
+  @@index([status])
+  @@index([createdAt])
 }
 
-model TransactiontItem {
-  id            String      @id @default(uuid())
+model TransactionItem {
+  id            String   @id @default(uuid())
   transactionId String
   title         String
-  price         Int
-  qtd           Int
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  price         Decimal  @db.Decimal(12,2)
+  quantity      Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
   transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@index([transactionId])
 }
 
 model TransactionClientInfo {
-  id            String      @id @default(uuid())
-  transactionId String
+  id            String   @id @default(uuid())
+  transactionId String   @unique
   name          String
-  email         String?
+  email         String
   phone         String
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
   transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
 model WebHooks {
-  id         String           @id @default(uuid())
+  id         String          @id @default(uuid())
   url        String
   title      String
   body       Json?
@@ -121,67 +151,103 @@ model WebHooks {
   method     WebHooksMethod
   scope      WebhooksScope
   events     WebHooksEvents[]
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
-  companieID String
-  companie   Tenants        @relation(fields: [companieID], references: [id], onDelete: Cascade)
+  companieId String
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  companie   Tenants         @relation(fields: [companieId], references: [id], onDelete: Cascade)
+
+  @@index([companieId])
 }
 
+
+model WebhookDelivery {
+  id             String   @id @default(uuid())
+  transactionId  String
+  event          WebHooksEvents
+  url            String
+  payload        Json
+  status         WebhookDeliveryStatus @default(PENDING)
+  attempts       Int      @default(0)
+  lastError      String?
+  deliveredAt    DateTime?
+  nextRetryAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  transaction    Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  @@unique([transactionId, event])
+  @@index([status])
+}
+
+
 model Wallet {
-  id           String       @id @default(uuid())
-  companieID   String       @unique
+  id           String   @id @default(uuid())
+  companieId   String   @unique
   walletHolder String
   iban         String
   bank         String
-  isVerified   Boolean      @default(false)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  companie     Tenants    @relation(fields: [companieID], references: [id], onDelete: Cascade)
-  withdrawls   Withdrawls[]
+  isVerified   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  companie     Tenants        @relation(fields: [companieId], references: [id], onDelete: Cascade)
+  withdrawals  Withdrawals[]
 }
 
-model Withdrawls {
-  id                 String                  @id @default(uuid())
+model Withdrawals {
+  id                 String        @id @default(uuid())
   walletId           String
   companieId         String
-  total              Int
-  tax                Int
-  taxtype            TaxType                 @default(NONE)
-  status             PaymentStatus           @default(PENDING)
-  wasVerifiedByOwner Boolean                 @default(false)
+  amount             Decimal       @db.Decimal(12,2)
+  tax                Decimal       @db.Decimal(12,2)
+  total              Decimal       @db.Decimal(12,2)
+  taxType            TaxType        @default(NONE)
+  status             PaymentStatus  @default(PENDING)
+  wasVerifiedByOwner Boolean        @default(false)
   fileUrl            String?
   notes              String?
-  createdAt          DateTime                @default(now())
-  updatedAt          DateTime                @updatedAt
-  aprovedAt          DateTime?
+  approvedAt         DateTime?
   revokedAt          DateTime?
-  companie           Tenants               @relation(fields: [companieId], references: [id], onDelete: Cascade)
-  wallet             Wallet                  @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  verfication        WithdrawlsVerification?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  companie            Tenants       @relation(fields: [companieId], references: [id], onDelete: Cascade)
+  wallet              Wallet        @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  verification        WithdrawalVerification?
+
+  @@index([companieId])
+  @@index([walletId])
+  @@index([status])
 }
 
-model WithdrawlsVerification {
-  id          String     @id @default(uuid())
-  withdrallId String     @unique
-  used        Boolean    @default(false)
-  verified    Boolean    @default(false)
-  token       String     @unique
-  expiresAt   DateTime
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  Withdrawls  Withdrawls @relation(fields: [withdrallId], references: [id], onDelete: Cascade)
+model WithdrawalVerification {
+  id            String   @id @default(uuid())
+  withdrawalId  String   @unique
+  token         String   @unique
+  used          Boolean  @default(false)
+  verified      Boolean  @default(false)
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  withdrawal    Withdrawals @relation(fields: [withdrawalId], references: [id], onDelete: Cascade)
 }
 
 model Notification {
   id         String           @id @default(uuid())
+  entitieId String
   companieId String
   message    String
   type       NotificationType
   isRead     Boolean          @default(false)
+  deeplink   String?
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
-  deeplink   String?
-  companie   Tenants        @relation(fields: [companieId], references: [id], onDelete: Cascade)
+
+  companie   Tenants          @relation(fields: [companieId], references: [id], onDelete: Cascade)
+
+  @@index([companieId])
+  @@index([isRead])
 }
 
 enum Role {
@@ -189,7 +255,7 @@ enum Role {
   SUPERCOMPANIE
 }
 
-enum VeriicationStatus {
+enum VerificationStatus {
   PENDING
   VERIFIED
   REJECTED
@@ -198,24 +264,22 @@ enum VeriicationStatus {
 enum PaymentStatus {
   PAID
   PENDING
-  FAILD
-  APROVED
+  FAILED
+  APPROVED
   REJECTED
 }
 
 enum PaymentMethod {
-  PAYPAY
   REFERENCE
 }
 
 enum WebhooksScope {
   PAYMENTS
-  WITHDRWALS
-  ALL
+  WITHDRAWALS
 }
 
 enum WebHooksEvents {
-  SUCESS
+  SUCCESS
   ERROR
   CREATED
   REJECTED
@@ -223,7 +287,7 @@ enum WebHooksEvents {
 
 enum NotificationType {
   PAYMENT
-  WITHDRWALS
+  WITHDRAWALS
   SECURITY
   OTHERS
 }
@@ -240,4 +304,10 @@ enum TaxType {
   FIXED
   IVA
   NONE
+}
+
+enum WebhookDeliveryStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }

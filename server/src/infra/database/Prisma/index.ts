@@ -6,7 +6,9 @@ import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 export default class PrismaRepositorie implements OnModuleDestroy {
   protected readonly logger = new Logger('PRISMA');
   static instace: PrismaClient | null = null;
-  constructor() {}
+  constructor() { }
+  
+  
   static getInstance(): PrismaClient {
     if (!PrismaRepositorie.instace) {
       PrismaRepositorie.instace = new PrismaClient();

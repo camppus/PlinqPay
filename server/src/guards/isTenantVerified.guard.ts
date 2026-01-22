@@ -5,28 +5,25 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export default class IsActiveTenantGuard implements CanActivate {
   private readonly prisma = PrismaRepositorie.getInstance();
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const userId = request.headers['x-user-id'];
-    return this.validateIfIsAdmin(userId);
+    return await this.verify(userId);
   }
 
-  private async validateIfIsAdmin(userId: string) {
-    const admin = await this.prisma.tenants.findFirst({
+  private async verify(userId: string) {
+    const user = await this.prisma.tenants.findFirst({
       where: {
         id: userId,
         isActive: true,
       },
     });
-    if (!admin) {
+    if (!user) {
       throw new ForbiddenException({
         message: 'Precisa ser uma empresa verificada para exercer esta acção',
       });

@@ -1,0 +1,89 @@
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  Header,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import TrasanctionService from './transaction.service';
+import { CreateTransactionDTO } from './dto/create.dto';
+import IsApiKeyAbleToProcessPaymentGuard from '@/guards/apiKey.guard';
+import { CurrentApiKey } from '@/decorators/apikey.decorator';
+import { ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { IsPositiveNumberPipe } from '@/pipes/isPositive.pipe';
+import { CurrentUser } from '@/decorators/currentUser.decorator';
+import IsAdminGuard from '@/guards/isAdmin.guard';
+import IsActiveTenantGuard from '@/guards/isTenantVerified.guard';
+
+@ApiTags('Pagamentos')
+@Controller('v1/transaction')
+export class TransactionController {
+  constructor(private readonly service: TrasanctionService) {}
+  private readonly notifySecret = process.env.GETAWAY_NOTIFY_SECRET;
+  @Post()
+  @ApiOperation({
+    summary: 'Criar pagamento',
+  })
+  @ApiHeader({
+    name: 'api-key',
+  })
+  @UseGuards(IsApiKeyAbleToProcessPaymentGuard)
+  public async create(
+    @Body() data: CreateTransactionDTO,
+    @CurrentApiKey() apikey: string,
+  ) {
+    return await this.service.create(data, apikey);
+  }
+
+  @Get('/my')
+  @UseGuards(IsActiveTenantGuard)
+  @ApiOperation({
+    summary: 'Lista de pagementos por conta',
+  })
+  public async getAllByTenantId(
+    @Query('page', IsPositiveNumberPipe) page: number,
+    @CurrentUser(ParseUUIDPipe) tenantId: string,
+  ) {
+    return await this.service.getByTenant(page, tenantId);
+  }
+
+  @Get()
+  @UseGuards(IsAdminGuard)
+  @ApiOperation({
+    summary: 'Lista de pagementos',
+  })
+  public async getAll(@Query('page', IsPositiveNumberPipe) page: number) {
+    return await this.service.getAll(page);
+  }
+
+  @Get(':id/details')
+  @UseGuards(IsAdminGuard)
+  @ApiOperation({
+    summary: 'Detalhes do pagamento',
+  })
+  public async getDetails(
+    @CurrentUser(ParseUUIDPipe) tenantId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return await this.service.getDetails(id, tenantId);
+  }
+
+  @Post('notify')
+  @HttpCode(200)
+  @Header('Content-Type', 'text/plain')
+  async update(@Body() data: any, @Query('key') key: string) {
+    if (key !== this.notifySecret) {
+      throw new ForbiddenException(
+        'Aceso negado informa o query key com a chave secreta',
+      );
+    }
+    await this.service.update(data);
+    return 'success';
+  }
+}

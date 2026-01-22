@@ -20,6 +20,8 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
         phone: data.phone,
         title: data.title,
         role: 'COMPANIE',
+        isActive: true,
+        isVerified: true,
       },
     });
     return {

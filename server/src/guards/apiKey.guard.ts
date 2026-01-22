@@ -14,9 +14,22 @@ export default class IsApiKeyAbleToProcessPaymentGuard implements CanActivate {
   private readonly logger = new Logger('ApiKeyVerifier');
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    this.logger.debug(request.headers)
-    const apiKey = request.headers['api-key'] as string;
-    return await this.validateIfIsAdmin(apiKey, request.ip as string);
+    this.logger.debug(request.headers);
+    const headers = Object.keys(request.headers).reduce<Record<string, string>>(
+      (acc, key) => {
+        const value = request.headers[key];
+        if (Array.isArray(value)) {
+          acc[key.toLowerCase()] = value[0];
+        } else if (value) {
+          acc[key.toLowerCase()] = value;
+        }
+        return acc;
+      },
+      {},
+    );
+    const apiKey = headers['api-key'] || headers['x-api-key'];
+    const ip = headers['x-forwarded-for']?.split(',')[0] || request.ip;
+    return await this.validateIfIsAdmin(apiKey, ip as string);
   }
 
   private async validateIfIsAdmin(apiKey: string, ip: string) {
@@ -29,6 +42,8 @@ export default class IsApiKeyAbleToProcessPaymentGuard implements CanActivate {
       this.logger.fatal('MiSSING API_kEY -> ', ip, this.getDateMessage());
       throw new BadRequestException({
         message: 'Apikey em falta',
+        apiKey,
+        ip,
       });
     }
 
@@ -45,6 +60,8 @@ export default class IsApiKeyAbleToProcessPaymentGuard implements CanActivate {
       this.logger.fatal('NO EXISTEN API_kEY -> ', ip, this.getDateMessage());
       throw new BadRequestException({
         message: 'ApiKey não encontrada',
+        apiKey,
+        ip,
       });
     }
 
@@ -52,6 +69,8 @@ export default class IsApiKeyAbleToProcessPaymentGuard implements CanActivate {
       this.logger.fatal('DESACTIVE API_kEY -> ', ip, this.getDateMessage());
       throw new BadRequestException({
         message: 'ApiKey desativada pelo adimintrador',
+        apiKey,
+        ip,
       });
     }
 
@@ -66,6 +85,8 @@ export default class IsApiKeyAbleToProcessPaymentGuard implements CanActivate {
       );
       throw new BadRequestException({
         message: 'Verifica a sua conta para que possas excutar esta acção',
+        apiKey,
+        ip,
       });
     }
 

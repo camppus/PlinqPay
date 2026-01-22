@@ -23,11 +23,18 @@ export class CreatePaymentUseCase {
     const getwayResponse = await this.processor.pay(
       precification.amount.toString(),
     );
+
     const createdPayment = await this.repo.createTransaction({
       asignature: getwayResponse.asignature,
       companieId: apikey.companieId,
       getawayInfo: getwayResponse,
-      precification,
+      precification: {
+        amount: precification.amount,
+        tax: precification.tax,
+        subtotal: precification.amount - precification.tax, 
+        total: precification.amount,
+        taxtType: precification.taxtType,
+      },
       transaction: data,
     });
     return {

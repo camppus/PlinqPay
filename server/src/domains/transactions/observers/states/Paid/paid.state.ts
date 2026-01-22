@@ -8,11 +8,10 @@ import { BadGatewayException } from '@nestjs/common';
 export class Paid implements ITransactionState {
   private readonly repo = PrismaRepositorie.getInstance();
   public async execute(data: Transaction) {
-
-    if (data?.status != "PENDING") {
+    if (data?.status != 'PENDING') {
       throw new BadGatewayException({
-        message : "Apenas pagamen"
-      })
+        message: 'Apenas pagamen',
+      });
     }
     await this.handleWebHooks(data);
     await this.updateStatus(data);
@@ -66,10 +65,10 @@ export class Paid implements ITransactionState {
       },
       data: {
         totalDisponible: {
-          increment: data.total,
+          increment: data.subtotal,
         },
         totalErned: {
-          increment: data.subtotal,
+          increment: data.total,
         },
         totalErnedWithTax: {
           increment: data.subtotal,

@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import constants from '@/constants';
 
@@ -8,9 +8,12 @@ export class TaxController {
   @ApiOperation({
     summary: 'Consultar a taxa',
   })
+  @Get()
   public getConfigs() {
     return {
-      tax: constants.TAX,
+      taxType: 'PERCENT',
+      value: constants.TAX,
+      currency: 'AOA',
     };
   }
 }

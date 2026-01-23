@@ -37,8 +37,6 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
         currency: 'kz',
         entity: getawayInfo.entitie,
         reference: getawayInfo.reference,
-        paymentUrl: getawayInfo.payUrl,
-        qrCodeUrl: getawayInfo.payUrl,
         status: 'PENDING',
         externId: transaction.externalId,
         getawayIdentifier: getawayInfo.id,
@@ -136,6 +134,9 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
           },
           {
             signature: unique,
+          },
+          {
+            externId: unique,
           },
         ],
       },

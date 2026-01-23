@@ -5,6 +5,7 @@ import { Price, PriceValidator } from '@/objectValues/Price';
 import { TaxtCalculatorFactorie } from '@/objectValues/Tax/taxcalulator';
 import { ApiSecretKeys } from '@prisma/client';
 import { NotificationsService } from '@/domains/notifications/notification.service';
+import Assignature from '@/lib/shared/Assignature';
 
 export class CreatePaymentUseCase {
   constructor(
@@ -26,8 +27,9 @@ export class CreatePaymentUseCase {
       precification.amount.toString(),
     );
 
+    const signature = new Assignature().assignature(apikey.secretKey, data);
     const createdPayment = await this.repo.createTransaction({
-      asignature: getwayResponse.asignature,
+      asignature: signature,
       companieId: apikey.companieId,
       getawayInfo: getwayResponse,
       precification: {

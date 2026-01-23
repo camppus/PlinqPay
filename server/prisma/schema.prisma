@@ -89,8 +89,6 @@ model Transaction {
   signature    String
   entity       String?
   reference    String?       @unique
-  qrCodeUrl    String?
-  paymentUrl   String?
   callbackUrl  String
 
   paidAt       DateTime?

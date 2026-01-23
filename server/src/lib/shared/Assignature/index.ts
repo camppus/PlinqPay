@@ -9,13 +9,23 @@ export default class Assignature {
     return 'sk_' + crypto.randomBytes(48).toString('base64');
   }
 
-  public assignature(secretKey: string, payload: any): string {
-    const assignature = crypto
+  public assignature(secretKey: string, payload: CreateTransactionDTO): string {
+    const payloadToVerify = {
+      externalId: payload.externalId,
+      amount: payload.amount,
+      method: payload.method,
+      callbackUrl: payload.callbackUrl,
+    };
+
+    const canonical = JSON.stringify(payloadToVerify);
+    const signature = crypto
       .createHmac('sha256', secretKey)
-      .update(payload)
-      .digest('hex');
-    return assignature;
+      .update(canonical, 'utf8')
+      .digest('base64');
+
+    return signature;
   }
+
   public verifySignature(
     payload: CreateTransactionDTO & { sign: string },
     secretKey: string,

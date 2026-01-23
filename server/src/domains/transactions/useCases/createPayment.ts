@@ -48,7 +48,6 @@ export class CreatePaymentUseCase {
       type: 'PAYMENT',
     });
     return {
-      getWayInfo: getwayResponse,
       data: createdPayment,
     };
   }

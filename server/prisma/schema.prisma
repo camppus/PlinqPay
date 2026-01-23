@@ -7,10 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Config {
-  id        String   @id @default(uuid())
-  percent   Decimal  @db.Decimal(5,2)
-}
 
 model Tenants {
   id            String   @id @default(uuid())

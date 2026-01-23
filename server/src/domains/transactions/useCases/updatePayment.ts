@@ -7,6 +7,7 @@ import { Paid } from '../observers/states/Paid/paid.state';
 import { Fail } from '../observers/states/Fail/fail.state';
 import Assignature from '@/lib/shared/Assignature';
 import { ApiKeyRepositorie } from '@/domains/keys/repositories/@types';
+import { NotificationsService } from '@/domains/notifications/notification.service';
 
 export class UpdatePayment {
   private readonly asign = new Assignature();
@@ -21,15 +22,18 @@ export class UpdatePayment {
     TRANSFER_FAIL: 'FAILED',
   };
 
-  private nofiers: Record<'PAID' | 'FAILED', ITransactionState> = {
-    PAID: new Paid(),
-    FAILED: new Fail(),
-  };
+  private nofiers: Record<'PAID' | 'FAILED', ITransactionState>;
 
   constructor(
     private readonly repo: ITransactionRepositorie,
     private readonly aikeyRepo: ApiKeyRepositorie,
-  ) {}
+    private readonly notification: NotificationsService,
+  ) {
+    this.nofiers = {
+      PAID: new Paid(this.notification),
+      FAILED: new Fail(this.notification),
+    };
+  }
 
   public async execute(data: UpdatePaymentDTO) {
     const status = this.mapPaypayStatus(data.status) ?? 'FAILED';
@@ -63,7 +67,7 @@ export class UpdatePayment {
       });
     }
 
-    const notifier = this.nofiers[status] ?? new Fail();
+    const notifier = this.nofiers[status] ?? new Fail(this.notification);
     await notifier.execute(transaction);
   }
 

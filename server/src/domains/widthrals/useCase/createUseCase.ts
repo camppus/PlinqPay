@@ -3,12 +3,14 @@ import { CreateWidthrawlDto } from '../dto/create.dto';
 import { ITenatsRepositories } from '@/domains/tenants/repositories/@type';
 import { IWalletRepositorie } from '@/domains/wallets/repositories/@type';
 import { IWidthdrawsRepositories } from '../repositories/@types';
+import { NotificationsService } from '@/domains/notifications/notification.service';
 
 export class CreateWidthDrawUseCase {
   constructor(
     private readonly tenantRepo: ITenatsRepositories,
     private readonly walletRepo: IWalletRepositorie,
     private readonly widthrawlRepo: IWidthdrawsRepositories,
+    private readonly notifier: NotificationsService,
   ) {}
 
   public async exute(data: CreateWidthrawlDto, tenantId: string) {
@@ -43,6 +45,14 @@ export class CreateWidthDrawUseCase {
         message: 'Precisas aguardar a útima pendência ser concluida',
       });
     }
-    return await this.widthrawlRepo.create(data, tenantId, wallet);
+
+    const widhtraw = await this.widthrawlRepo.create(data, tenantId, wallet);
+    await this.notifier.create({
+      companieId: tenantId,
+      entitieId: widhtraw.id,
+      message: `Saque reprovado ${Number(data.amount).toLocaleString('pt')},00 kz`,
+      type: 'WITHDRAWALS',
+    });
+    return widhtraw;
   }
 }

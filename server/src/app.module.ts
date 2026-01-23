@@ -15,6 +15,8 @@ import { TransactionModule } from './domains/transactions/transaction.module';
 import { envSchema } from './types';
 import { WalletModule } from './domains/wallets/wallets.module';
 import WidthdralModule from './domains/widthrals/widthdrawls.module';
+import { TaxModule } from './domains/tax/tax.module';
+import { NotificationsModule } from './domains/notifications/notification.module';
 @Module({
   imports: [
     DatabaseModule,
@@ -24,6 +26,8 @@ import WidthdralModule from './domains/widthrals/widthdrawls.module';
     APikeyModule,
     WalletModule,
     WidthdralModule,
+    TaxModule,
+    NotificationsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate(config) {
@@ -47,6 +51,10 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleare)
+      .exclude({
+        method: RequestMethod.ALL,
+        path: '/v1/tax',
+      })
       .exclude({
         method: RequestMethod.POST,
         path: '/v1/auth/login',

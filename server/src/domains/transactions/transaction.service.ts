@@ -8,12 +8,14 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { GetPaymentUseCase } from './useCases/getPayment';
 import { UpdatePaymentDTO } from './dto/update.dto';
 import { UpdatePayment } from './useCases/updatePayment';
+import { NotificationsService } from '../notifications/notification.service';
 
 @Injectable()
 export default class TrasanctionService {
   constructor(
     private readonly apiKeyRepo: PrismaAPiKeyRepositorie,
     private readonly transactionRepo: PrismaTransactionRepositorie,
+    private readonly notifier: NotificationsService,
   ) {}
 
   public async create(data: CreateTransactionDTO, publickApiKey: string) {
@@ -21,6 +23,7 @@ export default class TrasanctionService {
     const paymentUseCase = new CreatePaymentUseCase(
       this.transactionRepo,
       processor,
+      this.notifier,
     );
     const apikey = (await this.apiKeyRepo.getByPublickKey(
       publickApiKey,
@@ -57,7 +60,11 @@ export default class TrasanctionService {
   }
 
   public async update(data: UpdatePaymentDTO) {
-    const updater = new UpdatePayment(this.transactionRepo, this.apiKeyRepo);
+    const updater = new UpdatePayment(
+      this.transactionRepo,
+      this.apiKeyRepo,
+      this.notifier,
+    );
     const updated = await updater.execute(data);
   }
 }

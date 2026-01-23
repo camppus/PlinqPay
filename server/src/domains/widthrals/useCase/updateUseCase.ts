@@ -6,20 +6,24 @@ import { UpdateWidthdralDto } from '../dto/update.dto';
 import { IWidthDrawsStatusTransaction } from '../states';
 import { Approved } from '../states/Approved';
 import { Rejected } from '../states/Rejected';
+import { NotificationsService } from '@/domains/notifications/notification.service';
 
 export class UpdateWidthDrawUseCase {
   private readonly updaterStrategieMap: Record<
     'APPROVED' | 'REJECTED',
     IWidthDrawsStatusTransaction
-  > = {
-    APPROVED: new Approved(),
-    REJECTED: new Rejected(),
-  };
+  >;
   constructor(
     private readonly tenantRepo: ITenatsRepositories,
     private readonly walletRepo: IWalletRepositorie,
     private readonly widthrawlRepo: IWidthdrawsRepositories,
-  ) {}
+    private readonly notification: NotificationsService,
+  ) {
+    this.updaterStrategieMap = {
+      APPROVED: new Approved(this.notification),
+      REJECTED: new Rejected(this.notification),
+    };
+  }
 
   public async exute(data: UpdateWidthdralDto) {
     const [withdrawl] = await Promise.all([

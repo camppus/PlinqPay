@@ -3,9 +3,12 @@ import PrismaRepositorie from '@/infra/database/Prisma';
 import { CallBackHandler } from '../../sub/callback.sub';
 import { ITransactionState } from '../state.interface';
 import { BadGatewayException } from '@nestjs/common';
+import { NotificationsService } from '@/domains/notifications/notification.service';
 
 export class Paid implements ITransactionState {
   private readonly repo = PrismaRepositorie.getInstance();
+
+  constructor(private readonly notifier: NotificationsService) {}
   public async execute(data: Transaction) {
     if (data?.status != 'PENDING') {
       throw new BadGatewayException({
@@ -20,6 +23,16 @@ export class Paid implements ITransactionState {
       ...data,
       status: 'PAID',
     });
+
+    await this.notifier.update(
+      {
+        companieId: data.companieId,
+        entitieId: data.id,
+        message: `Pagamento aprovado ${Number(data.amount).toLocaleString('pt')},00 kz`,
+        type: 'PAYMENT',
+      },
+      data.id,
+    );
   }
   private async handleWebHooks(data: Transaction): Promise<void> {
     const [hasPaidNotification] = await Promise.all([

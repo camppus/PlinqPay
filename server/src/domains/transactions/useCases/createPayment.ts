@@ -4,11 +4,13 @@ import { Paymentprocessor } from '@/infra/Getaway';
 import { Price, PriceValidator } from '@/objectValues/Price';
 import { TaxtCalculatorFactorie } from '@/objectValues/Tax/taxcalulator';
 import { ApiSecretKeys } from '@prisma/client';
+import { NotificationsService } from '@/domains/notifications/notification.service';
 
 export class CreatePaymentUseCase {
   constructor(
     private readonly repo: ITransactionRepositorie,
     private readonly processor: Paymentprocessor,
+    private readonly notifier: NotificationsService,
   ) {}
 
   public async pay(data: CreateTransactionDTO, apikey: ApiSecretKeys) {
@@ -31,11 +33,17 @@ export class CreatePaymentUseCase {
       precification: {
         amount: precification.amount,
         tax: precification.tax,
-        subtotal: precification.amount - precification.tax, 
+        subtotal: precification.amount - precification.tax,
         total: precification.amount,
         taxtType: precification.taxtType,
       },
       transaction: data,
+    });
+    await this.notifier.create({
+      companieId: apikey.companieId,
+      entitieId: createdPayment.id,
+      message: 'Pagamento pendente',
+      type: 'PAYMENT',
     });
     return {
       getWayInfo: getwayResponse,

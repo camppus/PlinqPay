@@ -3,10 +3,12 @@ import PrismaRepositorie from '@/infra/database/Prisma';
 import { CallBackHandler } from '../../sub/callback.sub';
 import { ITransactionState } from '../state.interface';
 import { BadGatewayException } from '@nestjs/common';
+import { NotificationsService } from '@/domains/notifications/notification.service';
 
 export class Fail implements ITransactionState {
   private readonly repo = PrismaRepositorie.getInstance();
 
+  constructor(private readonly notification: NotificationsService) {}
   public async execute(data: Transaction) {
     if (data?.status !== 'PENDING') {
       throw new BadGatewayException({
@@ -22,6 +24,16 @@ export class Fail implements ITransactionState {
       ...data,
       status: 'FAILED',
     });
+
+    await this.notification.update(
+      {
+        companieId: data.companieId,
+        entitieId: data.id,
+        message: `Pagamento cancelado ${Number(data.amount).toLocaleString('pt')},00 kz`,
+        type: 'PAYMENT',
+      },
+      data.id,
+    );
   }
 
   private async handleWebHooks(data: Transaction): Promise<void> {

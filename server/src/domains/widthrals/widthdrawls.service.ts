@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { CreateWidthrawlDto } from './dto/create.dto';
 import { CreateWidthDrawUseCase } from './useCase/createUseCase';
@@ -8,6 +7,7 @@ import { UpdateWidthDrawUseCase } from './useCase/updateUseCase';
 import { PrismaWalletRepositorie } from '../wallets/repositories/repos/PrismaWalletRepositorie';
 import { PrismaWidthDrawlRepo } from './repositories/repos/PrismaWidthDrawlRepositorie';
 import { TenantsPrismaRepositorie } from '../tenants/repositories/repos/tenantsPrismaRepo';
+import { NotificationsService } from '../notifications/notification.service';
 
 @Injectable()
 export class WidthdrawlService {
@@ -15,6 +15,7 @@ export class WidthdrawlService {
     private readonly tenantRepo: TenantsPrismaRepositorie,
     private readonly walletRepo: PrismaWalletRepositorie,
     private readonly widthrawlRepo: PrismaWidthDrawlRepo,
+    private readonly notification: NotificationsService,
   ) {}
 
   public async create(data: CreateWidthrawlDto, tetantId: string) {
@@ -22,6 +23,7 @@ export class WidthdrawlService {
       this.tenantRepo,
       this.walletRepo,
       this.widthrawlRepo,
+      this.notification,
     );
     return await handler.exute(data, tetantId);
   }
@@ -36,6 +38,7 @@ export class WidthdrawlService {
       this.tenantRepo,
       this.walletRepo,
       this.widthrawlRepo,
+      this.notification,
     );
     return await handler.exute(data);
   }

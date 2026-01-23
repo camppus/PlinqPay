@@ -9,12 +9,12 @@ import { apiReference } from '@scalar/nestjs-api-reference';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger({
-      prefix: 'Plinqpag',
+      prefix: 'PlinqPay',
     }),
   });
 
   const config = new DocumentBuilder()
-    .setTitle('Plinqpag API')
+    .setTitle('PlinqPay API')
     .setDescription('APi de pagamentos')
     .setVersion('1.0')
     .addBearerAuth()
@@ -25,8 +25,8 @@ async function bootstrap() {
     apiReference({
       content: document,
       theme: 'bluePlanet',
-      title: 'PligPag Doc',
-      pageTitle: 'PligPag Doc',
+      title: 'PligPaay Doc',
+      pageTitle: 'PligPay',
     }),
   );
   app.enableCors();

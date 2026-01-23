@@ -14,7 +14,7 @@ export class CreateWalletUseCase {
 
     if (hasWalet) {
       throw new ConflictException({
-        message: 'Empresa já possui a carteira plinqpag',
+        message: 'Empresa já possui a carteira PlinqPay',
       });
     }
     return this.repo.create(data, tenantId);

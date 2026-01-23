@@ -1,5 +1,5 @@
 import PrismaRepositorie from '@/infra/database/Prisma';
-import { IWalletRepositorie } from '../@type';
+import { IWalletRepositorie, WalletType } from '../@type';
 import { Wallet } from '@prisma/client';
 import { IPAginationGet } from '@/types';
 import { CreateWalletDTO } from '../../dto/create.dto';
@@ -19,7 +19,7 @@ export class PrismaWalletRepositorie implements IWalletRepositorie {
       },
     });
   }
-
+z
   public async getAll(
     page: number,
     limit: number,
@@ -40,7 +40,7 @@ export class PrismaWalletRepositorie implements IWalletRepositorie {
     };
   }
 
-  public async getByUnique(unique: string): Promise<Wallet | null> {
+  public async getByUnique(unique: string): Promise<WalletType | null> {
     return await this.prisma.wallet.findFirst({
       where: {
         OR: [

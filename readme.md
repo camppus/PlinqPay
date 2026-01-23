@@ -1,6 +1,6 @@
-# 🍍 Plinqpag – Plataforma SaaS de Pagamentos Angolanos
+# 🍍 PlinqPay – Plataforma SaaS de Pagamentos Angolanos
 
-Plinqpag é uma **plataforma SaaS de gateway de pagamento** que permite aos clientes integrar pagamentos angolanos de forma segura, rastreável e escalável. A plataforma oferece:
+PlinqPay é uma **plataforma SaaS de gateway de pagamento** que permite aos clientes integrar pagamentos angolanos de forma segura, rastreável e escalável. A plataforma oferece:
 
 - Criação e gestão de **API Keys**
 - Registro e validação de usuários (KYC)
@@ -25,11 +25,11 @@ Plinqpag é uma **plataforma SaaS de gateway de pagamento** que permite aos clie
 
 ### Estrutura da API Key
 
-| Campo          | Descrição                                            |
-| -------------- | ---------------------------------------------------- |
-| `title`        | Nome da API Key fornecido pelo usuário               |
-| `publick`      | Chave publica usada para assinar e validar callbacks |
-| `secret`       | Chave privada usada para assinar e validar callbacks |
+| Campo     | Descrição                                            |
+| --------- | ---------------------------------------------------- |
+| `title`   | Nome da API Key fornecido pelo usuário               |
+| `publick` | Chave publica usada para assinar e validar callbacks |
+| `secret`  | Chave privada usada para assinar e validar callbacks |
 
 ### Criação e Gestão
 
@@ -62,7 +62,7 @@ Plinqpag é uma **plataforma SaaS de gateway de pagamento** que permite aos clie
 
 ## 4️⃣ Módulo de Transações
 
-- Tipos de pagamento: **Referência** 
+- Tipos de pagamento: **Referência**
 - Dados necessários para cada transação:
   - `amount` → Valor da transação
   - `wallet_id` → Carteira de destino do cliente
@@ -151,9 +151,4 @@ flowchart TD
 
 ---
 
-> Este README resume o projeto **Plinqpag**, fornecendo visão completa do sistema, fluxos, módulos e práticas de segurança para integração de pagamentos e notificações.
-
-
-
-
-
+> Este README resume o projeto **PlinqPay**, fornecendo visão completa do sistema, fluxos, módulos e práticas de segurança para integração de pagamentos e notificações.

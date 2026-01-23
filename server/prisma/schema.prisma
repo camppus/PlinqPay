@@ -171,7 +171,6 @@ model Wallet {
   isVerified   Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
   companie     Tenants        @relation(fields: [companieId], references: [id], onDelete: Cascade)
   withdrawals  Withdrawals[]
 }
@@ -181,9 +180,6 @@ model Withdrawals {
   walletId           String
   companieId         String
   amount             Decimal       @db.Decimal(12,2)
-  tax                Decimal       @db.Decimal(12,2)
-  total              Decimal       @db.Decimal(12,2)
-  taxType            TaxType        @default(NONE)
   status             PaymentStatus  @default(PENDING)
   fileUrl            String?
   notes              String?

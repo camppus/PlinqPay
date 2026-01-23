@@ -17,7 +17,7 @@ import IsAdminGuard from '@/guards/isAdmin.guard';
 import IsTenantVerifiedGuard from '@/guards/isVerifiedtenant.guard';
 import { CurrentUser } from '@/decorators/currentUser.decorator';
 
-@ApiTags('Wallets')
+@ApiTags('Carteira')
 @Controller('v1/wallets')
 export class WalletController {
   constructor(private readonly service: WalletService) {}

@@ -13,11 +13,10 @@ import ApiKeyService from './keys.service';
 import { CurrentUser } from '@/decorators/currentUser.decorator';
 import { IsPositiveNumberPipe } from '@/pipes/isPositive.pipe';
 import IsAdminGuard from '@/guards/isAdmin.guard';
-import IsActiveTenantGuard from '@/guards/isTenantVerified.guard';
 import IsTenantVerifiedGuard from '@/guards/isVerifiedtenant.guard';
 
 @Controller('v1/apikeys')
-@ApiTags('APikey')
+@ApiTags('Chave API')
 export default class APiKeyController {
   constructor(private readonly service: ApiKeyService) {}
 

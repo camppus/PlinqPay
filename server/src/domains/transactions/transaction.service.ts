@@ -28,10 +28,7 @@ export default class TrasanctionService {
     const apikey = (await this.apiKeyRepo.getByPublickKey(
       publickApiKey,
     )) as ApiSecretKeys;
-    const { data: createPayment, getWayInfo } = await paymentUseCase.pay(
-      data,
-      apikey,
-    );
+    const { data: createPayment } = await paymentUseCase.pay(data, apikey);
     return {
       data: createPayment,
     };

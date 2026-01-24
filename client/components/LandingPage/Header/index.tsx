@@ -28,7 +28,7 @@ export function Header() {
 
         {/* Menu desktop */}
         <nav className="flex items-center gap-4 text-sm">
-          <a href="/docs" className="hover:text-blue-500 transition-all">
+          <a href="/docs" className="hover:text-blue-500 lg:flex hidden  transition-all">
             Documentação
           </a>
           <Button size="sm" className="text-white">

@@ -28,36 +28,50 @@ const enterprises = [
 const integrations = [
   {
     icon: <CreditCard />,
-    title: "Pagamentos via referência",
+    title: "Referência",
     description:
       "Permite transferências instantâneas e seguras via referência, integradas ao seu sistema em tempo real.",
   },
   {
     icon: <Webhook />,
-    title: "Callback URL",
+    title: "Callback",
     description:
       "Receba notificações automáticas em tempo real sobre o status das transações diretamente no seu sistema.",
   },
   {
     icon: <Wallet />,
-    title: "Registo de carteira",
+    title: "Carteira",
     description:
       "Crie e gerencie carteiras digitais para seus usuários, com controle de saldo, histórico e segurança total.",
   },
   {
     icon: <Coins />,
-    title: "Saque instantâneo",
+    title: "Saque",
     description:
       "Realize saques imediatos de forma simples e segura, garantindo liquidez e rapidez para seus clientes.",
   },
 ];
 
-const techs = [
-  { label: "JavaScript", className: "top-5 left-10" },
-  { label: "TypeScript", className: "top-20 right-16" },
-  { label: "Node.js", className: "bottom-24 left-20" },
-  { label: "REST API", className: "bottom-10 right-10" },
-  { label: "Webhook", className: "top-1/2 left-5" },
+const faqs = [
+  {
+    question: "Como posso integrar a PlinqPay no meu sistema?",
+    answer:
+      "Você pode integrar usando nossa API REST ou via SDKs disponíveis para várias linguagens, com documentação detalhada.",
+  },
+  {
+    question: "Quais métodos de pagamento são aceitos?",
+    answer: "Aceitamos  transferências via referência bancárias angolanas.",
+  },
+  {
+    question: "Existe limite de transações por dia?",
+    answer:
+      "Não há limite para contas verificadas. Contas em sandbox possuem limite de testes diário.",
+  },
+  {
+    question: "Como funciona o suporte ao cliente?",
+    answer:
+      "Nosso suporte é 24/7 via chat, e-mail ou telefone. Também disponibilizamos documentação completa e exemplos de integração.",
+  },
 ];
 
 const testimonials = [
@@ -181,13 +195,15 @@ export default function Home() {
             Desenvolva, automatize ou conecte sem complicações. Nossa API se
             adapta a qualquer nível técnico, do código ao no-code.
           </p>
-          <Button className="rounded-full text-white  mt-5" size={"lg"}>
-            Veja nossa documentação{" "}
-            <ArrowUpCircle
-              fill="white"
-              className="text-blue-500 rotate-45"
-            />{" "}
-          </Button>
+          <a href="/docs">
+            <Button className="rounded-full text-white  mt-5" size={"lg"}>
+              Veja nossa documentação{" "}
+              <ArrowUpCircle
+                fill="white"
+                className="text-blue-500 rotate-45"
+              />{" "}
+            </Button>
+          </a>
         </div>
       </span>
 
@@ -255,8 +271,9 @@ export default function Home() {
           </div>
         </article>
       </span>
-      <span className="grid lg:grid-cols-2 lg:px-55 mt-20 pt-40 px-6 gap-10">
-        <article>
+      <span className="grid lg:grid-cols-2 lg:px-55 mt-20 py-20 px-6 gap-10 border-y  border-dashed relative">
+        <span className="absolute h-full left-[50%] top-0 border border-dashed"></span>
+        <article className="">
           <div className="flex flex-col gap-6  ">
             <h1 className="lg:text-5xl text-4xl font-bold ">
               Tem dúvidas? Relaxa, nós temos as respostas.
@@ -268,11 +285,46 @@ export default function Home() {
           </div>
         </article>
         <article>
-          <img
-            src="https://www.abacatepay.com/_next/static/media/imagesupport.21600be7.svg"
-            alt=""
-            className="grayscale-100 rounded-md"
-          />
+          {" "}
+          <div className="mt-10 flex flex-col gap-4">
+            {faqs.map((faq, i) => (
+              <details
+                key={i}
+                className="bg-background/80 backdrop-blur border rounded-xl p-4 cursor-pointer group transition-all duration-200 hover:shadow-lg"
+              >
+                <summary className="font-semibold text-lg list-none flex justify-between items-center">
+                  {faq.question}
+                  <span className="ml-2 text-blue-500 group-open:rotate-45 transition-transform">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-2 text-sm opacity-80">{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </article>
+      </span>
+
+      <span className="flex lg:px-55 mt-20 py-20 px-6 gap-10 border-y  border-dashed relative">
+        <article className="bg-linear-to-r from-blue-700 text-white rounded-lg to-blue-400 -lg p-4 grid grid-cols-2 w-full">
+          <span className="flex flex-col gap-4 pt-20">
+            <h1 className="lg:text-5xl text-4xl font-bold ">
+              Você chegou no fim da página.
+            </h1>
+            <p>
+              Se chegou até aqui, é porque tá interessado. Então vai lá, faz
+              logo o cadastro.
+            </p>
+
+            <a href="/docs">
+              <Button  size={"lg"} className="text-blue-500 rounded-full hover:bg-white bg-white">
+                Vai , clica neste botão <ArrowRight />{" "}
+              </Button>
+            </a>
+          </span>
+          <span>
+            <img className="h-100" src="/undraw.svg" alt="" />
+          </span>
         </article>
       </span>
     </div>

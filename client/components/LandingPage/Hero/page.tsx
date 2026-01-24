@@ -25,12 +25,14 @@ export function Hero() {
           devs.
         </p>
 
-        <span className="grid grid-cols-2 gap-3">
-          <Button className="text-white">
-            Integre ao seu negócio
-            <ArrowUpCircle className="text-blue-500 rotate-45" fill="white" />
-          </Button>
-          <Button className="border border-white/5" variant={"ghost"}>Por que usar ?</Button>
+        <span className="grid lg:grid-cols-2 gap-3">
+          <a href="/docs">
+            <Button className="text-white">
+              Integre ao seu negócio
+              <ArrowUpCircle className="text-blue-500 rotate-45" fill="white" />
+            </Button>
+          </a>
+          <Button variant={"ghost"}>Por que usar ?</Button>
         </span>
 
         <span className="grid grid-cols-2 gap-4">

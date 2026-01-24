@@ -58,7 +58,12 @@ export const InfiniteImageScroller = ({
             key={i}
             src={src}
             alt="Empresa"
-            className="h-10 object-contain grayscale opacity-50"
+            className="
+    h-10 object-contain
+    opacity-50
+    transition-all
+    dark:grayscale dark:brightness-110 dark:contrast-110
+  "
           />
         ))}
       </div>

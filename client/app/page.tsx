@@ -1,4 +1,5 @@
 import { FloatingLanguageImages } from "@/components/LandingPage/FLoating";
+import Footer from "@/components/LandingPage/Footer";
 import { Header, Striped } from "@/components/LandingPage/Header";
 import { Hero } from "@/components/LandingPage/Hero/page";
 import { Badge } from "@/components/ui/badge";
@@ -317,7 +318,10 @@ export default function Home() {
             </p>
 
             <a href="/docs">
-              <Button  size={"lg"} className="text-blue-500 rounded-full hover:bg-white bg-white">
+              <Button
+                size={"lg"}
+                className="text-blue-500 rounded-full hover:bg-white bg-white"
+              >
                 Vai , clica neste botão <ArrowRight />{" "}
               </Button>
             </a>
@@ -327,6 +331,7 @@ export default function Home() {
           </span>
         </article>
       </span>
+      <Footer />
     </div>
   );
 }

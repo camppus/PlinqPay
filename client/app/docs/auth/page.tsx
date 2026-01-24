@@ -26,7 +26,7 @@ export default function AuthDoc() {
         <span>
           <strong className="text-blue-500">Chave de API: </strong>{" "}
           <span>
-            Sua credencial de acesso à API da PlinqPag. Esta chave identifica
+            Sua credencial de acesso à API da Plinqpay. Esta chave identifica
             sua conta e autoriza suas requisições.
           </span>
           <strong className="text-blue-500"> IMPORTANTE: </strong>
@@ -67,7 +67,7 @@ export default function AuthDoc() {
               segredos
             </li>
             <li>Nunca compartilhe suas chaves de API</li>
-            <li>A PlinqPag nunca solicitará suas chaves</li>
+            <li>A Plinqpay nunca solicitará suas chaves</li>
             <li>Revogar chaves existentes</li>
             <li>Revogue imediatamente qualquer chave comprometida</li>
           </ul>
@@ -89,7 +89,7 @@ export default function AuthDoc() {
           <ul className="dark:text-neutral-400 list-disc list-inside flex flex-col gap-2">
             <li>A chave de API não for fornecida no header</li>
             <li>A chave for inválida</li>
-            <li>A PlinqPag nunca solicitará suas chaves</li>
+            <li>A Plinqpay nunca solicitará suas chaves</li>
             <li>A chave tiver sido revogada</li>
           </ul>
         </span>

@@ -25,7 +25,7 @@ export default function CallBackPage() {
         <span>
           <strong className="text-blue-500">Chave de API: </strong>
           <span>
-            Sua credencial de acesso à API da PlinqPag. Esta chave identifica
+            Sua credencial de acesso à API da Plinqpay. Esta chave identifica
             sua conta e autoriza suas requisições.
           </span>
           <strong className="text-blue-500"> IMPORTANTE: </strong>

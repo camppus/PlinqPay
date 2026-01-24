@@ -250,7 +250,7 @@ export default function Home() {
           <img
             src="https://www.abacatepay.com/_next/static/media/imagesupport.21600be7.svg"
             alt=""
-            className="grayscale-100 rounded-md"
+            className="grayscale-100 rounded-md w-full"
           />
         </article>
         <article>
@@ -307,8 +307,8 @@ export default function Home() {
       </span>
 
       <span className="flex lg:px-55 mt-20 py-20 px-6 gap-10 border-y  border-dashed relative">
-        <article className="bg-linear-to-r from-blue-700 text-white rounded-lg to-blue-400 -lg p-4 grid lg:grid-cols-2 w-full">
-          <span className="flex flex-col gap-4 pt-20">
+        <article className="bg-linear-to-r from-blue-700 text-white rounded-lg to-blue-400 -lg p-4 grid md:grid-cols-2 w-full">
+          <span className="flex flex-col gap-4 md:pt-20">
             <h1 className="lg:text-5xl text-4xl font-bold ">
               Você chegou no fim da página.
             </h1>
@@ -326,7 +326,7 @@ export default function Home() {
               </Button>
             </a>
           </span>
-          <span className="lg:flex hidden">
+          <span className="md:flex hidden">
             <img className="h-100" src="/undraw.svg" alt="" />
           </span>
         </article>

@@ -27,12 +27,17 @@ export function Hero() {
 
         <span className="grid lg:grid-cols-2 gap-3">
           <a href="/docs">
-            <Button className="text-white">
+            <Button className="text-white w-full">
               Integre ao seu negócio
               <ArrowUpCircle className="text-blue-500 rotate-45" fill="white" />
             </Button>
           </a>
-          <Button variant={"ghost"}>Por que usar ?</Button>
+          <Button
+            variant={"outline"}
+            className="w-full opacity-80 hover:opacity-100"
+          >
+            Por que usar ?
+          </Button>
         </span>
 
         <span className="grid grid-cols-2 gap-4">
@@ -125,7 +130,7 @@ export function SocialProof() {
       {/* Texto */}
       <span className="text-xs opacity-80">
         Mais de <strong className="text-blue-500 font-semibold">2.000+</strong>{" "}
-        empresas  confiam
+        empresas confiam
       </span>
     </div>
   );

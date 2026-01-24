@@ -9,7 +9,7 @@ export default function DocLayout() {
   return (
     <main className="min-h-screen flex flex-col gap-3">
       <strong className="text-blue-500 ">Introdução</strong>
-      <h1 className="scroll-m-20  text-2xl font-extrabold tracking-tight text-balance">
+      <h1 c>
         Comece aqui!
       </h1>
       <p>Pegue seu café e aprenda sobre a PlinqPay!</p>

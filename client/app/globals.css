@@ -4,13 +4,15 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-   --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+  --animate-scroll: scroll var(--animation-duration, 40s)
+    var(--animation-direction, forwards) linear infinite;
 
   @keyframes scroll {
     to {
       transform: translate(calc(-50% - 0.5rem));
     }
   }
+
   --font-sans: var(--font-poppins);
   --font-mono: var(--font-poppins);
   --color-background: var(--background);
@@ -54,7 +56,33 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
 
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.marquee-left {
+  animation: marquee-left 35s linear infinite;
+  will-change: transform;
+}
+
+.marquee-right {
+  animation: marquee-right 35s linear infinite;
+  will-change: transform;
+}
 
 :root {
   --radius: 0.625rem;

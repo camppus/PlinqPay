@@ -6,8 +6,8 @@ import { ArrowUpCircle, Lock, Zap } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="w-full lg:pt-40 pt-30 lg:px-65 grid lg:grid-cols-2 gap-4 px-4">
-      <article className="flex flex-col lg:gap-10 gap-6">
+    <section className="w-full lg:pt-40 pt-30 lg:px-65 grid lg:grid-cols-2 gap-4 px-6">
+      <article className="flex flex-col gap-10">
         <SocialProof />
         <h1 className="scroll-m-20  lg:text-8xl text-6xl font-extrabold tracking-tight text-balance">
           Receba fácil. Cresça
@@ -25,12 +25,12 @@ export function Hero() {
           devs.
         </p>
 
-        <span className="flex items-center gap-3 lg:w-auto w-full">
+        <span className="grid grid-cols-2 gap-3">
           <Button className="text-white">
             Integre ao seu negócio
             <ArrowUpCircle className="text-blue-500 rotate-45" fill="white" />
           </Button>
-          <Button variant={"ghost"}>Por que usar ?</Button>
+          <Button className="border border-white/5" variant={"ghost"}>Por que usar ?</Button>
         </span>
 
         <span className="grid grid-cols-2 gap-4">
@@ -108,7 +108,8 @@ export function SocialProof() {
             key={index}
             src={src}
             className="
-              h-7 w-7
+              lg:h-7 lg:w-7
+              h-5 w-5
               rounded-full
               object-cover
               shadow-sm
@@ -120,9 +121,9 @@ export function SocialProof() {
       </div>
 
       {/* Texto */}
-      <span className="text-sm opacity-80">
+      <span className="text-xs opacity-80">
         Mais de <strong className="text-blue-500 font-semibold">2.000+</strong>{" "}
-        devs e empresas confiam
+        empresas  confiam
       </span>
     </div>
   );

@@ -26,7 +26,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={` ${poppins.variable} font-mono p-0 m-0`}
     >
-      <head />
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn-uicons.flaticon.com/2.4.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+        />
+      </head>
       <body>
         <ThemeProvider
           attribute="class"

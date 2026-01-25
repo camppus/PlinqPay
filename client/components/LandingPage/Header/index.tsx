@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
@@ -8,7 +7,6 @@ import { Menu, Moon, Sun, X } from "lucide-react"; // ícones do hamburger
 
 export function Header() {
   const { theme, setTheme } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="fixed bg-transparent backdrop-blur-3xl z-50 top-0 w-full flex items-center justify-between lg:py-0 py-4">

@@ -24,6 +24,7 @@ export default function Home() {
 
   return (
     <article className="w-full lg:items-center gap-4 flex flex-col lg:*:w-[50%] *:w-full">
+      {/*
       <div className="rounded-lg border-l-4 border-red-500 bg-red-50 p-4 dark:bg-red-950">
         <p className="text-sm text-red-900 dark:text-red-200">
           💡 <strong>IMPORTANTE :</strong> O seu <code>perfil</code> precisa
@@ -32,7 +33,7 @@ export default function Home() {
         <Button className="mt-4 " size={"sm"} variant={"outline"}>
           Verificar
         </Button>
-      </div>
+      </div> */}
       <Wallet
         bankName="BAI"
         iban="12345678903LASPO"

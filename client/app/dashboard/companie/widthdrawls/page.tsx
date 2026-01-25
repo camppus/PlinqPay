@@ -15,15 +15,7 @@ import { PaymentStatus } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { FaCheckCircle, FaClock, FaTimesCircle, FaEye } from "react-icons/fa";
 import clsx from "clsx";
-
-// Status map
-const statusMap: Record<PaymentStatus, { icon: JSX.Element; color: string }> = {
-  [PaymentStatus.PAID]: { icon: <FaCheckCircle />, color: "green" },
-  [PaymentStatus.PENDING]: { icon: <FaClock />, color: "yellow" },
-  [PaymentStatus.FAILED]: { icon: <FaTimesCircle />, color: "red" },
-  [PaymentStatus.APPROVED]: { icon: <FaCheckCircle />, color: "blue" },
-  [PaymentStatus.REJECTED]: { icon: <FaTimesCircle />, color: "gray" },
-};
+import { statusMap } from "@/components/Transactions";
 
 export default function WithdrawalsPage() {
   const [openSheet, setOpenSheet] = useState(false);
@@ -47,7 +39,7 @@ export default function WithdrawalsPage() {
   return (
     <div className="w-full lg:w-[50%] flex flex-col gap-4 mx-auto">
       {/* Saldo */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-4">
         <div className="p-4 rounded-xl border bg-background shadow-sm text-center">
           <p className="text-sm text-muted-foreground">Já sacado</p>
           <p className="text-xl font-bold text-red-500">
@@ -80,21 +72,8 @@ export default function WithdrawalsPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge
-                    variant={
-                      w.status === PaymentStatus.PAID ? "default" : "outline"
-                    }
-                    className={clsx(
-                      "flex items-center gap-1",
-                      w.status === PaymentStatus.PAID &&
-                        "bg-green-100 text-green-700",
-                      w.status === PaymentStatus.PENDING &&
-                        "bg-yellow-100 text-yellow-700",
-                      w.status === PaymentStatus.REJECTED &&
-                        "bg-gray-100 text-gray-700",
-                    )}
-                  >
-                    {status.icon} {w.status}
+                  <Badge variant={"outline"}>
+                    {status.icon} {status.title}
                   </Badge>
 
                   {/* Ver comprovante */}

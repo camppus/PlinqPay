@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { ReactNode } from "react";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export const statusMap: Record<
   PaymentStatus,
@@ -82,7 +83,7 @@ export function RecentTransaction({ data }: { data: ITransaction }) {
         variant={"link"}
         className="w-[20%] text-white underline text-xs"
       >
-        <a href={`/dashboard/companie/${data.id}`}>Detalhes</a>
+        <Link href={`/dashboard/companie/${data.id}`}>Detalhes</Link>
       </Button>
     </div>
   );

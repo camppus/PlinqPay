@@ -2,7 +2,7 @@
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
-import { Bell, Menu, Moon, Sun } from "lucide-react";
+import { Bell, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { ReactNode, useState } from "react";
@@ -28,7 +28,7 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
     {
       title: "Definições",
       icon: <i className="fi fi-rr-settings" />,
-      to: "/dashboard/companie/settings",
+      to: "/dashboard/companie/profile",
     },
   ];
 
@@ -36,12 +36,14 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
 
   return (
     <main className="flex flex-col gap-4">
-      <header className="fixed z-33 flex items-center border-b justify-between w-full left-0 top-0 md:p-4 py-2 bg-transparent backdrop-blur-xl">
+      <header className="fixed z-33 flex items-center border-b justify-between w-full left-0 top-0 md:p-4 px-3 py-2 bg-transparent backdrop-blur-xl">
         <Logo />
         <div>
-          <Button size={"lg"} variant={"ghost"}>
-            <Bell />
-          </Button>
+          <Link href={"/dashboard/companie/notification"}>
+            <Button size={"lg"} variant={"ghost"}>
+              <Bell />
+            </Button>
+          </Link>
 
           <Button
             variant="ghost"
@@ -55,7 +57,9 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
           </Button>
         </div>
       </header>
-      <section className="min-h-screen md:py-30 py-22 md:px-4 px-2">{children}</section>
+      <section className="min-h-screen md:py-30 py-22 md:px-4 px-2">
+        {children}
+      </section>
       <footer className="fixed z-3 flex bottom-0 left-0 justify-center items-center  w-full  min-h-17 md:py-4 p-2 ">
         <span className=" grid grid-cols-4  gap-5 w-full   xl:w-[35%]  md:w-[90%]  border dark:border-white/4 p-2 md:p-4 rounded-full bg-transparent backdrop-blur-3xl">
           {navs.map((item, idx) => (

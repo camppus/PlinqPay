@@ -123,7 +123,7 @@ export default function Home() {
         <div className="flex  justify-between">
           <Striped alt={"50"} />
           <span className="flex-1 flex lg:flex-row flex-col justify-between items-center gap-5 px-4">
-            <div className="flex  relative lg:text-4xl text-4xl lg:text-start lg:w-[30%]  lg:mb-0 mb-4 text-center lg:h-full">
+            <div className="flex relative lg:text-3xl text-2xl lg:text-start lg:w-[35%]  lg:mb-0 mb-4 text-center lg:h-full">
               <ShinyText
                 text="Estamos em grandes projectos como"
                 speed={2}
@@ -139,7 +139,7 @@ export default function Home() {
               />
               <span className="absolute hidden lg:flex  z-455 h-full border right-0 top-0  border-dashed"></span>
             </div>
-            <div className="flex-1 ">
+            <div className="lg:w-[60%] w-full">
               <InfiniteImageScroller items={enterprises} />
             </div>
           </span>
@@ -320,7 +320,8 @@ export default function Home() {
             <a href="/docs">
               <Button
                 size={"lg"}
-                className="text-blue-500 rounded-full hover:bg-white bg-white"
+                variant={"outline"}
+                className=" text-blue-500 rounded-full hover:bg-white bg-white"
               >
                 Vai , clica neste botão <ArrowRight />{" "}
               </Button>

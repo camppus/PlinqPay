@@ -28,12 +28,17 @@ export function Header() {
 
         {/* Menu desktop */}
         <nav className="flex items-center gap-4 text-sm">
-          <a href="/docs" className="hover:text-blue-500 lg:flex hidden  transition-all">
+          <a
+            href="/docs"
+            className="hover:text-blue-500 lg:flex hidden  transition-all"
+          >
             Documentação
           </a>
-          <Button size="sm" className="text-white">
-            Cadastre-se
-          </Button>
+          <a href="/auth">
+            <Button size="sm" className="text-white">
+              Cadastre-se
+            </Button>
+          </a>
           <Button
             variant="ghost"
             className="hover:bg-transparent dark:hover:bg-transparent opacity-80 hover:opacity-100"

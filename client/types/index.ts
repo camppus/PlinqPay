@@ -60,9 +60,6 @@ export enum WebhookDeliveryStatus {
   FAILED = "FAILED",
 }
 
-
-
-
 export interface ITenant {
   id: string;
   cursor: number;
@@ -88,7 +85,6 @@ export interface ITenant {
   withdrawals?: IWithdrawal[];
 }
 
-
 export interface IKycValidation {
   id: string;
   companieId: string;
@@ -106,7 +102,6 @@ export interface IKycValidation {
   companie?: ITenant;
 }
 
-
 export interface IApiSecretKey {
   id: string;
   title: string;
@@ -119,7 +114,6 @@ export interface IApiSecretKey {
 
   companie?: ITenant;
 }
-
 
 export interface ITransaction {
   id: string;
@@ -154,7 +148,6 @@ export interface ITransaction {
   webhooksDelivery?: IWebhookDelivery[];
 }
 
-
 export interface ITransactionItem {
   id: string;
   transactionId: string;
@@ -166,7 +159,6 @@ export interface ITransactionItem {
 
   transaction?: ITransaction;
 }
-
 
 export interface ITransactionClientInfo {
   id: string;
@@ -211,7 +203,6 @@ export interface IWallet {
   withdrawals?: IWithdrawal[];
 }
 
-
 export interface IWithdrawal {
   id: string;
   walletId: string;
@@ -229,8 +220,6 @@ export interface IWithdrawal {
   wallet?: IWallet;
 }
 
-
-
 export interface INotification {
   id: string;
   entitieId: string;
@@ -242,4 +231,12 @@ export interface INotification {
   updatedAt: Date;
 
   companie?: ITenant;
+}
+
+export interface Istats {
+  title: string;
+  subttile: string;
+  description: string;
+  amount: number;
+  isCoin: boolean;
 }

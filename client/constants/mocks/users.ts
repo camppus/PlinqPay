@@ -1,0 +1,186 @@
+import { ITenant, Role, VerificationStatus } from "@/types";
+
+export const tenantsMock: ITenant[] = [
+  {
+    id: "cmp_001",
+    cursor: 1,
+    title: "PliqPay Fintech",
+    email: "admin@pliqpay.ao",
+    phone: "+244 923 000 111",
+    password: "hashed_password",
+    role: Role.SUPERCOMPANIE,
+    isActive: true,
+    isVerified: true,
+    createdAt: new Date("2024-01-10"),
+    updatedAt: new Date(),
+
+    totalErned: 850000,
+    totalDisponible: 215000,
+    totalErnedWithTax: 910000,
+
+    wallet: {
+      id: "wallet_001",
+      companieId: "cmp_001",
+      walletHolder: "PliqPay Fintech",
+      iban: "AO06000400012345678901",
+      bank: "Banco BAI",
+      isVerified: true,
+      createdAt: new Date("2024-01-15"),
+      updatedAt: new Date(),
+    },
+
+    kycValidation: {
+      id: "kyc_001",
+      companieId: "cmp_001",
+      documentFrontUrl: "/mock/kyc/front.jpg",
+      documentBackUrl: "/mock/kyc/back.jpg",
+      bi: "004455667LA045",
+      status: VerificationStatus.VERIFIED,
+      verified: true,
+      verifiedAt: new Date("2024-01-20"),
+      expiredAt: new Date("2030-01-01"),
+      createdAt: new Date("2024-01-15"),
+      updatedAt: new Date(),
+    },
+
+    keys: [],
+    transactions: [],
+    withdrawals: [],
+    notifications: [],
+  },
+
+  {
+    id: "cmp_002",
+    cursor: 2,
+    title: "PayWave Angola",
+    email: "contact@paywave.ao",
+    phone: "+244 934 112 222",
+    password: "hashed_password",
+    role: Role.COMPANIE,
+    isActive: true,
+    isVerified: true,
+    createdAt: new Date("2024-02-02"),
+    updatedAt: new Date(),
+
+    totalErned: 420000,
+    totalDisponible: 98000,
+    totalErnedWithTax: 455000,
+
+    wallet: {
+      id: "wallet_002",
+      companieId: "cmp_002",
+      walletHolder: "PayWave Angola",
+      iban: "AO06000400098765432100",
+      bank: "Banco BIC",
+      isVerified: true,
+      createdAt: new Date("2024-02-05"),
+      updatedAt: new Date(),
+    },
+
+    kycValidation: {
+      id: "kyc_002",
+      companieId: "cmp_002",
+      documentFrontUrl: "/mock/kyc/front.jpg",
+      documentBackUrl: "/mock/kyc/back.jpg",
+      bi: "003344556LA123",
+      status: VerificationStatus.VERIFIED,
+      verified: true,
+      verifiedAt: new Date("2024-02-10"),
+      expiredAt: new Date("2029-01-01"),
+      createdAt: new Date("2024-02-05"),
+      updatedAt: new Date(),
+    },
+
+    keys: [],
+    transactions: [],
+    withdrawals: [],
+    notifications: [],
+  },
+
+  {
+    id: "cmp_003",
+    cursor: 3,
+    title: "KwanzaTech",
+    email: "support@kwanzatech.ao",
+    phone: "+244 912 778 333",
+    password: "hashed_password",
+    role: Role.COMPANIE,
+    isActive: true,
+    isVerified: false,
+    createdAt: new Date("2024-03-01"),
+    updatedAt: new Date(),
+
+    totalErned: 120000,
+    totalDisponible: 120000,
+    totalErnedWithTax: 130000,
+
+    wallet: {
+      id: "wallet_003",
+      companieId: "cmp_003",
+      walletHolder: "KwanzaTech",
+      iban: "AO06000400011122233344",
+      bank: "Banco Sol",
+      isVerified: false,
+      createdAt: new Date("2024-03-02"),
+      updatedAt: new Date(),
+    },
+
+    kycValidation: {
+      id: "kyc_003",
+      companieId: "cmp_003",
+      documentFrontUrl: "/mock/kyc/front.jpg",
+      documentBackUrl: "/mock/kyc/back.jpg",
+      bi: "009988776LA888",
+      status: VerificationStatus.PENDING,
+      verified: false,
+      createdAt: new Date("2024-03-02"),
+      updatedAt: new Date(),
+      expiredAt: new Date(),
+    },
+
+    keys: [],
+    transactions: [],
+    withdrawals: [],
+    notifications: [],
+  },
+
+  {
+    id: "cmp_004",
+    cursor: 4,
+    title: "FastPay",
+    email: "hello@fastpay.ao",
+    phone: "+244 921 456 789",
+    password: "hashed_password",
+    role: Role.COMPANIE,
+    isActive: false,
+    isVerified: false,
+    createdAt: new Date("2023-12-12"),
+    updatedAt: new Date(),
+
+    totalErned: 30000,
+    totalDisponible: 0,
+    totalErnedWithTax: 32000,
+
+    wallet: null,
+
+    kycValidation: {
+      id: "kyc_004",
+      companieId: "cmp_004",
+      documentFrontUrl: "/mock/kyc/front.jpg",
+      documentBackUrl: "/mock/kyc/back.jpg",
+      bi: "001122334LA000",
+      status: VerificationStatus.REJECTED,
+      verified: false,
+      createdAt: new Date("2023-12-13"),
+      updatedAt: new Date(),
+      expiredAt: new Date(),
+    },
+
+    keys: [],
+    transactions: [],
+    withdrawals: [],
+    notifications: [],
+  },
+
+  // 👉 podes duplicar este padrão até cmp_010
+];

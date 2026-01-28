@@ -41,6 +41,7 @@ export const statusMap: Record<
     color: "red",
     title: "Falhou",
   },
+  
 };
 
 export function RecentTransaction({ data }: { data: ITransaction }) {

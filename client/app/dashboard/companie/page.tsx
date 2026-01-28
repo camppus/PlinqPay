@@ -85,6 +85,25 @@ export default function Home() {
     }
   };
 
+  const update = async () => {
+    if (!iban || !bank || !bankHolder)
+      return toast.info("Preencha todos os campos");
+    const token = localStorage.getItem("token") as string;
+    setProcessing(true);
+    const res = await new TenantService(token).updateWallet({
+      bank,
+      iban,
+      walletHolder: bankHolder,
+    });
+    toast.info(res?.message ?? "Cateira actualizada");
+    setProcessing(false);
+    if (res?.id) {
+      setUser({
+        ...user,
+        wallet: res,
+      });
+    }
+  };
   const bancosAngola = [
     { value: "BNA", label: "Banco Nacional de Angola (BNA)" },
     { value: "BPC", label: "Banco de Poupança e Crédito (BPC)" },
@@ -110,12 +129,14 @@ export default function Home() {
       setTimeout(() => {
         setIban(user?.wallet?.iban ?? "");
         setBank(user?.wallet?.bank ?? "");
+        setBankHoder(user?.wallet?.walletHolder ?? "");
         setLoad(false);
       }, constants.TIMEOUT_LOADER);
     }
 
     get();
   }, [page]);
+
   return (
     <article className="w-full lg:items-center gap-4 flex flex-col lg:*:w-[50%] *:w-full">
       {load ? (
@@ -221,6 +242,81 @@ export default function Home() {
               </DialogContent>
             </Dialog>
           )}
+          {user.wallet && (
+            <Dialog>
+              <DialogTrigger asChild disabled={!user.isVerified}>
+                <Button variant={"outline"} className="text-white">
+                  Actualizar carteira
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Cadastro de Carteira</DialogTitle>
+                  <DialogDescription>
+                    Informe o banco e o IBAN angolano da sua conta.
+                  </DialogDescription>
+                </DialogHeader>
+                <form action="" className="flex flex-col gap-4">
+                  <Label>Titular</Label>
+                  <InputGroup>
+                    <InputGroupInput
+                      required
+                      value={bankHolder}
+                      onChange={(e) =>
+                        setBankHoder(e.target.value.toUpperCase())
+                      }
+                      placeholder="Nome correto do titular"
+                    />
+                    <InputGroupAddon>
+                      <IconUser />
+                    </InputGroupAddon>
+                  </InputGroup>
+                  <Label>IBAN</Label>
+                  <InputGroup>
+                    <InputGroupInput
+                      required
+                      value={iban}
+                      onChange={(e) => setIban(e.target.value.toUpperCase())}
+                      placeholder="Insira o IBAN angolano"
+                    />
+                    <InputGroupAddon>
+                      <IconCoin />
+                    </InputGroupAddon>
+                  </InputGroup>
+
+                  <Label>Banco</Label>
+                  <Select value={bank} onValueChange={setBank}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecione o banco" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {bancosAngola.map((b) => (
+                        <SelectItem key={b.value} value={b.value}>
+                          {b.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </form>
+                <DialogFooter className="mt- w-full grid grid-cols-2">
+                  <Button
+                    disabled={processing}
+                    className="dark:text-white"
+                    onClick={update}
+                  >
+                    {processing ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      "Actualizar"
+                    )}
+                  </Button>
+                  <DialogClose asChild>
+                    <Button variant={"outline"}>Cancelar</Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
 
           <span className="mt-4">
             {!isArrayMappble(recentTrasactions) ? (
@@ -249,30 +345,10 @@ export default function Home() {
                   {recentTrasactions.map((item, idx) => (
                     <RecentTransaction data={item} key={idx} />
                   ))}
-                  <span className="flex gap-3 mt-2 justify-center">
-                    <Button
-                      disabled={page <= 1}
-                      onClick={() => {
-                        setPage((prev) => prev - 1);
-                      }}
-                      variant={"outline"}
-                      className="rounded-full"
-                      size={"icon"}
-                    >
-                      <ArrowLeft />
-                    </Button>
-                    <Button
-                      disabled={page >= lastPage}
-                      variant={"outline"}
-                      className="rounded-full"
-                      size={"icon"}
-                      onClick={() => {
-                        setPage((prev) => prev + 1);
-                      }}
-                    >
-                      <ArrowRight />
-                    </Button>
-                  </span>
+                  <p className="text-xs mt-5 text-center dark:opacity-90">
+                    Aqui aparece apenas as 20 transações recentes , o restante
+                    podes consultar no teu sistema!
+                  </p>
                 </span>
               </span>
             )}

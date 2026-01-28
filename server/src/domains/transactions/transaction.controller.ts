@@ -51,7 +51,7 @@ export class TransactionController {
     @Query('page', IsPositiveNumberPipe) page: number,
     @CurrentUser(ParseUUIDPipe) tenantId: string,
   ) {
-    return await this.service.getByTenant(page, tenantId);
+    return await this.service.getByTenant(1, tenantId);
   }
 
   @Get()

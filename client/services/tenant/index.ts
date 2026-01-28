@@ -94,4 +94,18 @@ export default class TenantService {
       };
     }
   }
+  public async updateWallet(body: {
+    walletHolder: string;
+    iban: string;
+    bank: string;
+  }) {
+    try {
+      const res = await api.put("/wallets", body);
+      return res.data;
+    } catch (error: any) {
+      return {
+        message: error?.response?.data?.message || "Erro ao atualizar conta",
+      };
+    }
+  }
 }

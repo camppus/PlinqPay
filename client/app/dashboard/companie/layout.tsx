@@ -5,15 +5,17 @@ import clsx from "clsx";
 import { Bell, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, use, useEffect, useState } from "react";
 import NotificationService from "@/services/Notification";
 import constants from "@/constants";
+import { useUser } from "@/context/UserContext";
+import { toast } from "sonner";
 
 export default function ComapnieLayout({ children }: { children: ReactNode }) {
   const [unred, setUnread] = useState(0);
   const [canPlaySound, setCanPlaySound] = useState(false);
   const [once, setOnce] = useState(false);
-
+  const { user } = useUser();
   useEffect(() => {
     async function get() {
       const token = localStorage.getItem("token") as string;
@@ -70,6 +72,9 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
     },
   ];
 
+  if (!user) {
+    return null;
+  }
   const [active, setACtive] = useState(0);
 
   return (
@@ -107,8 +112,15 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
             <Link
               href={item.to}
               key={idx}
-              onClick={() => {
-                setACtive(idx);
+              onClick={(e) => {
+                if (user.isVerified) {
+                  setACtive(idx);
+                  return;
+                }
+                toast.info("Aguarde a verificação", {
+                  description: "Aguarde a verificação para poder navegar no sistema",
+                });
+                e.preventDefault();
               }}
               className={clsx(
                 "transition-all opacity-50  hover:scale-90 flex gap-2 justify-center  items-center  border p-2 px-3 rounded-full",

@@ -123,7 +123,7 @@ export default function WithdrawalsPage() {
       </div>
 
       <Button
-        disabled={user.totalDisponible == 1}
+        disabled={user.totalDisponible >= 10000}
         className=" text-white"
         onClick={() => setOpenSheet(true)}
       >

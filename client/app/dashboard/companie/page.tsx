@@ -229,7 +229,7 @@ export default function Home() {
                   <EmptyMedia variant="icon">
                     <FolderRoot />
                   </EmptyMedia>
-                  <EmptyTitle>Sem tranações</EmptyTitle>
+                  <EmptyTitle>Sem transações</EmptyTitle>
                   <EmptyDescription>
                     Assim que os pagamentos começarem a surgir apareceram aqui
                     os 5 mais recentes pagamento

@@ -12,13 +12,13 @@ export class PrismaWidthDrawlRepo implements IWidthdrawsRepositories {
     tenantId: string,
     wallet: Wallet,
   ): Promise<Withdrawals> {
-    return (await this.prisma.withdrawals.create({
+    return await this.prisma.withdrawals.create({
       data: {
         companieId: tenantId,
         amount: Number(data.amount),
         walletId: wallet.id,
       },
-    })) as Withdrawals;
+    }) as Withdrawals;
   }
 
   public async getAll(
@@ -75,14 +75,14 @@ export class PrismaWidthDrawlRepo implements IWidthdrawsRepositories {
     const offset = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
-      this.prisma.wallet.findMany({
+      this.prisma.withdrawals.findMany({
         take: limit,
         skip: offset,
         where: {
           companieId: id,
         },
       }),
-      this.prisma.wallet.count({
+      this.prisma.withdrawals.count({
         where: {
           companieId: id,
         },

@@ -10,4 +10,9 @@ export interface IWidthdrawsRepositories {
   ): Promise<Withdrawals>;
   getAll(page: number, limit: number): Promise<IPAginationGet<Withdrawals[]>>;
   getById(id: string): Promise<Withdrawals | null>;
+  getAllBytenant(
+    page: number,
+    limit: number,
+    id: string,
+  ): Promise<IPAginationGet<Withdrawals[]>>;
 }

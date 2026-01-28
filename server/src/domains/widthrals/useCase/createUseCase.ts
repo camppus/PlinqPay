@@ -36,23 +36,17 @@ export class CreateWidthDrawUseCase {
         message: 'Saldo insuficiente',
       });
     }
-    const pendwinWirdRwasl = wallet.withdrawals.filter((item) => {
-      return item.status == 'PENDING';
-    });
-
-    if (pendwinWirdRwasl.length > 0) {
-      throw new ConflictException({
-        message: 'Precisas aguardar a útima pendência ser concluida',
-      });
-    }
 
     const widhtraw = await this.widthrawlRepo.create(data, tenantId, wallet);
     await this.notifier.create({
       companieId: tenantId,
       entitieId: widhtraw.id,
-      message: `Saque reprovado ${Number(data.amount).toLocaleString('pt')},00 kz`,
+      message: `Saque criado ${Number(data.amount).toLocaleString('pt')},00 kz`,
       type: 'WITHDRAWALS',
     });
-    return widhtraw;
+    return {
+      data: widhtraw,
+      message: 'Criado com sucesso',
+    };
   }
 }

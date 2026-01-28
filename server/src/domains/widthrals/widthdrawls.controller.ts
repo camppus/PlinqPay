@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -16,7 +17,7 @@ import IsActiveTenantGuard from '@/guards/isTenantVerified.guard';
 import IsAdminGuard from '@/guards/isAdmin.guard';
 
 @ApiTags('Saque')
-@Controller('withdrawals')
+@Controller('v1/withdrawals')
 @UseGuards(IsActiveTenantGuard)
 export class WithdrawalsController {
   constructor(private readonly withdrawlService: WidthdrawlService) {}
@@ -33,13 +34,24 @@ export class WithdrawalsController {
     return await this.withdrawlService.create(data, tenantId);
   }
 
+  @Get('/my')
+  @ApiOperation({
+    summary: 'Listar saques por usuário',
+  })
+  async getByTenant(
+    @Query('page', ParseIntPipe) page = 1,
+    @CurrentUser() id: string,
+  ) {
+    return await this.withdrawlService.getByTenant(Number(page), id);
+  }
+
   @Get()
   @UseGuards(IsAdminGuard)
   @ApiOperation({
     summary: 'Listar saques',
     description: 'Lista os saques com paginação',
   })
-  async get(@Query('page') page = 1) {
+  async get(@Query('page', ParseIntPipe) page = 1) {
     return await this.withdrawlService.get(Number(page));
   }
 

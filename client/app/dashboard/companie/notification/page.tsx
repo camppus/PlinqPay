@@ -81,7 +81,7 @@ export default function NotificationsPage() {
                   notif.type == NotificationType.PAYMENT
                     ? `/dashboard/companie/${notif.id}`
                     : notif.type == NotificationType.WITHDRAWALS
-                      ? "`/dashboard/companie/widthdrawls"
+                      ? "/dashboard/companie/widthdrawls"
                       : "#";
                 return (
                   <Link

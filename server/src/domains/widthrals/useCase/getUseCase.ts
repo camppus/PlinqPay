@@ -7,4 +7,13 @@ export class GetWidthdrawlUsecase {
     const widthdrawls = await this.widthrawlRepo.getAll(page, limit);
     return widthdrawls;
   }
+
+  public async getBytenant(page: number, limit: number, tenantId: string) {
+    const widthdrawls = await this.widthrawlRepo.getAllBytenant(
+      page,
+      limit,
+      tenantId,
+    );
+    return widthdrawls;
+  }
 }

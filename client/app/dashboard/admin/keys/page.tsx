@@ -45,7 +45,7 @@ export default function ApiKeys() {
       setStats([
         {
           title: "Total de Chaves",
-          subttile: "Chaves cadastradas",
+          subtitle: "Chaves cadastradas",
           description:
             "Número total de chaves de API registradas na plataforma",
           amount: keys.length, // total de chaves
@@ -53,21 +53,21 @@ export default function ApiKeys() {
         },
         {
           title: "Chaves Ativas",
-          subttile: "Chaves em uso",
+          subtitle: "Chaves em uso",
           description: "Chaves de API que estão ativas e podem ser usadas",
           amount: keys.filter((k) => k.isActive).length, // total ativas
           isCoin: false,
         },
         {
           title: "Chaves Inativas",
-          subttile: "Chaves desativadas",
+          subtitle: "Chaves desativadas",
           description: "Chaves que foram desativadas pelo admin",
           amount: keys.filter((k) => !k.isActive).length, // total inativas
           isCoin: false,
         },
         {
           title: "Chaves Recentes",
-          subttile: "Últimas criadas",
+          subtitle: "Últimas criadas",
           description: "Número de chaves criadas nos últimos 7 dias",
           amount: keys.filter(
             (k) =>
@@ -106,7 +106,7 @@ export default function ApiKeys() {
                   </CardHeader>
                   <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex gap-2 font-medium">
-                      {item.subttile} <IconTrendingUp className="size-4" />
+                      {item.subtitle} <IconTrendingUp className="size-4" />
                     </div>
                     <div className="text-muted-foreground">
                       {item.description}

@@ -87,9 +87,9 @@ export function Hero() {
             src="/dash.jpg"
             alt=""
             className="
-        w-full opacity-50
+        w-full dark:opacity-50
         object-cover
-        h-full animate-pulse grayscale-100
+        h-full  dark:grayscale-100
         rounded-sm
       "
           />

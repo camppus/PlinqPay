@@ -15,5 +15,5 @@ export function formatCurrency(value: number | string) {
     style: "currency",
     currency: "AOA",
     minimumFractionDigits: 0,
-  });
+  })
 }

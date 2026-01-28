@@ -6,14 +6,14 @@ type IWalletProps = {
 
 export function Wallet({ bankName, iban, userName }: IWalletProps) {
   return (
-    <div className="relative w-90 md:w-full h-55 rounded-2xl overflow-hidden">
+    <div className="relative  w-full md:w-full h-55 rounded-2xl overflow-hidden">
       <div className="absolute inset-0 bg-linear-to-br from-blue-400 via-blue-600 to-black opacity-90" />
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl" />
       <img src="/P.png" alt="" className="absolute h-8 right-3 top-4" />
       <div className="absolute -inset-1 rounded-2xl bg-linear-to-r from-black/10 to-blue-600 blur opacity-40" />
 
       <div className="relative z-2 h-full w-full p-6 flex flex-col justify-between text-white">
-        <div className="flex justify-between items-start">
+        <div className="flex  ">
           <span className="text-lg font-semibold tracking-wide">
             {bankName}
           </span>
@@ -36,7 +36,7 @@ export function Wallet({ bankName, iban, userName }: IWalletProps) {
         <div className="flex justify-between items-end">
           <div>
             <p className="text-xs uppercase opacity-70">Titular</p>
-            <p className="font-medium text-sm tracking-wide">{userName}</p>
+            <p className="font-medium text-sm tracking-wide mt-1">{userName}</p>
           </div>
 
           <span className="text-sm opacity-80">Cartão</span>

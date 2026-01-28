@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
 import { Menu, Moon, Sun, X } from "lucide-react"; // ícones do hamburger
+import Logo from "@/components/Logo";
 
 export function Header() {
   const { theme, setTheme } = useTheme();
@@ -15,13 +16,7 @@ export function Header() {
       <div className="flex items-center justify-between w-full lg:px-12 px-4">
         {/* Logo */}
         <div>
-          <img
-            src="/logo.png"
-            alt="Logo"
-            className={clsx("h-10 w-28 object-contain", {
-              "brightness-0 grayscale-100": theme === "light",
-            })}
-          />
+          <Logo />
         </div>
 
         {/* Menu desktop */}

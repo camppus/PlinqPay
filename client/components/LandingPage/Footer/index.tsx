@@ -1,3 +1,4 @@
+import Logo from "@/components/Logo";
 import {
   FaFacebookF,
   FaTwitter,
@@ -17,7 +18,7 @@ export default function Footer() {
     <footer className="bg-background/90 backdrop-blur border-b pb-5 border-dashed">
       <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col lg:flex-row justify-between items-center gap-6">
         <div className="flex flex-col lg:flex-row items-center gap-4">
-          <img src="/logo.png" className="h-10  object-contain" alt="" />
+          <Logo />
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} PlinqPay. Todos os direitos reservados.
           </p>
@@ -37,7 +38,6 @@ export default function Footer() {
           ))}
         </div>
       </div>
-      <p className="text-center text-muted">by Francisco Diakomas@</p>
     </footer>
   );
 }

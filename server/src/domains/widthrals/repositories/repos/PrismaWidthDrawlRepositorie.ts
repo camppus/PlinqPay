@@ -26,28 +26,34 @@ export class PrismaWidthDrawlRepo implements IWidthdrawsRepositories {
     limit: number,
   ): Promise<IPAginationGet<Withdrawals[]>> {
     const offset = (page - 1) * limit;
-    const data = await this.prisma.wallet.findMany({
-      include: {
-        companie: {
-          select: {
-            title: true,
-            id: true,
-            totalDisponible: true,
-            totalErned: true,
-            phone: true,
-            email: true,
+
+    const [data, total] = await Promise.all([
+      this.prisma.wallet.findMany({
+        include: {
+          companie: {
+            select: {
+              title: true,
+              id: true,
+              totalDisponible: true,
+              totalErned: true,
+              phone: true,
+              email: true,
+            },
           },
         },
-      },
-      take: limit,
-      skip: offset,
-    });
+        take: limit,
+        skip: offset,
+      }),
+      this.prisma.wallet.count({}),
+    ]);
 
+    const totalPages = Math.ceil(total / limit);
     return {
       data: data as any,
       pagination: {
         limit,
-        cursor: page,
+        page,
+        lastPage: totalPages,
       },
       total: data.length,
     };
@@ -59,5 +65,39 @@ export class PrismaWidthDrawlRepo implements IWidthdrawsRepositories {
         id,
       },
     });
+  }
+
+  public async getAllBytenant(
+    page: number,
+    limit: number,
+    id: string,
+  ): Promise<IPAginationGet<Withdrawals[]>> {
+    const offset = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.wallet.findMany({
+        take: limit,
+        skip: offset,
+        where: {
+          companieId: id,
+        },
+      }),
+      this.prisma.wallet.count({
+        where: {
+          companieId: id,
+        },
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+    return {
+      data: data as any,
+      pagination: {
+        limit,
+        page,
+        lastPage: totalPages,
+      },
+      total: data.length,
+    };
   }
 }

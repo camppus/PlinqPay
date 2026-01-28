@@ -19,7 +19,7 @@ export class PrismaWalletRepositorie implements IWalletRepositorie {
       },
     });
   }
-z
+  z;
   public async getAll(
     page: number,
     limit: number,
@@ -33,8 +33,9 @@ z
     return {
       data: wallets as any,
       pagination: {
-        cursor: page,
+        page,
         limit,
+        lastPage: 0,
       },
       total: wallets.length,
     };

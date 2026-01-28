@@ -5,9 +5,11 @@ export interface IPAginationGet<T> {
   data: T[];
   total: number;
   pagination: {
-    cursor: number;
     limit: number;
+    page: number;
+    lastPage: number;
   };
+  stats?: any;
 }
 
 export interface IRepository<T> {

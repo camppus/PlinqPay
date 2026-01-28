@@ -16,12 +16,11 @@ export class NotificationsController {
   })
   async get(
     @Query('page', IsPositiveNumberPipe) page = 1,
-    @Query('limit', IsPositiveNumberPipe) limit = 20,
     @CurrentUser() tenantId: string,
   ) {
     return await this.notificationsService.get(
       Number(page),
-      Number(limit),
+      Number(50),
       tenantId,
     );
   }

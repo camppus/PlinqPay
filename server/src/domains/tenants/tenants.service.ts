@@ -27,7 +27,7 @@ export class TenantsService {
     );
     return {
       acessToken: tokenData,
-      message: 'Verifique a sua conta',
+      message: 'Seja bem vindo',
       data: created,
     };
   }
@@ -36,7 +36,7 @@ export class TenantsService {
     const createFacede = new UpdateCompanieUseCase(this.repo);
     const updated = await createFacede.execute(data, id);
     return {
-      message: 'Verifique a sua conta',
+      message: 'Conta actualizada',
       data: updated,
     };
   }

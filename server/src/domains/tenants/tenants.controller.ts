@@ -80,14 +80,4 @@ export default class TennatsController {
   public async toogle(@Param('id', ParseUUIDPipe) id: string) {
     return this.TenantsService.toogle(id);
   }
-
-  @Delete(':id')
-  @UseGuards(IsAdminGuard)
-  @ApiOperation({
-    summary: 'Deletar uma empresa',
-  })
-  @ApiHideProperty()
-  public async delete(@Param('id', ParseUUIDPipe) id: string) {
-    return this.TenantsService.delete(id);
-  }
 }

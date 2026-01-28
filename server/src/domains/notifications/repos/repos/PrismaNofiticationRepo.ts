@@ -49,8 +49,9 @@ export class PrismaNotificationRepository implements INotificationRepositorie {
         skip,
         take: limit,
         orderBy: [
-          { isRead: 'asc' }, // false primeiro
+          { isRead: 'asc' },
           { createdAt: 'desc' },
+          { updatedAt: 'desc' },
         ],
         where: {
           companieId: tenantId,
@@ -59,12 +60,14 @@ export class PrismaNotificationRepository implements INotificationRepositorie {
       this.prisma.notification.count(),
     ]);
 
+    const totalPages = Math.ceil(total / limit);
     return {
       data,
       total,
       pagination: {
-        cursor: page,
+        page,
         limit,
+        lastPage: totalPages,
       },
     };
   }

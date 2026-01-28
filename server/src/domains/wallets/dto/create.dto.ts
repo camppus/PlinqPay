@@ -8,7 +8,6 @@ export class CreateWalletDTO {
   @IsString()
   @IsNotEmpty()
   walletHolder: string;
-  @IsIBAN()
   @IsNotEmpty()
   @ApiProperty()
   iban: string;

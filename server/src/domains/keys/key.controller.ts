@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -26,18 +27,24 @@ export default class APiKeyController {
   })
   @UseGuards(IsTenantVerifiedGuard)
   @Post()
-  public async create(@CurrentUser(ParseUUIDPipe) tenantId: string) {
-    return await this.service.create(tenantId);
+  public async create(
+    @CurrentUser(ParseUUIDPipe) tenantId: string,
+    @Body('title') title: string,
+  ) {
+    return await this.service.create(tenantId , title);
   }
 
+  @UseGuards(IsTenantVerifiedGuard)
   @ApiOperation({
     summary: 'toogle de api-key',
     description: 'Apenas para admin',
   })
   @Patch(':apikeyId')
-  @UseGuards(IsAdminGuard)
-  public async toogle(@Param('apikeyId', ParseUUIDPipe) apikeyId: string) {
-    return await this.service.toogle(apikeyId);
+  public async toogle(
+    @Param('apikeyId', ParseUUIDPipe) apikeyId: string,
+    @CurrentUser() userid: string,
+  ) {
+    return await this.service.toogle(apikeyId, userid);
   }
 
   @ApiOperation({

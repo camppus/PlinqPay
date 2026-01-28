@@ -77,19 +77,24 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
     limit: number,
   ): Promise<IPAginationGet<Transaction>> {
     const offset = (page - 1) * limit;
-    const payments = await this.prisma.transaction.findMany({
-      take: limit,
-      skip: offset,
-      include: {
-        client: true,
-        items: true,
-      },
-    });
+    const [payments, total] = await Promise.all([
+      this.prisma.transaction.findMany({
+        take: limit,
+        skip: offset,
+        include: {
+          client: true,
+          items: true,
+        },
+      }),
+      this.prisma.transaction.count(),
+    ]);
+    const totalPages = Math.ceil(total / limit);
     return {
       data: payments,
       pagination: {
-        cursor: page,
+        page,
         limit,
+        lastPage: totalPages,
       },
       total: payments.length,
     };
@@ -101,22 +106,37 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
     tenantId: string,
   ): Promise<IPAginationGet<Transaction>> {
     const offset = (page - 1) * limit;
-    const payments = await this.prisma.transaction.findMany({
-      take: limit,
-      skip: offset,
-      include: {
-        client: true,
-        items: true,
-      },
-      where: {
-        companieId: tenantId,
-      },
-    });
+    const [payments, total] = await Promise.all([
+      this.prisma.transaction.findMany({
+        take: limit,
+        skip: offset,
+        orderBy: [
+          {
+            createdAt: 'desc',
+          },
+          
+        ],
+        include: {
+          client: true,
+          items: true,
+        },
+        where: {
+          companieId: tenantId,
+        },
+      }),
+      this.prisma.transaction.count({
+        where: {
+          companieId: tenantId,
+        },
+      }),
+    ]);
+    const totalPages = Math.ceil(total / limit);
     return {
       data: payments,
       pagination: {
-        cursor: page,
+        page,
         limit,
+        lastPage: totalPages,
       },
       total: payments.length,
     };

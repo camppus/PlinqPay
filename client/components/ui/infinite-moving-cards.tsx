@@ -60,9 +60,11 @@ export const InfiniteImageScroller = ({
             alt="Empresa"
             className="
     h-10 object-contain
-    opacity-50
     transition-all
-    dark:grayscale dark:brightness-110 dark:contrast-110
+    dark:opacity-70
+
+    grayscale brightness-5 contrast-125
+    dark:grayscale-0 dark:brightness-110 dark:contrast-110
   "
           />
         ))}

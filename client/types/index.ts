@@ -235,7 +235,7 @@ export interface INotification {
 
 export interface Istats {
   title: string;
-  subttile: string;
+  subtitle: string;
   description: string;
   amount: number;
   isCoin: boolean;

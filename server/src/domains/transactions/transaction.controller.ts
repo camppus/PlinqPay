@@ -64,7 +64,6 @@ export class TransactionController {
   }
 
   @Get(':id/details')
-  @UseGuards(IsAdminGuard)
   @ApiOperation({
     summary: 'Detalhes do pagamento',
   })

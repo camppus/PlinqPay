@@ -39,13 +39,6 @@ export class WalletController {
     return this.service.getAll(+page, +limit).then((r) => r.data);
   }
 
-  @Get('my/wallets')
-  @UseGuards(IsTenantVerifiedGuard)
-  @ApiOperation({ summary: 'Detalhes da minha carteira' })
-  async getMy(@CurrentUser() unique: string): Promise<Wallet | null> {
-    return this.service.getByUnique(unique);
-  }
-
   @Get(':unique')
   @UseGuards(IsAdminGuard)
   @ApiOperation({ summary: 'Obter uma carteira pelo ID ou companieId' })

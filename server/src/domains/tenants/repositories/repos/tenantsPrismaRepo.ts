@@ -61,36 +61,93 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
   }
 
   public async get(
-    cursor: number,
+    page: number,
     limit: number,
   ): Promise<IPAginationGet<Tenants>> {
-    const tenants = await this.prisma.tenants.findMany({
-      take: limit,
-      select: {
-        createdAt: true,
-        id: true,
-        updatedAt: true,
-        title: true,
-        email: true,
-        phone: true,
-        isActive: true,
-        isVerified: true,
-        cursor: true,
-      },
-      cursor: { cursor: cursor },
-      orderBy: { cursor: 'asc' },
-      where: {
-        isActive: true,
-        role: 'COMPANIE',
-      },
+    let total = 0;
+    let verified = 0;
+    let pending = 0;
+    let blocked = 0;
+
+    const skip = (page - 1) * limit;
+    const [data, grouped] = await Promise.all([
+      this.prisma.tenants.findMany({
+        take: limit,
+        skip,
+        select: {
+          createdAt: true,
+          id: true,
+          updatedAt: true,
+          title: true,
+          email: true,
+          phone: true,
+          isActive: true,
+          isVerified: true,
+          cursor: true,
+          totalDisponible: true,
+          totalErned: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        where: {
+          role: 'COMPANIE',
+        },
+      }),
+      await this.prisma.tenants.groupBy({
+        by: ['isVerified', 'isActive'],
+        _count: { id: true },
+        where: {
+          role: 'COMPANIE',
+        },
+      }),
+    ]);
+
+    grouped.forEach((g) => {
+      total += g._count.id;
+
+      if (g.isActive && g.isVerified) verified += g._count.id;
+      else if (g.isActive && !g.isVerified) pending += g._count.id;
+      else if (!g.isActive) blocked += g._count.id;
     });
+
+    const totalPages = Math.ceil(total / limit);
     return {
-      data: tenants as Tenants[],
-      total: tenants.length,
+      data: data as Tenants[],
+      total: total,
       pagination: {
-        cursor,
+        page,
         limit,
+        lastPage: totalPages,
       },
+      stats: [
+        {
+          title: 'Total de Usuários',
+          subtitle: 'Usuários cadastrados',
+          description: 'Número total de usuários registrados na plataforma',
+          amount: total,
+          isCoin: false,
+        },
+        {
+          title: 'Usuários Verificados',
+          subtitle: 'KYC aprovado',
+          description: 'Usuários com identidade verificada com sucesso',
+          amount: verified,
+          isCoin: false,
+        },
+        {
+          title: 'Usuários Pendentes',
+          subtitle: 'Aguardando verificação',
+          description: 'Usuários que ainda não concluíram o KYC',
+          amount: pending,
+          isCoin: false,
+        },
+        {
+          title: 'Usuários Bloqueados',
+          subtitle: 'Contas suspensas',
+          description: 'Usuários desativados por violação ou inatividade',
+          amount: blocked,
+          isCoin: false,
+        },
+      ],
     };
   }
 
@@ -111,21 +168,14 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
           },
         ],
       },
-      select: {
-        createdAt: true,
-        id: true,
-        updatedAt: true,
-        title: true,
-        email: true,
-        phone: true,
-        isActive: true,
-        isVerified: true,
-        cursor: true,
+      include: {
+        wallet: true,
       },
     });
+
     return companie
       ? {
-          data: companie as Tenants,
+          data: { ...companie, password: '' } as Tenants,
         }
       : null;
   }
@@ -141,7 +191,7 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
         id,
       },
       data: {
-        isActive: !oldComanie.data.isActive,
+        isVerified: !oldComanie.data.isVerified,
       },
 
       select: {
@@ -176,7 +226,7 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
       },
       data: {
         title: data.title,
-        email: data.title,
+        email: data.email,
         phone: data.phone,
       },
 

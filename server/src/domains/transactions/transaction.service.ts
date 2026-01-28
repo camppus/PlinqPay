@@ -47,7 +47,6 @@ export default class TrasanctionService {
   public async getDetails(id: string, tenantId: string) {
     const getter = new GetPaymentUseCase(this.transactionRepo);
     const response = await getter.getById(id);
-
     if (response?.companieId != tenantId) {
       throw new ForbiddenException({
         message: 'Você não tem permisão para ver este conteudo',

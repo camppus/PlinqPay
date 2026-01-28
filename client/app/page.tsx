@@ -124,19 +124,25 @@ export default function Home() {
           <Striped alt={"50"} />
           <span className="flex-1 flex lg:flex-row flex-col justify-between items-center gap-5 px-4">
             <div className="flex relative lg:text-3xl text-2xl lg:text-start lg:w-[35%]  lg:mb-0 mb-4 text-center lg:h-full">
-              <ShinyText
-                text="Estamos em grandes projectos como"
-                speed={2}
-                delay={0}
-                color="#b5b5b5"
-                shineColor="#ffffff"
-                spread={120}
-                direction="left"
-                yoyo={false}
-                pauseOnHover={false}
-                disabled={false}
-                className="font-bold lg:mt-10"
-              />
+              <div className="lg:text-4xl text-3xl md:pt-6 pt-3">
+                <div className="font-bold dark:flex hidden  ">
+                  <ShinyText
+                    text="Estamos em grandes projectos como"
+                    speed={2}
+                    delay={0}
+                    color="#b5b5b5"
+                    shineColor="#ffffff"
+                    spread={120}
+                    direction="left"
+                    yoyo={false}
+                    pauseOnHover={false}
+                    disabled={false}
+                  />
+                </div>
+                <span className="relative dark:hidden flex  opacity-90 hover:opacity-100 font-bold   flex-col   gap-4   lg:items-center h-full">
+                  Estamos em grandes projectos como
+                </span>
+              </div>
               <span className="absolute hidden lg:flex  z-455 h-full border right-0 top-0  border-dashed"></span>
             </div>
             <div className="lg:w-[60%] w-full">
@@ -149,19 +155,23 @@ export default function Home() {
 
       <span className=" flex flex-col gap-5 lg:px-55 pt-20 px-5">
         <div className="text-center lg:text-5xl text-4xl">
-          <ShinyText
-            text="Atendendo milhões de clientes."
-            speed={2}
-            delay={0}
-            color="#b5b5b5"
-            shineColor="#ffffff"
-            spread={120}
-            direction="left"
-            yoyo={false}
-            pauseOnHover={false}
-            disabled={false}
-            className="font-bold"
-          />
+          <div className="font-bold dark:flex hidden  justify-center items-center">
+            <ShinyText
+              text="Atendendo milhões de clientes."
+              speed={2}
+              delay={0}
+              color="#b5b5b5"
+              shineColor="#ffffff"
+              spread={120}
+              direction="left"
+              yoyo={false}
+              pauseOnHover={false}
+              disabled={false}
+            />
+          </div>
+          <span className="relative dark:hidden flex lg:text-5xl text-4xl opacity-90 hover:opacity-100 font-bold   flex-col   gap-4   lg:items-center h-full">
+            Atendendo milhões de clientes.
+          </span>
         </div>
 
         <aside className="grid lg:grid-cols-4 grid-cols-2 border-dashed border-y mt-10 lg:px-10">
@@ -250,7 +260,7 @@ export default function Home() {
           <img
             src="https://www.abacatepay.com/_next/static/media/imagesupport.21600be7.svg"
             alt=""
-            className="grayscale-100 rounded-md w-full"
+            className="dark:grayscale-100 rounded-md w-full"
           />
         </article>
         <article>

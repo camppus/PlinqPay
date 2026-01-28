@@ -5,9 +5,47 @@ import clsx from "clsx";
 import { Bell, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import NotificationService from "@/services/Notification";
+import constants from "@/constants";
 
 export default function ComapnieLayout({ children }: { children: ReactNode }) {
+  const [unred, setUnread] = useState(0);
+  const [canPlaySound, setCanPlaySound] = useState(false);
+  const [once, setOnce] = useState(false);
+
+  useEffect(() => {
+    async function get() {
+      const token = localStorage.getItem("token") as string;
+      const data = await new NotificationService(token).getUnread();
+      if (canPlaySound && data?.data != unred && !once) {
+        const audio = new Audio("/song.mp3");
+        audio.play();
+        setOnce(true);
+      }
+      setUnread(data?.data ?? 0);
+    }
+
+    get();
+    const interval = setInterval(async () => {
+      await get();
+    }, constants.TIMEOUT_LOADER);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
+
+  useEffect(() => {
+    const enableSound = () => {
+      setCanPlaySound(true);
+      window.removeEventListener("click", enableSound);
+    };
+
+    window.addEventListener("click", enableSound);
+    return () => window.removeEventListener("click", enableSound);
+  }, []);
+
   const { theme, setTheme } = useTheme();
   const navs = [
     {
@@ -39,8 +77,11 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
       <header className="fixed z-33 flex items-center border-b justify-between w-full left-0 top-0 md:p-4 px-3 py-2 bg-transparent backdrop-blur-xl">
         <Logo />
         <div>
-          <Link href={"/dashboard/companie/notification"}>
-            <Button size={"lg"} variant={"ghost"}>
+          <Link
+            href={"/dashboard/companie/notification"}
+            className="relative dark:*:text-white animate-pulse"
+          >
+            <Button size={"lg"} variant={unred > 0 ? "default" : "ghost"}>
               <Bell />
             </Button>
           </Link>

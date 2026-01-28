@@ -9,10 +9,13 @@ import { ApiSecretKeys } from '@prisma/client';
 export class PrismaAPiKeyRepositorie implements ApiKeyRepositorie {
   private readonly prisma = PrismaRepositorie.getInstance();
   private readonly assignature = new Assignature();
-  public async create(tenantId: string): Promise<APiReturnDefaultType> {
+  public async create(
+    tenantId: string,
+    title: string,
+  ): Promise<APiReturnDefaultType> {
     const newApiKey = await this.prisma.apiSecretKeys.create({
       data: {
-        title: 'api_',
+        title: title,
         publicKey: this.assignature.genPublicKey(),
         secretKey: this.assignature.genSecretKey(),
         companieId: tenantId,
@@ -24,10 +27,11 @@ export class PrismaAPiKeyRepositorie implements ApiKeyRepositorie {
     };
   }
   public async getKeyByTenantId(tenantId: string) {
-    return this.prisma.apiSecretKeys.findFirst({
+    return this.prisma.apiSecretKeys.findMany({
       where: {
         companieId: tenantId,
       },
+      orderBy: { createdAt: 'desc' },
       include: {
         companie: {
           select: {
@@ -42,25 +46,31 @@ export class PrismaAPiKeyRepositorie implements ApiKeyRepositorie {
     page: number,
     limit: number,
   ): Promise<IPAginationGet<Omit<ApiSecretKeys, 'secretKey'>>> {
-    const offest = (page - 1) * limit;
-    const apikeys = (await this.prisma.apiSecretKeys.findMany({
-      take: limit,
-      skip: offest,
-      select: {
-        title: true,
-        publicKey: true,
-        companieId: true,
-        id: true,
-        isActive: true,
-        updatedAt: true,
-        createdAt: true,
-      },
-    })) as any as ApiSecretKeys[];
+    const skip = (page - 1) * limit;
+    const [apikeys, total] = await Promise.all([
+      this.prisma.apiSecretKeys.findMany({
+        take: limit,
+        skip,
+        select: {
+          title: true,
+          publicKey: true,
+          companieId: true,
+          id: true,
+          isActive: true,
+          updatedAt: true,
+          createdAt: true,
+        },
+      }) as any as ApiSecretKeys[],
+      this.prisma.apiSecretKeys.count(), // pega o total de registros
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
     return {
       data: apikeys,
       pagination: {
-        cursor: page,
+        page,
         limit,
+        lastPage: totalPages,
       },
       total: apikeys.length,
     };

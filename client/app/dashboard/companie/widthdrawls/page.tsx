@@ -16,12 +16,16 @@ import { formatCurrency } from "@/lib/utils";
 import { FaCheckCircle, FaClock, FaTimesCircle, FaEye } from "react-icons/fa";
 import clsx from "clsx";
 import { statusMap } from "@/components/Transactions";
+import { useUser } from "@/context/UserContext";
+import Stats from "@/components/Stats";
+import { Wallet } from "@/components/Wallet";
+import { IconDownload } from "@tabler/icons-react";
 
 export default function WithdrawalsPage() {
   const [openSheet, setOpenSheet] = useState(false);
   const [amount, setAmount] = useState(0);
   const [comprovanteUrl, setComprovanteUrl] = useState<string | null>(null);
-
+  const { user } = useUser();
   // Saldo
   const totalWithdrawn = withdrawalsMock
     .filter((w) => w.status === PaymentStatus.PAID)
@@ -36,28 +40,55 @@ export default function WithdrawalsPage() {
     setOpenSheet(false);
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
-    <div className="w-full lg:w-[50%] flex flex-col gap-4 mx-auto">
-      {/* Saldo */}
+    <div className="w-full lg:items-center gap-4 flex flex-col lg:*:w-[50%] *:w-full">
+      {user?.wallet ? (
+        <Wallet
+          bankName={user.wallet.bank}
+          iban={user.wallet.iban}
+          userName={user.wallet.walletHolder}
+        />
+      ) : (
+        <Wallet
+          bankName={"Registre seu cartão"}
+          iban={"0000000000000000000"}
+          userName={"Não cadastrado"}
+        />
+      )}
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="p-4 rounded-xl border bg-background shadow-sm text-center">
-          <p className="text-sm text-muted-foreground">Já sacado</p>
-          <p className="text-xl font-bold text-red-500">
-            {formatCurrency(totalWithdrawn)}
-          </p>
-        </div>
-        <div className="p-4 rounded-xl border bg-background shadow-sm text-center">
-          <p className="text-sm text-muted-foreground">Disponível</p>
-          <p className="text-xl font-bold text-green-500">
-            {formatCurrency(availableToWithdraw)}
-          </p>
-        </div>
+        <Stats
+          data={{
+            title: "Saldo Disponível",
+            subtitle: "Atual",
+            description: "Total disponível na conta do usuário",
+            amount: user.totalDisponible,
+            isCoin: true,
+          }}
+        />
+
+        <Stats
+          data={{
+            title: "Total Faturado",
+            subtitle: "Acumulado",
+            description: "Valor total faturado pelo usuário",
+            amount: user.totalErned,
+            isCoin: true,
+          }}
+        />
       </div>
 
-      {/* Botão sacar */}
-      <Button onClick={() => setOpenSheet(true)}>Sacar</Button>
+      <Button
+        disabled={user.totalDisponible == 0}
+        className=" text-white"
+        onClick={() => setOpenSheet(true)}
+      >
+        Sacar
+      </Button>
 
-      {/* Histórico */}
       <div className="border rounded-xl bg-background shadow-sm p-4 w-full">
         <h2 className="font-semibold mb-2">Histórico de Saques</h2>
         <ul className="divide-y divide-muted-foreground">
@@ -71,9 +102,25 @@ export default function WithdrawalsPage() {
                     {w.createdAt.toLocaleDateString("pt")}
                   </p>
                 </div>
+                {w.status == PaymentStatus.PAID && (
+                  <div className="flex flex-col gap-2">
+                    <p className="font-medium">Comprovativo</p>
+                    <a target="_blank" download href={w.fileUrl ?? ""}>
+                      <Badge variant={"outline"}>
+                        <IconDownload />
+                        Baixar
+                      </Badge>
+                    </a>
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <Badge variant={"outline"}>
-                    {status.icon} {status.title}
+                    {status.icon}{" "}
+                    {w.status == PaymentStatus.PAID
+                      ? "Aprovado"
+                      : w.status == PaymentStatus.PENDING
+                        ? "Pendente"
+                        : "Rejeitado"}
                   </Badge>
 
                   {/* Ver comprovante */}
@@ -94,7 +141,6 @@ export default function WithdrawalsPage() {
         </ul>
       </div>
 
-      {/* Sheet de saque */}
       <Sheet open={openSheet} onOpenChange={setOpenSheet}>
         <SheetContent side="right" className="w-96">
           <SheetHeader>
@@ -116,7 +162,6 @@ export default function WithdrawalsPage() {
         </SheetContent>
       </Sheet>
 
-      {/* Sheet para comprovante */}
       <Sheet
         open={!!comprovanteUrl}
         onOpenChange={() => setComprovanteUrl(null)}

@@ -8,16 +8,40 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { isArrayMappble } from "@/lib/utils";
 import { statusMap } from "@/components/Transactions";
+import TransactionSevice from "@/services/Transaction";
+import constants from "@/constants";
+import Loader from "@/components/Loader";
 
 export default function TransactionDetailsPage() {
-  const { id } = useParams(); // pegar id da rota
+  const { id } = useParams();
   const [transaction, setTransaction] = useState<ITransaction | null>(null);
+  const [load, setLoad] = useState(true);
 
   useEffect(() => {
-    const trx = transactionsMock.find((t) => t.id === id);
-    setTransaction(trx || null);
+    async function get() {
+      const token = localStorage.getItem("token") as string;
+      const data = await new TransactionSevice(token).getById(id as string);
+      console.log(data);
+
+      if (data?.id) {
+        setTransaction(data);
+      }
+
+      setTimeout(() => {
+        setLoad(false);
+      }, constants.TIMEOUT_LOADER);
+    }
+
+    get();
   }, [id]);
 
+  if (load) {
+    return (
+      <section className="w-full lg:items-center gap-4 flex flex-col lg:*:w-[50%] *:w-full">
+        <Loader />
+      </section>
+    );
+  }
   if (!transaction) {
     return (
       <p className="p-5 text-center text-red-500">Transação não encontrada</p>
@@ -99,17 +123,8 @@ export default function TransactionDetailsPage() {
         </ul>
       </div>
 
-      {/* Datas e referência */}
       <div className="border rounded-xl bg-background shadow-sm p-4 grid grid-cols-2 gap-2">
-        <div>
-          <p className="text-xs text-muted-foreground">Criada em</p>
-          <p>{transaction.createdAt.toLocaleDateString("pt")}</p>
-        </div>
-        <div>
-          <p className="text-xs text-muted-foreground">Atualizada em</p>
-          <p>{transaction.updatedAt.toLocaleDateString("pt")}</p>
-        </div>
-        <div>
+        <div className="border-r">
           <p className="text-xs text-muted-foreground">Referencia</p>
           <p>{transaction.reference}</p>
         </div>
@@ -117,6 +132,24 @@ export default function TransactionDetailsPage() {
           <p className="text-xs text-muted-foreground">Entidade</p>
           <p className="truncate">{transaction.entity}</p>
         </div>
+      </div>
+
+      <div className="border rounded-xl bg-background shadow-sm p-4 grid grid-cols-2 gap-2">
+        <div>
+          <p className="text-xs text-muted-foreground">Criada em</p>
+          <p>{new Date(transaction.createdAt).toLocaleDateString("pt")}</p>
+        </div>
+        <div>
+          <p className="text-xs text-muted-foreground">Atualizada em</p>
+          <p>{new Date(transaction.updatedAt).toLocaleDateString("pt")}</p>
+        </div>
+
+        {transaction?.paidAt && (
+          <div>
+            <p className="text-xs text-muted-foreground">Pago aos</p>
+            <p> {new Date(transaction.paidAt).toLocaleDateString("pt")}</p>
+          </div>
+        )}
       </div>
     </div>
   );

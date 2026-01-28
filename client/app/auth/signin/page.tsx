@@ -5,15 +5,30 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Lock, Mail, Phone, Users } from "lucide-react";
+import {
+  Eye,
+  EyeClosed,
+  Loader2,
+  Lock,
+  Mail,
+  Phone,
+  Users,
+} from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import AuthService from "@/services/auth";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const service = new AuthService();
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [processing, setProcesing] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -22,8 +37,37 @@ export default function Login() {
   if (!mounted) {
     return null;
   }
+
+  async function submitAction(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const title = formData.get("title") as string;
+    const phone = formData.get("phone") as string;
+    if (!email || !password || !phone || !title) {
+      toast.error("Preenche todos os campos");
+      return;
+    }
+    setProcesing(true);
+    const responseAPi = await service.signIng({
+      email,
+      password,
+      phone,
+      title,
+    });
+    toast.info(responseAPi.message);
+    const user = responseAPi?.user;
+    if (user) {
+      router.push(`/dashboard/companie`);
+      localStorage.setItem("token", responseAPi.token);
+    }
+    setProcesing(false);
+  }
+
   return (
-    <form action="" className=" flex-col  flex  items-center">
+    <form onSubmit={submitAction} className=" flex-col  flex  items-center">
       <span className="flex flex-col gap-2 lg:mt-30 lg:w-[60%] w-full">
         <h1 className="scroll-m-20  lg:text-4xl text-3xl font-semibold lg:w-[80%]  tracking-tight text-balance">
           Crie a sua conta
@@ -34,31 +78,62 @@ export default function Login() {
         <span className="flex flex-col gap-3 my-4">
           <label htmlFor="title">Nome</label>
           <InputGroup>
-            <InputGroupInput placeholder="seu nome" type="text" />
+            <InputGroupInput
+              type="text"
+              required
+              id="title"
+              name="title"
+              placeholder="seu nome"
+            />
             <InputGroupAddon>
               <Users />
             </InputGroupAddon>
           </InputGroup>
-          <label htmlFor="emal">Email</label>
+          <label htmlFor="phone">Telefone</label>
           <InputGroup>
-            <InputGroupInput placeholder="Seu email" type="email" />
-            <InputGroupAddon>
-              <Mail />
-            </InputGroupAddon>
-          </InputGroup>
-
-          <label htmlFor="emal">Telefone</label>
-          <InputGroup>
-            <InputGroupInput placeholder="telefone" type="tel" />
+            <InputGroupInput
+              required
+              id="phone"
+              name="phone"
+              placeholder="telefone"
+              type="tel"
+            />
             <InputGroupAddon>
               <Phone />
             </InputGroupAddon>
           </InputGroup>
-          <label htmlFor="pass">Senha</label>
+          <label htmlFor="emal">Email</label>
           <InputGroup>
-            <InputGroupInput placeholder="********" type="password" />
+            <InputGroupInput
+              name="email"
+              placeholder="Seu email"
+              type="email"
+              required
+              id="email"
+            />
+            <InputGroupAddon>
+              <Mail />
+            </InputGroupAddon>
+          </InputGroup>
+          <label htmlFor="password">Senha</label>
+          <InputGroup>
+            <InputGroupInput
+              name="password"
+              placeholder="***********"
+              type={showPass ? "password" : "text"}
+              required
+              id="password"
+            />
             <InputGroupAddon>
               <Lock />
+            </InputGroupAddon>
+            <InputGroupAddon
+              align={"inline-end"}
+              onClick={() => {
+                setShowPass((prev) => !prev);
+              }}
+            >
+              {showPass ? <EyeClosed /> : <Eye />}
             </InputGroupAddon>
           </InputGroup>
         </span>
@@ -66,7 +141,9 @@ export default function Login() {
           <Checkbox />
           <p>Salvar a sessão</p>
         </span>
-        <Button className="text-white">Entrar</Button>
+        <Button disabled={processing} className="text-white">
+          {processing ? <Loader2 className="animate-spin" /> : "Criar conta"}
+        </Button>
 
         <a href="/auth" className="text-center mt-3 text-sm">
           Já tens uma conta?{" "}

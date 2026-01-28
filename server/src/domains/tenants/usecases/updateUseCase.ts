@@ -1,4 +1,3 @@
-import { CreateCompanieDTo } from '../dto/create.dto';
 import Email from '@/objectValues/Email';
 import PhoneNumber from '@/objectValues/Phone';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
@@ -10,7 +9,7 @@ export default class UpdateCompanieUseCase {
   public async execute(dto: UpdateTenantDTO, id: string) {
     const email = new Email(dto.email);
     const phone = new PhoneNumber(dto.phone);
-    await this.verifyIfExist(email.getValue(), phone.getValue());
+    await this.verifyIfExist(email.getValue(), phone.getValue(), id);
     const updated = await this.repo.update(
       {
         email: email.getValue(),
@@ -31,13 +30,17 @@ export default class UpdateCompanieUseCase {
     };
   }
 
-  private async verifyIfExist(email: string, phone: string) {
+  private async verifyIfExist(email: string, phone: string, userId: string) {
     const [userWithEmail, userWithPhoneNumber] = await Promise.all([
       this.repo.getByUnique(email),
       this.repo.getByUnique(phone),
     ]);
 
-    if (userWithEmail || userWithPhoneNumber) {
+    const userFound = userWithEmail ? userWithEmail : userWithPhoneNumber;
+    if (userFound) {
+      if (userFound.data.id == userId) {
+        return;
+      }
       throw new BadRequestException({
         message: 'Tente dados diferentes , o teelfone ou email esta em uso',
       });

@@ -3,6 +3,7 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 
 import { ThemeProvider } from "@/context/theme";
+import { Toaster } from "@/components/ui/sonner";
 
 export const poppins = Poppins({
   subsets: ["latin"],
@@ -35,10 +36,11 @@ export default function RootLayout({
       <body>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
+          <Toaster />
           {children}
         </ThemeProvider>
       </body>

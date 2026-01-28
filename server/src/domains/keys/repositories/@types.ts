@@ -11,7 +11,7 @@ export interface ApiKeyRepositorie {
   ): Promise<IPAginationGet<Omit<ApiSecretKeys, 'secretKey'>>>;
   getById(id: string): Promise<Omit<ApiSecretKeys, 'secretKey'> | null>;
   getByPublickKey(id: string): Promise<ApiSecretKeys | null>;
-  create(tenantId: string): Promise<APiReturnDefaultType>;
+  create(tenantId: string, title: string): Promise<APiReturnDefaultType>;
   toogle(id: string): Promise<{ status: boolean }>;
-  getKeyByTenantId(id: string): Promise<ApiSecretKeys | null>;
+  getKeyByTenantId(id: string): Promise<ApiSecretKeys[] | null>;
 }

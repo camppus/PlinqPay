@@ -1,7 +1,11 @@
 import Encript from '@/lib/shared/Encript';
 import { AuthRepositorie } from '../repo/@type';
 import ResetPasswordDto from '../dto/reset.dto';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import Password from '@/objectValues/Password';
 
 export default class ResetPasswordUsecase {
@@ -32,7 +36,7 @@ export default class ResetPasswordUsecase {
 
   private isCorrectPass(newPassword: string, confirmNewPasword: string) {
     if (newPassword != confirmNewPasword) {
-      throw new BadRequestException({
+      throw new ForbiddenException({
         message: 'A senha nova de ser igual a senha de confirmação',
       });
     }

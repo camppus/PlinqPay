@@ -59,9 +59,9 @@ export function RecentTransaction({ data }: { data: ITransaction }) {
             </AvatarFallback>
           </Avatar>
           <span>
-            <p>{data?.client?.name.split(" ")[0]}</p>
+            <p>{data?.client?.name}</p>
             <small className="opacity-80 text-xs">
-              {data.createdAt.toLocaleDateString("pt")}
+              {new Date(data.createdAt).toLocaleDateString("pt")}
             </small>
           </span>
         </span>
@@ -71,7 +71,7 @@ export function RecentTransaction({ data }: { data: ITransaction }) {
             className={`text-lg font-medium opacity-60 text-${status.color}-500`}
           >
             {status.color.includes("red") ? "-" : "+"}{" "}
-            {data.subtotal.toLocaleString("pt")},00 kz
+            {data.total.toLocaleString("pt")},00 kz
           </h1>
           <Badge variant="outline" className="flex items-center gap-1">
             {status.icon} <span>{status.title}</span>

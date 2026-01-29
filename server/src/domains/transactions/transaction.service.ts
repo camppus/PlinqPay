@@ -4,7 +4,7 @@ import { CreateTransactionDTO } from './dto/create.dto';
 import { CreatePaymentUseCase } from './useCases/createPayment';
 import { PrismaTransactionRepositorie } from './repositories/repos/PrismaTransactionRepositorie';
 import { ApiSecretKeys } from '@prisma/client';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GetPaymentUseCase } from './useCases/getPayment';
 import { UpdatePaymentDTO } from './dto/update.dto';
 import { UpdatePayment } from './useCases/updatePayment';

@@ -30,12 +30,12 @@ export class WidthdrawlService {
 
   public async get(page: number) {
     const handler = new GetWidthdrawlUsecase(this.widthrawlRepo);
-    return await handler.exute(page, 40);
+    return await handler.exute(page, 1);
   }
 
   public async getByTenant(page: number, id: string) {
     const handler = new GetWidthdrawlUsecase(this.widthrawlRepo);
-    return await handler.getBytenant(page, 40, id);
+    return await handler.getBytenant(page, 20, id);
   }
   public async updater(data: UpdateWidthdralDto) {
     const handler = new UpdateWidthDrawUseCase(

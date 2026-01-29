@@ -171,6 +171,37 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
       },
       include: {
         wallet: true,
+        keys: {
+          select: {
+            id: true,
+            companieId: true,
+            isActive: true,
+            publicKey: true,
+            title: true,
+            updatedAt: true,
+            createdAt: true,
+          },
+        },
+        withdrawals: {
+          take: 20,
+          orderBy: [
+            {
+              createdAt: 'desc',
+            },
+          ],
+        },
+        transactions: {
+          take: 20,
+          orderBy: [
+            {
+              createdAt: 'desc',
+            },
+          ],
+          include: {
+            client: true,
+            items: true,
+          },
+        },
       },
     });
 

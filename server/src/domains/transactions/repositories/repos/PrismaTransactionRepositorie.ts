@@ -4,11 +4,7 @@ import {
   ITransactionRepositorie,
   TransactionModel,
 } from '../@types';
-import {
-  PaymentStatus,
-  Transaction,
-  TransactionClientInfo,
-} from '@prisma/client';
+import { PaymentStatus, Transaction } from '@prisma/client';
 
 import { TransactionCartItemDTO } from '../../dto/create.dto';
 import { IPAginationGet } from '@/types';
@@ -77,18 +73,131 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
     limit: number,
   ): Promise<IPAginationGet<Transaction>> {
     const offset = (page - 1) * limit;
-    const [payments, total] = await Promise.all([
+    const [
+      payments,
+      total,
+      totalPayments,
+      totalWithdraws,
+      totalPendings,
+      widhraws,
+      canceled,
+    ] = await Promise.all([
       this.prisma.transaction.findMany({
         take: limit,
         skip: offset,
         include: {
           client: true,
           items: true,
+          companie: {
+            select: {
+              title: true,
+              id: true,
+              email: true,
+              phone: true,
+            },
+          },
         },
+        orderBy: [
+          {
+            createdAt: 'desc',
+          },
+        ],
       }),
       this.prisma.transaction.count(),
+      this.prisma.transaction.aggregate({
+        _sum: {
+          amount: true,
+          subtotal: true,
+        },
+        where: {
+          status: 'PAID',
+        },
+      }),
+      this.prisma.withdrawals.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          status: {
+            in: ['APPROVED', 'PAID'],
+          },
+        },
+      }),
+      this.prisma.transaction.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          status: 'PENDING',
+        },
+      }),
+      this.prisma.withdrawals.findMany({
+        take: 50,
+        orderBy: [
+          {
+            createdAt: 'desc',
+          },
+        ],
+      }),
+      this.prisma.transaction.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          status: 'FAILED',
+        },
+      }),
     ]);
     const totalPages = Math.ceil(total / limit);
+    const totalIn = Number(totalPayments._sum.amount ?? 0);
+    const totalMade = Number(totalPayments._sum.subtotal ?? 0);
+    const totalOut = Number(totalWithdraws._sum.amount ?? 0);
+    const stats = [
+      {
+        title: 'Faturamento Total',
+        subtitle: 'Tudo que entrou',
+        description: 'Total de pagamentos confirmados (incluindo comissão)',
+        amount: totalMade,
+        isCoin: true,
+      },
+      {
+        title: 'Recebido',
+        subtitle: 'Entradas líquidas',
+        description: 'Valor realmente recebido dos pagamentos',
+        amount: totalIn,
+        isCoin: true,
+      },
+      {
+        title: 'Pendências',
+        subtitle: 'Pagamentos a confirmar',
+        description: 'Valor de pagamentos ainda pendentes',
+        amount: Number(totalPendings._sum.amount ?? 0),
+        isCoin: true,
+      },
+      {
+        title: 'Comissões / Ganhos',
+        subtitle: 'O que ganhamos',
+        description:
+          'Diferença entre o total recebido e o valor líquido dos clientes',
+        amount: totalIn - totalMade,
+        isCoin: true,
+      },
+      {
+        title: 'Saldo Disponível',
+        subtitle: 'O que sobra',
+        description: 'Entradas menos saques',
+        amount: totalIn - totalOut,
+        isCoin: true,
+      },
+      {
+        title: 'Cancelados',
+        subtitle: 'Perdas',
+        description: 'Valor de pagamentos que foram cancelados',
+        amount: Number(canceled._sum.amount),
+        isCoin: true,
+      },
+    ];
+
     return {
       data: payments,
       pagination: {
@@ -96,7 +205,11 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
         limit,
         lastPage: totalPages,
       },
-      total: payments.length,
+      total,
+      stats: {
+        stats,
+        widhraws,
+      },
     };
   }
 
@@ -114,7 +227,6 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
           {
             createdAt: 'desc',
           },
-          
         ],
         include: {
           client: true,
@@ -164,6 +276,7 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
         client: true,
         webhooksDelivery: true,
         items: true,
+        companie: true,
       },
     });
   }

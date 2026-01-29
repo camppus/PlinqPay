@@ -12,13 +12,13 @@ export class PrismaWidthDrawlRepo implements IWidthdrawsRepositories {
     tenantId: string,
     wallet: Wallet,
   ): Promise<Withdrawals> {
-    return await this.prisma.withdrawals.create({
+    return (await this.prisma.withdrawals.create({
       data: {
         companieId: tenantId,
         amount: Number(data.amount),
         walletId: wallet.id,
       },
-    }) as Withdrawals;
+    })) as Withdrawals;
   }
 
   public async getAll(
@@ -27,27 +27,67 @@ export class PrismaWidthDrawlRepo implements IWidthdrawsRepositories {
   ): Promise<IPAginationGet<Withdrawals[]>> {
     const offset = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
-      this.prisma.wallet.findMany({
-        include: {
-          companie: {
-            select: {
-              title: true,
-              id: true,
-              totalDisponible: true,
-              totalErned: true,
-              phone: true,
-              email: true,
+    const [data, total, totalWithdrawnAgg, totalPendingAgg, totalRejectedAgg] =
+      await Promise.all([
+        this.prisma.withdrawals.findMany({
+          include: {
+            companie: {
+              select: {
+                title: true,
+                id: true,
+                totalDisponible: true,
+                totalErned: true,
+                phone: true,
+                email: true,
+              },
             },
+            wallet: true,
           },
-        },
-        take: limit,
-        skip: offset,
-      }),
-      this.prisma.wallet.count({}),
-    ]);
+          orderBy: [{ createdAt: 'desc' }],
+          take: limit,
+          skip: offset,
+        }),
+        this.prisma.withdrawals.count({}),
+        this.prisma.withdrawals.aggregate({
+          _sum: { amount: true },
+          where: { status: { in: ['PAID', 'APPROVED'] } },
+        }),
+        this.prisma.withdrawals.aggregate({
+          _sum: { amount: true },
+          where: { status: 'PENDING' },
+        }),
+        this.prisma.withdrawals.aggregate({
+          _sum: { amount: true },
+          where: { status: 'REJECTED' },
+        }),
+      ]);
 
     const totalPages = Math.ceil(total / limit);
+
+    const stats = [
+      {
+        title: 'Total Sacado',
+        subtitle: 'O que já foi retirado',
+        description: 'Soma de todos os saques aprovados ou pagos',
+        amount: Number(totalWithdrawnAgg._sum.amount ?? 0),
+        isCoin: true,
+      },
+      {
+        title: 'Pendentes',
+        subtitle: 'Saques aguardando aprovação',
+        description: 'Soma de todos os saques ainda pendentes',
+        amount: Number(totalPendingAgg._sum.amount ?? 0),
+        isCoin: true,
+      },
+      {
+        title: 'Recusados / Cancelados',
+        subtitle: 'Perdas',
+        description: 'Soma de todos os saques recusados ou cancelados',
+        amount: Number(totalRejectedAgg._sum.amount ?? 0),
+        isCoin: true,
+      },
+    ];
+
     return {
       data: data as any,
       pagination: {
@@ -56,6 +96,7 @@ export class PrismaWidthDrawlRepo implements IWidthdrawsRepositories {
         lastPage: totalPages,
       },
       total: data.length,
+      stats,
     };
   }
 

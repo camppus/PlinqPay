@@ -17,3 +17,5 @@ export function formatCurrency(value: number | string) {
     minimumFractionDigits: 0,
   })
 }
+
+export const toNumber = (value?: string | number | null) => Number(value ?? 0);

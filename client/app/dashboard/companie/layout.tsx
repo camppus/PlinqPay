@@ -10,6 +10,7 @@ import NotificationService from "@/services/Notification";
 import constants from "@/constants";
 import { useUser } from "@/context/UserContext";
 import { toast } from "sonner";
+import { IconLogout } from "@tabler/icons-react";
 
 export default function ComapnieLayout({ children }: { children: ReactNode }) {
   const [unred, setUnread] = useState(0);
@@ -86,7 +87,7 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
             href={"/dashboard/companie/notification"}
             className="relative dark:*:text-white animate-pulse"
           >
-            <Button size={"lg"} variant={unred > 0 ? "default" : "ghost"}>
+            <Button size={"icon"} variant={unred > 0 ? "default" : "ghost"}>
               <Bell />
             </Button>
           </Link>
@@ -101,6 +102,12 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
             <Moon className="absolute h-5 w-5 scale-0 transition-all dark:scale-100" />
             <span className="sr-only">Toggle theme</span>
           </Button>
+
+          <Link href={"/auth"}>
+            <Button size={"icon"} variant={"destructive"}>
+              <IconLogout />
+            </Button>
+          </Link>
         </div>
       </header>
       <section className="min-h-screen md:py-30 py-22 md:px-4 px-2">
@@ -118,7 +125,8 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
                   return;
                 }
                 toast.info("Aguarde a verificação", {
-                  description: "Aguarde a verificação para poder navegar no sistema",
+                  description:
+                    "Aguarde a verificação para poder navegar no sistema",
                 });
                 e.preventDefault();
               }}

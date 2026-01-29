@@ -79,7 +79,7 @@ export default function NotificationsPage() {
                 const Icon = notificationMap[notif.type].icon;
                 const path =
                   notif.type == NotificationType.PAYMENT
-                    ? `/dashboard/companie/${notif.id}`
+                    ? `/dashboard/companie/${notif.entitieId}`
                     : notif.type == NotificationType.WITHDRAWALS
                       ? "/dashboard/companie/widthdrawls"
                       : "#";
@@ -108,7 +108,9 @@ export default function NotificationsPage() {
                       </p>
                     </div>{" "}
                     <span className="w-2 h-2 rounded-full bg-blue-500 mt-2" />
-                    <small className="text-xs absolute bottom-2 text-blue-500 underline right-3">Ver detalhes</small>
+                    <small className="text-xs absolute bottom-2 text-blue-500 underline right-3">
+                      Ver detalhes
+                    </small>
                   </Link>
                 );
               })}

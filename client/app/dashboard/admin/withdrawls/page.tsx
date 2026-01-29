@@ -22,9 +22,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Loader from "@/components/Loader";
 import { IconCheck, IconX, IconFile, IconEdit } from "@tabler/icons-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, isArrayMappble } from "@/lib/utils";
+import constants from "@/constants";
+import { Istats, IWithdrawal } from "@/types";
+import Stats from "@/components/Stats";
+import WithdrawlsSevice from "@/services/Widthdralls";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { statusMap } from "@/components/Transactions";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
-// Mock de saques
 const withdrawalsMock = [
   {
     id: "1",
@@ -60,137 +66,175 @@ const withdrawalsMock = [
 
 export default function Withdrawals() {
   const [isLoad, setIsLoad] = useState(true);
-  const [withdrawals, setWithdrawals] = useState(withdrawalsMock);
+  const [withdrawals, setWithdrawals] = useState<IWithdrawal[]>([]);
+  const [stats, setStats] = useState<Istats[]>([]);
 
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPAge] = useState(1);
   useEffect(() => {
-    setTimeout(() => setIsLoad(false), 1000); // simula loading
-  }, []);
+    async function getAlls() {
+      const token = localStorage.getItem("token") as string;
+      const service = new WithdrawlsSevice(token);
+      const data = await service.getAll(page);
+      const users = (data?.data ?? []) as IWithdrawal[];
+      console.log(data);
+      setWithdrawals(users);
+      setStats(data?.stats ?? []);
+      setTimeout(() => setIsLoad(false), constants.TIMEOUT_LOADER);
+      if (data?.pagination) {
+        setLastPAge(data?.pagination?.lastPage);
+      }
+    }
+    getAlls();
+  }, [page]);
 
   const updateWithdrawal = (
     id: string,
     updates: Partial<(typeof withdrawalsMock)[0]>,
-  ) => {
-    setWithdrawals((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, ...updates } : w)),
-    );
-  };
+  ) => {};
 
   if (isLoad) return <Loader />;
 
   return (
-    <section className="flex flex-col gap-6 px-4 lg:px-6">
-      <h1 className="text-2xl font-semibold">Gerenciamento de Saques</h1>
+    <section className="flex flex-col gap-6">
+      <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid  gap-4 px-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs  lg:grid-cols-3 md:grid-cols-2 ">
+        {isArrayMappble(stats) &&
+          stats.map((item, idx) => <Stats key={idx} data={item} />)}
+      </div>
 
-      <Table className="rounded-lg overflow-hidden">
-        <TableHeader className="bg-muted sticky top-0 z-10">
-          <TableRow>
-            <TableHead>Usuário</TableHead>
-            <TableHead>Valor</TableHead>
-            <TableHead>Carteira</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Nota</TableHead>
-            <TableHead>Comprovativo</TableHead>
-            <TableHead>Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {withdrawals.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell>{item.user}</TableCell>
-              <TableCell>{formatCurrency(item.amount)}</TableCell>
-              <TableCell>{item.wallet}</TableCell>
-              <TableCell>
-                <Badge
-                  variant={
-                    item.status === "APROVADO"
-                      ? "default"
-                      : item.status === "PENDENTE"
-                        ? "secondary"
-                        : "destructive"
-                  }
-                >
-                  {item.status}
-                </Badge>
-              </TableCell>
-              <TableCell>{item.note || "-"}</TableCell>
-              <TableCell>
-                {item.proof ? (
-                  <a
-                    href={`/${item.proof}`}
-                    target="_blank"
-                    className="text-blue-500 underline"
-                  >
-                    Ver
-                  </a>
-                ) : (
-                  "-"
-                )}
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      Ações
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      onClick={() =>
-                        updateWithdrawal(item.id, { status: "APROVADO" })
-                      }
-                    >
-                      <IconCheck className="mr-2 size-4" /> Aprovar
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() =>
-                        updateWithdrawal(item.id, { status: "REJEITADO" })
-                      }
-                    >
-                      <IconX className="mr-2 size-4" /> Rejeitar
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <label
-                        htmlFor={`note-${item.id}`}
-                        className="flex items-center gap-2 w-full cursor-pointer"
-                      >
-                        <IconEdit className="size-4" /> Adicionar Nota
-                      </label>
-                      <input
-                        id={`note-${item.id}`}
-                        type="text"
-                        placeholder="Digite a nota"
-                        className="hidden"
-                        onBlur={(e) =>
-                          updateWithdrawal(item.id, { note: e.target.value })
-                        }
-                      />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <label
-                        htmlFor={`proof-${item.id}`}
-                        className="flex items-center gap-2 w-full cursor-pointer"
-                      >
-                        <IconFile className="size-4" /> Adicionar Comprovativo
-                      </label>
-                      <input
-                        id={`proof-${item.id}`}
-                        type="file"
-                        className="hidden"
-                        onChange={(e) =>
-                          updateWithdrawal(item.id, {
-                            proof: e.target.files?.[0]?.name || "",
-                          })
-                        }
-                      />
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
+      <span className=" px-4 lg:px-6">
+        <Table className="rounded-lg overflow-hidden">
+          <TableHeader className="bg-muted sticky top-0 z-10">
+            <TableRow>
+              <TableHead>Usuário</TableHead>
+              <TableHead>Valor</TableHead>
+              <TableHead>Iban</TableHead>
+              <TableHead>Banco</TableHead>
+              <TableHead>Ordenante</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Nota</TableHead>
+              <TableHead>Comprovativo</TableHead>
+              <TableHead>Data</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {withdrawals.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>
+                  <span className=" flex gap-2">
+                    <Avatar>
+                      <AvatarFallback>
+                        {item?.companie?.title.slice(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <h1>{item?.companie?.title}</h1>
+                      <small>{item?.companie?.email}</small>
+                      <small>{item?.companie?.phone}</small>
+                    </div>
+                  </span>
+                </TableCell>
+                <TableCell>
+                  {Number(item.amount).toLocaleString("pt")}, 00 kz
+                </TableCell>
+                <TableCell>{item?.wallet?.iban}</TableCell>
+                <TableCell>{item?.wallet?.bank}</TableCell>
+                <TableCell>{item?.wallet?.walletHolder}</TableCell>
+                <TableCell>
+                  <Badge variant={"outline"}>
+                    {statusMap[item.status].icon}
+                    {statusMap[item.status].title}
+                  </Badge>
+                </TableCell>
+                <TableCell>{item.notes || "-"}</TableCell>
+                <TableCell>
+                  {item.fileUrl ? (
+                    <a
+                      href={`/${item.fileUrl}`}
+                      target="_blank"
+                      className="text-blue-500 underline"
+                    >
+                      Ver
+                    </a>
+                  ) : (
+                    "-"
+                  )}
+                </TableCell>
+                <TableCell>
+                  <span className="flex flex-col gap-1">
+                    <small>
+                      Criado :{" "}
+                      {new Date(item.createdAt).toLocaleDateString("pt")}
+                    </small>
+
+                    {item.approvedAt && (
+                      <small>
+                        Liberado :{" "}
+                        {new Date(item.approvedAt).toLocaleDateString("pt")}
+                      </small>
+                    )}
+                    {item.revokedAt && (
+                      <small>
+                        Cancelado :{" "}
+                        {new Date(item.revokedAt).toLocaleDateString("pt")}
+                      </small>
+                    )}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        Ações
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          updateWithdrawal(item.id, { status: "APROVADO" })
+                        }
+                      >
+                        <IconCheck className="mr-2 size-4" /> Aprovar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          updateWithdrawal(item.id, { status: "REJEITADO" })
+                        }
+                      >
+                        <IconX className="mr-2 size-4" /> Rejeitar
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <span className="flex gap-3 mt-2 justify-center">
+          <Button
+            disabled={page <= 1 || isLoad}
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            variant="outline"
+            className="rounded-full"
+            size="icon"
+          >
+            <ArrowLeft />
+          </Button>
+          <span className="flex items-center px-2">
+            {page} / {lastPage}
+          </span>
+          <Button
+            disabled={page >= lastPage || isLoad}
+            onClick={() => setPage((prev) => Math.min(prev + 1, lastPage))}
+            variant="outline"
+            className="rounded-full"
+            size="icon"
+          >
+            <ArrowRight />
+          </Button>
+        </span>
+      </span>
     </section>
   );
 }

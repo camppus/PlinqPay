@@ -4,14 +4,6 @@ import Loader from "@/components/Loader";
 import constants from "@/constants";
 import { useEffect, useMemo, useState } from "react";
 import { isArrayMappble } from "@/lib/utils";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -36,6 +28,8 @@ import {
 import TenantService from "@/services/tenant";
 import Stats from "@/components/Stats";
 import { toast } from "sonner";
+import Link from "next/link";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function Users() {
   const [isLoad, setIsLoad] = useState(true);
@@ -45,46 +39,24 @@ export default function Users() {
     "all" | "active" | "verified" | "rejected"
   >("all");
 
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 20,
-    lastPage: 1,
-    total: 0,
-  });
-
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPAge] = useState(1);
   useEffect(() => {
     async function getAlls() {
       const token = localStorage.getItem("token") as string;
       const service = new TenantService(token);
-      const data = await service.getAlls(1);
+      const data = await service.getAlls(page);
       const users = (data?.data ?? []) as ITenant[];
       console.log(data);
       setTenants(users);
       setStats(data?.stats ?? []);
       setTimeout(() => setIsLoad(false), constants.TIMEOUT_LOADER);
-      const pages = data?.pagination;
+      if (data?.pagination) {
+        setLastPAge(data?.pagination?.lastPage);
+      }
     }
     getAlls();
-  }, []);
-
-  const filteredTenants = useMemo(() => {
-    if (!tenants) return [];
-    switch (filter) {
-      case "active":
-        return tenants.filter((t) => t.isActive || t.isVerified);
-      case "rejected":
-        return tenants.filter((t) => !t.isActive);
-      case "all":
-      default:
-        return tenants;
-    }
-  }, [tenants, filter]);
-  const paginatedTenants = useMemo(() => {
-    const start = (pagination.page - 1) * pagination.limit;
-    const end = start + pagination.limit;
-    return filteredTenants.slice(start, end);
-  }, [filteredTenants, pagination]);
-  const totalPages = pagination.lastPage;
+  }, [page]);
 
   const handleStatusChange = async (id: string, newStatus: boolean) => {
     const token = localStorage.getItem("token") as string;
@@ -141,11 +113,12 @@ export default function Users() {
                     <TableHead>Status</TableHead>
                     <TableHead>Parceiro desde</TableHead>
                     <TableHead>Estado</TableHead>
+                    <TableHead>Detalhes</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="border">
-                  {paginatedTenants.length ? (
-                    paginatedTenants.map((item, idx) => (
+                  {tenants.length ? (
+                    tenants.map((item, idx) => (
                       <TableRow key={idx}>
                         <TableCell colSpan={2}>
                           <Avatar>
@@ -193,6 +166,11 @@ export default function Users() {
                             }
                           />
                         </TableCell>
+                        <TableCell>
+                          <Link href={`/dashboard/admin/users/${item.id}`}>
+                            <Button variant={"outline"}>Detalhes</Button>
+                          </Link>
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (
@@ -203,61 +181,32 @@ export default function Users() {
                     </TableRow>
                   )}
                 </TableBody>
-              </Table>
-              <div className="flex items-center justify-between px-4">
-                <div>
-                  Página {pagination.page} de {pagination.lastPage}
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => setPagination((p) => ({ ...p, page: 1 }))}
-                    disabled={pagination.page === 1}
-                  >
-                    <IconChevronsLeft />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() =>
-                      setPagination((p) => ({
-                        ...p,
-                        page: Math.max(p.page - 1, 1),
-                      }))
-                    }
-                    disabled={pagination.page === 1}
-                  >
-                    <IconChevronLeft />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() =>
-                      setPagination((p) => ({
-                        ...p,
-                        page: Math.min(p.page + 1, pagination.lastPage),
-                      }))
-                    }
-                    disabled={pagination.page === pagination.lastPage}
-                  >
-                    <IconChevronRight />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() =>
-                      setPagination((p) => ({
-                        ...p,
-                        page: pagination.lastPage,
-                      }))
-                    }
-                    disabled={pagination.page === pagination.lastPage}
-                  >
-                    <IconChevronsRight />
-                  </Button>
-                </div>
-              </div>
+              </Table>{" "}
+              <span className="flex gap-3 mt-2 justify-center">
+                <Button
+                  disabled={page <= 1 || isLoad}
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                  variant="outline"
+                  className="rounded-full"
+                  size="icon"
+                >
+                  <ArrowLeft />
+                </Button>
+                <span className="flex items-center px-2">
+                  {page} / {lastPage}
+                </span>
+                <Button
+                  disabled={page >= lastPage || isLoad}
+                  onClick={() =>
+                    setPage((prev) => Math.min(prev + 1, lastPage))
+                  }
+                  variant="outline"
+                  className="rounded-full"
+                  size="icon"
+                >
+                  <ArrowRight />
+                </Button>
+              </span>
             </TabsContent>
           </Tabs>
         </>

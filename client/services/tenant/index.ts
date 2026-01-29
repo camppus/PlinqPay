@@ -26,6 +26,7 @@ export default class TenantService {
   }
   public async getAlls(page: number) {
     try {
+      console.log(page)
       const res = await api.get(`/tenants?cursor=${page}`);
       return res.data;
     } catch (error: any) {
@@ -105,6 +106,17 @@ export default class TenantService {
     } catch (error: any) {
       return {
         message: error?.response?.data?.message || "Erro ao atualizar conta",
+      };
+    }
+  }
+  public async getById(id: string) {
+    try {
+      const res = await api.get(`/tenants/${id}/details`);
+      return res.data;
+    } catch (error: any) {
+      return {
+        message:
+          error?.response?.data?.message || "Erro ao buscar dados do usuário",
       };
     }
   }

@@ -89,35 +89,37 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
           </span>
         </div>
       </div>
+      {secretKey != "Já foi vista" ||
+        (!secretKey && (
+          <div className="mt-3">
+            <p className="text-xs text-muted-foreground mb-2">Secret Key</p>
+            <div className="flex items-center gap-2 rounded-md border bg-muted px-3 py-1 font-mono text-xs">
+              <span className="flex-1 truncate">
+                {visible ? secretKey : "********************"}
+              </span>
 
-      <div className="mt-3">
-        <p className="text-xs text-muted-foreground mb-2">Secret Key</p>
-        <div className="flex items-center gap-2 rounded-md border bg-muted px-3 py-1 font-mono text-xs">
-          <span className="flex-1 truncate">
-            {visible ? secretKey : "********************"}
-          </span>
-
-          <span className=" flex items-center gap-2">
-            <span onClick={() => setVisible(!visible)}>
-              {visible ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </span>
-            <Button
-              onClick={() => {
-                toast.info("Chave copiado");
-                navigator.clipboard.writeText(secretKey);
-              }}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <IconCopy />
-            </Button>
-          </span>
-        </div>
-      </div>
+              <span className=" flex items-center gap-2">
+                <span onClick={() => setVisible(!visible)}>
+                  {visible ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </span>
+                <Button
+                  onClick={() => {
+                    toast.info("Chave copiado");
+                    navigator.clipboard.writeText(secretKey);
+                  }}
+                  size={"icon"}
+                  variant={"outline"}
+                >
+                  <IconCopy />
+                </Button>
+              </span>
+            </div>
+          </div>
+        ))}
 
       <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
         <span>Criada em</span>

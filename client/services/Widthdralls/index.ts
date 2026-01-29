@@ -27,4 +27,14 @@ export default class WithdrawlsSevice {
       };
     }
   }
+  public async getAll(page: number) {
+    try {
+      const res = await api.get(`/withdrawals?page=${page}`);
+      return res.data;
+    } catch (error: any) {
+      return {
+        message: error?.response?.data?.message,
+      };
+    }
+  }
 }

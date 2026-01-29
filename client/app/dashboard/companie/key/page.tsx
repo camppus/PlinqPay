@@ -124,6 +124,7 @@ export default function Key() {
                   setTitle(e.target.value);
                 }}
                 placeholder="Título"
+                value={title}
               />
               <InputGroupAddon>
                 <KeyIcon />

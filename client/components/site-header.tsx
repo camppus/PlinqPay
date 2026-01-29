@@ -3,9 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Bell, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import Link from "next/link";
 
 export function SiteHeader() {
   const { setTheme, theme } = useTheme();
@@ -19,11 +18,6 @@ export function SiteHeader() {
         />
         <h1 className="text-base font-medium">Painel</h1>
         <div className="ml-auto flex items-center gap-2">
-          <Link href={"/dashboard/admin/notifications"}>
-            <Button variant="ghost" size="icon">
-              <Bell />
-            </Button>
-          </Link>
           <Button
             variant="ghost"
             className="hover:bg-transparent dark:hover:bg-transparent opacity-80 hover:opacity-100"

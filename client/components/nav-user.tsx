@@ -86,10 +86,10 @@ export function NavUser({ user }: { user: ITenant }) {
                 </DropdownMenuItem>
               </Link>
 
-              <Link href={"/dashboard/admin/notifications"}>
+              <Link href={"/dashboard/admin/withdrawls"}>
                 <DropdownMenuItem>
                   <IconNotification />
-                  Notificações
+                  Saques
                 </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>

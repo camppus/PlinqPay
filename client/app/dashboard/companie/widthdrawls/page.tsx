@@ -87,25 +87,12 @@ export default function WithdrawalsPage() {
   }
   return (
     <div className="w-full lg:items-center gap-4 flex flex-col lg:*:w-[50%] *:w-full">
-      {user?.wallet ? (
-        <Wallet
-          bankName={user.wallet.bank}
-          iban={user.wallet.iban}
-          userName={user.wallet.walletHolder}
-        />
-      ) : (
-        <Wallet
-          bankName={"Registre seu cartão"}
-          iban={"0000000000000000000"}
-          userName={"Não cadastrado"}
-        />
-      )}
       <div className="grid md:grid-cols-2 gap-4">
         <Stats
           data={{
             title: "Saldo Disponível",
             subtitle: "Atual",
-            description: "Total disponível na conta do usuário",
+            description: "Total disponível na minha conta",
             amount: user.totalDisponible,
             isCoin: true,
           }}
@@ -115,19 +102,18 @@ export default function WithdrawalsPage() {
           data={{
             title: "Total Faturado",
             subtitle: "Acumulado",
-            description: "Valor total faturado pelo usuário",
+            description: "Valor total faturado por mim na plinkpay",
             amount: user.totalErned,
             isCoin: true,
           }}
         />
       </div>
-
       <Button
-        disabled={user.totalDisponible >= 10000}
+        disabled={user.totalDisponible <= 0}
         className=" text-white"
         onClick={() => setOpenSheet(true)}
       >
-        Sacar
+        Solicitar saque
       </Button>
 
       {!isArrayMappble(Widthdralls) ? (
@@ -198,24 +184,23 @@ export default function WithdrawalsPage() {
           </ul>
           <span className="flex gap-3 mt-2 justify-center">
             <Button
-              disabled={page <= 1}
-              onClick={() => {
-                setPage((prev) => prev - 1);
-              }}
-              variant={"outline"}
+              disabled={page <= 1 || load}
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              variant="outline"
               className="rounded-full"
-              size={"icon"}
+              size="icon"
             >
               <ArrowLeft />
             </Button>
+            <span className="flex items-center px-2">
+              {page} / {lastPage}
+            </span>
             <Button
-              disabled={page >= lastPage}
-              variant={"outline"}
+              disabled={page >= lastPage || load}
+              onClick={() => setPage((prev) => Math.min(prev + 1, lastPage))}
+              variant="outline"
               className="rounded-full"
-              size={"icon"}
-              onClick={() => {
-                setPage((prev) => prev + 1);
-              }}
+              size="icon"
             >
               <ArrowRight />
             </Button>

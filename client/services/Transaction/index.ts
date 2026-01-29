@@ -25,4 +25,15 @@ export default class TransactionSevice {
       };
     }
   }
+
+  public async getAll(page: number) {
+    try {
+      const res = await api.get(`/transaction?page=${page}`);
+      return res.data;
+    } catch (error: any) {
+      return {
+        message: error?.response?.data?.message,
+      };
+    }
+  }
 }

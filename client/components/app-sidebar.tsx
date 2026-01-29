@@ -49,11 +49,6 @@ const data = {
       icon: IconCoins,
     },
     {
-      title: "Chaves",
-      url: "/dashboard/admin/keys",
-      icon: IconFolder,
-    },
-    {
       title: "Empresas",
       url: "/dashboard/admin/users",
       icon: IconUsers,

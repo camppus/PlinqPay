@@ -7,6 +7,7 @@ export type INotification = {
   type: NotificationType;
   isRead: boolean;
   createdAt: Date;
+  entitieId?: string;
 };
 
 export const notificationsMock: INotification[] = [

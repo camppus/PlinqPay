@@ -5,8 +5,6 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-
 @Injectable()
 export default class IsAdminGuard implements CanActivate {
   private readonly prisma = PrismaRepositorie.getInstance();

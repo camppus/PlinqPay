@@ -28,6 +28,7 @@ export class CreatePaymentUseCase {
     );
 
     const signature = new Assignature().assignature(apikey.secretKey, data);
+
     const createdPayment = await this.repo.createTransaction({
       asignature: signature,
       companieId: apikey.companieId,
@@ -41,6 +42,7 @@ export class CreatePaymentUseCase {
       },
       transaction: data,
     });
+    
     await this.notifier.create({
       companieId: apikey.companieId,
       entitieId: createdPayment.id,

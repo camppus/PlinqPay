@@ -1,11 +1,8 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  NestMiddleware,
-} from '@nestjs/common';
+import { ForbiddenException, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import JWT from '@/lib/shared/Jwt';
 import { IToken } from '@/types';
+
 export default class AuthMiddleare implements NestMiddleware {
   private readonly jwt = new JWT();
   private readonly allowedOrigin = 'https://pliqpay.onrender.com';

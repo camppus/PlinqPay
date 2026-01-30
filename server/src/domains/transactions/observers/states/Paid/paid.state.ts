@@ -8,11 +8,13 @@ import { NotificationsService } from '@/domains/notifications/notification.servi
 export class Paid implements ITransactionState {
   private readonly repo = PrismaRepositorie.getInstance();
 
-  constructor(private readonly notifier: NotificationsService) {}
+  constructor(private readonly notifier: NotificationsService) { }
+  
+
   public async execute(data: Transaction) {
     if (data?.status != 'PENDING') {
       throw new BadGatewayException({
-        message: 'Apenas pagamen',
+        message: 'Apenas pagamentos pedentes podem ser confirmados!',
       });
     }
     await this.handleWebHooks(data);

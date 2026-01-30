@@ -5,13 +5,12 @@ import { PaymentStatus } from '@prisma/client';
 import { ITransactionState } from '../observers/states/state.interface';
 import { Paid } from '../observers/states/Paid/paid.state';
 import { Fail } from '../observers/states/Fail/fail.state';
-import Assignature from '@/lib/shared/Assignature';
 import { ApiKeyRepositorie } from '@/domains/keys/repositories/@types';
 import { NotificationsService } from '@/domains/notifications/notification.service';
 
 export class UpdatePayment {
-  private readonly asign = new Assignature();
   private readonly logger = new Logger('UpdatePayment Logger ->>');
+
   private readonly statusMap: Record<string, PaymentStatus> = {
     TRADE_SUCCESS: 'PAID',
     TRADE_FINISHED: 'PAID',
@@ -36,7 +35,7 @@ export class UpdatePayment {
   }
 
   public async execute(data: UpdatePaymentDTO) {
-    const status = this.mapPaypayStatus(data.status) ?? 'FAILED';
+    const status = this.mapPaypayStatus(data.status);
     if (status == 'PENDING') {
       throw new BadRequestException({
         message: 'Pagamento pendente não sofre mudanças manuais',

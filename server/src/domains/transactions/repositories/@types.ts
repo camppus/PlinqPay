@@ -1,11 +1,4 @@
-import {
-  PaymentStatus,
-  Prisma,
-  Tenants,
-  Transaction,
-  TransactionClientInfo,
-  TransactionItem,
-} from '@prisma/client';
+import { PaymentStatus, Prisma, Transaction } from '@prisma/client';
 import {
   CreateTransactionDTO,
   TransactionCartItemDTO,
@@ -43,6 +36,7 @@ export interface ICreateTranstionProps {
 
 export interface ITransactionRepositorie {
   createTransaction(data: ICreateTranstionProps): Promise<Transaction>;
+
   createCardItems(
     items: TransactionCartItemDTO[],
     transactionId: string,

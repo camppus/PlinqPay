@@ -165,7 +165,7 @@ export default function Home() {
           ) : (
             <Wallet
               bankName={"Registre seu cartão"}
-              iban={"0000000000000000000"}
+              iban={""}
               userName={"Não cadastrado"}
             />
           )}

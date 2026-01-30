@@ -10,7 +10,7 @@ export default class AuthMiddleare implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization'];
 
-    const isProduction = false;
+    const isProduction = true;
     const origin = req.headers.origin;
     const referer = req.headers.referer;
 

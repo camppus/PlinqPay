@@ -17,7 +17,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
     return null;
   }
   return (
-    <section className="grid min-h-screen w-screen p-1 px-6 lg:px-1 md:px-30 lg:pt-0 pt-20 lg:grid-cols-2 gap-2">
+    <section className="grid min-h-screen w-screen p-1 px-6 lg:px-0 md:px-30 lg:pt-0 pt-20 lg:grid-cols-2 gap-2">
       <article className="overflow-hidden  text-white lg:flex hidden rounded-lg relative">
         <Image src={bg} alt="bg" />
 

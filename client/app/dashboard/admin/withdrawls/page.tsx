@@ -11,63 +11,56 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+  InputGroupTextarea,
+} from "@/components/ui/input-group";
+
 import Loader from "@/components/Loader";
-import { IconCheck, IconX, IconFile, IconEdit } from "@tabler/icons-react";
-import { formatCurrency, isArrayMappble } from "@/lib/utils";
+import { isArrayMappble } from "@/lib/utils";
 import constants from "@/constants";
-import { Istats, IWithdrawal } from "@/types";
+import { Istats, IWithdrawal, PaymentStatus } from "@/types";
 import Stats from "@/components/Stats";
 import WithdrawlsSevice from "@/services/Widthdralls";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { statusMap } from "@/components/Transactions";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-
-const withdrawalsMock = [
-  {
-    id: "1",
-    user: "João Silva",
-    amount: 50000,
-    wallet: "Kwanza Wallet 1234",
-    status: "PENDENTE",
-    note: "",
-    proof: "",
-    createdBy: "Admin1",
-  },
-  {
-    id: "2",
-    user: "Maria Costa",
-    amount: 120000,
-    wallet: "USD Wallet 5678",
-    status: "APROVADO",
-    note: "Pagamento confirmado",
-    proof: "comprovativo.pdf",
-    createdBy: "Admin2",
-  },
-  {
-    id: "3",
-    user: "Pedro Gomes",
-    amount: 25000,
-    wallet: "Kwanza Wallet 4321",
-    status: "REJEITADO",
-    note: "Saldo insuficiente",
-    proof: "",
-    createdBy: "Admin1",
-  },
-];
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { IconFile, IconMessage } from "@tabler/icons-react";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { uploadFile } from "@/actions";
+import { toast } from "sonner";
 
 export default function Withdrawals() {
   const [isLoad, setIsLoad] = useState(true);
   const [withdrawals, setWithdrawals] = useState<IWithdrawal[]>([]);
   const [stats, setStats] = useState<Istats[]>([]);
+  const [message, setMessage] = useState(
+    "Saque não pode ser processado por motivos internos",
+  );
+  const [status, setStatus] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [id, setId] = useState("");
+  const [processing, setProcessing] = useState(false);
 
   const [page, setPage] = useState(1);
   const [lastPage, setLastPAge] = useState(1);
@@ -77,8 +70,7 @@ export default function Withdrawals() {
       const service = new WithdrawlsSevice(token);
       const data = await service.getAll(page);
       const users = (data?.data ?? []) as IWithdrawal[];
-      console.log(data);
-      setWithdrawals(users);
+      setWithdrawals([...users]);
       setStats(data?.stats ?? []);
       setTimeout(() => setIsLoad(false), constants.TIMEOUT_LOADER);
       if (data?.pagination) {
@@ -87,11 +79,6 @@ export default function Withdrawals() {
     }
     getAlls();
   }, [page]);
-
-  const updateWithdrawal = (
-    id: string,
-    updates: Partial<(typeof withdrawalsMock)[0]>,
-  ) => {};
 
   if (isLoad) return <Loader />;
 
@@ -183,29 +170,157 @@ export default function Withdrawals() {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        disabled={item.status != PaymentStatus.PENDING}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setId(item.id);
+                        }}
+                      >
                         Ações
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          updateWithdrawal(item.id, { status: "APROVADO" })
-                        }
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        {!status && (
+                          <>
+                            <DialogTitle>Actualize o Saque</DialogTitle>
+                            <DialogDescription>
+                              prenche os campos necessários parafazer o mesmo
+                            </DialogDescription>
+                          </>
+                        )}
+                      </DialogHeader>
+
+                      <form
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          setProcessing(true);
+                          const formdata = new FormData();
+                          let fileUrl = "";
+                          if (status == "APPROVED" && file) {
+                            formdata.append("file", file);
+                            const { message, file: fileData } =
+                              await uploadFile(formdata);
+                            if (message != "sucesso") {
+                              toast.info(message);
+                              setProcessing(false);
+                              return;
+                            }
+                            fileUrl = String(fileData);
+                          }
+
+                          const token = localStorage.getItem("token") as string;
+                          const service = new WithdrawlsSevice(token);
+                          const data = await service.update({
+                            fileUrl,
+                            notes: message,
+                            id,
+                            status: String(status),
+                          });
+                          toast.info(
+                            data?.message ?? "Erro ao actualizar o saque",
+                          );
+                          console.log(data);
+                          setProcessing(false);
+                          setId("");
+                          setMessage("");
+                          setStatus(null);
+                        }}
+                        className="flex flex-col  gap-3"
                       >
-                        <IconCheck className="mr-2 size-4" /> Aprovar
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          updateWithdrawal(item.id, { status: "REJEITADO" })
-                        }
-                      >
-                        <IconX className="mr-2 size-4" /> Rejeitar
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        {!status ? (
+                          <>
+                            <Label>Estado</Label>
+                            <Select
+                              onValueChange={(e) => {
+                                setStatus(e);
+                              }}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Status" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="APPROVED">
+                                  Aprovado
+                                </SelectItem>
+                                <SelectItem value="REJECTED">
+                                  Rejeitado
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <small className="text-xs  opacity-80">
+                              Escolhe um estado para poder liberar outros campos
+                            </small>
+                          </>
+                        ) : (
+                          <>
+                            <h1 className="text-2xl text-center text-blue-500 font-bold mb-3">
+                              {status == "APPROVED"
+                                ? "Aprovação de saque"
+                                : "Reprovação de saque"}
+                            </h1>
+                            {status == "APPROVED" ? (
+                              <>
+                                <Label>Comprovativo</Label>
+                                <InputGroup>
+                                  <InputGroupInput
+                                    type="file"
+                                    name="file"
+                                    id="file"
+                                    placeholder="comprovativo"
+                                    onChange={(e) => {
+                                      setFile(
+                                        e.target.files
+                                          ? e.target.files[0]
+                                          : null,
+                                      );
+                                    }}
+                                  />
+                                  <InputGroupAddon>
+                                    <IconFile />
+                                  </InputGroupAddon>
+                                </InputGroup>
+                              </>
+                            ) : (
+                              <>
+                                <Label>Nota de provação</Label>
+                                <InputGroup>
+                                  <InputGroupTextarea
+                                    placeholder="Preenche o motivo pelo qual estas a reprovar o saque"
+                                    value={message}
+                                    onChange={(e) => {
+                                      setMessage(e.target.value);
+                                    }}
+                                    spellCheck={false}
+                                  />
+                                </InputGroup>
+                              </>
+                            )}
+                          </>
+                        )}
+
+                        <div className="grid grid-cols-2 gap-3 mt-4">
+                          <Button type="submit" className="text-white">
+                            {processing ? (
+                              <Loader2 className="animate-spin" />
+                            ) : (
+                              <>
+                                {!status && "Actualizar"}
+                                {status == "APPROVED" ? "Aprovar" : "Reprovar"}
+                              </>
+                            )}
+                          </Button>
+                          <Button type="button" variant={"outline"}>
+                            Cancelar
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </TableCell>
               </TableRow>
             ))}

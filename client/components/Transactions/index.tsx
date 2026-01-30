@@ -143,7 +143,57 @@ export function TransacttionDetails({ id }: { id: string }) {
         </Badge>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      {user && user?.role == Role.SUPERCOMPANIE ? (
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="flex items-center gap-4 border rounded-xl p-4 bg-background shadow-sm">
+            <Avatar>
+              <AvatarFallback className="font-black uppercase">
+                {transaction.client?.name[0]}
+                {transaction.client?.name[transaction.client?.name.length - 1]}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-semibold">{transaction.client?.name}</p>
+              <p className="text-sm text-muted-foreground">
+                {transaction.client?.email}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {transaction.client?.phone}
+              </p>
+              <Badge className="text-white mt-2">
+                <IconShoppingCart /> Emissor
+              </Badge>
+            </div>
+          </div>
+
+          {user && user?.role == Role.SUPERCOMPANIE && (
+            <div className="flex items-center gap-4 border rounded-xl p-4 bg-background shadow-sm">
+              <Avatar>
+                <AvatarFallback className="font-black uppercase">
+                  {transaction.companie?.title[0]}
+                  {
+                    transaction.companie?.title[
+                      transaction.companie?.title.length - 1
+                    ]
+                  }
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-semibold">{transaction.companie?.title}</p>
+                <p className="text-sm text-muted-foreground">
+                  {transaction.companie?.email}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {transaction.companie?.phone}
+                </p>
+                <Badge className="text-white mt-2" variant={"outline"}>
+                  <IconShoppingCart /> Receptor
+                </Badge>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
         <div className="flex items-center gap-4 border rounded-xl p-4 bg-background shadow-sm">
           <Avatar>
             <AvatarFallback className="font-black uppercase">
@@ -160,38 +210,11 @@ export function TransacttionDetails({ id }: { id: string }) {
               {transaction.client?.phone}
             </p>
             <Badge className="text-white mt-2">
-              <IconShoppingCart /> Cliente
+              <IconShoppingCart /> Emissor
             </Badge>
           </div>
         </div>
-
-        {user && user?.role == Role.SUPERCOMPANIE && (
-          <div className="flex items-center gap-4 border rounded-xl p-4 bg-background shadow-sm">
-            <Avatar>
-              <AvatarFallback className="font-black uppercase">
-                {transaction.companie?.title[0]}
-                {
-                  transaction.companie?.title[
-                    transaction.companie?.title.length - 1
-                  ]
-                }
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">{transaction.companie?.title}</p>
-              <p className="text-sm text-muted-foreground">
-                {transaction.companie?.email}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {transaction.companie?.phone}
-              </p>
-              <Badge className="text-white mt-2" variant={"outline"}>
-                <IconShoppingCart /> Vendedor
-              </Badge>
-            </div>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Valores */}
       <div className="grid grid-cols-2 gap-4">

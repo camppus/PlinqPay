@@ -37,4 +37,21 @@ export default class WithdrawlsSevice {
       };
     }
   }
+  public async update(body: {
+    id: string;
+    status: string;
+    fileUrl: string;
+    notes: string;
+  }) {
+    try {
+      const res = await api.put(`/withdrawals`, {
+        ...body,
+      });
+      return res.data;
+    } catch (error: any) {
+      return {
+        message: error?.response?.data?.message,
+      };
+    }
+  }
 }

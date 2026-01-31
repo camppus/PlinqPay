@@ -12,7 +12,7 @@ export class TaxController {
   public getConfigs() {
     return {
       taxType: 'PERCENT',
-      value: constants.TAX,
+      value: constants.TAX * 100 + '%',
       currency: 'AOA',
     };
   }

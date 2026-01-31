@@ -86,6 +86,7 @@ export class TransactionController {
         'Aceso negado informa o query key com a chave secreta',
       );
     }
+    console.log(data)
     await this.service.update(data);
     return 'success';
   }

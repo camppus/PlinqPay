@@ -39,7 +39,7 @@ export default class TransactionSevice {
     }
   }
 
-  public async create(amount: string, apikey: string, user: ITenant) {
+  public async create(amount: number, apikey: string, user: ITenant) {
     try {
       const data = await fetch(constants.SERVER_PATH + "/transaction", {
         method: "POST",

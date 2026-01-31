@@ -135,7 +135,7 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
             }
             setProcessing(true);
             const data = await new TransactionSevice("").create(
-              "100",
+              100,
               publicKey,
               user,
             );
@@ -144,11 +144,14 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
               toast.info("Pagamento criado com sucesso", {
                 description: "Acesse a aba principal e veja os detalhes",
               });
+            } else {
+              const message = Array.isArray(data?.message) ? data?.message[0] : data?.mesage
+              toast.info(message ?? "Erro ao criar registrar pagamento")
             }
             setProcessing(false);
           }}
         >
-          {!processing ? "Testar" : <Loader2 className="animate-spin" />}
+          {!processing ? "Testar com 100kz" : <Loader2 className="animate-spin" />}
         </Button>
       </div>
     </div>

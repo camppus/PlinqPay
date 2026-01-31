@@ -21,7 +21,7 @@ export function Hero() {
           </span>
         </h1>
         <p className="opacity-80">
-          Infraestrutura de pagamentos em poucas linhas. Feito de devs para
+          Infraestrutura de pagamentos em poucas linhas. Feito por devs para
           devs.
         </p>
 

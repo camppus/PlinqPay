@@ -19,7 +19,7 @@ export function Wallet({ bankName, iban, userName }: IWalletProps) {
           </span>
         </div>
 
-        <span className="flex md:flex-row flex-col gap-4 items-center justify-between">
+        <span className="flex md:flex-row flex-col gap-4 md:items-center items-start justify-between">
           <div className="relative w-10 h-14 rotate-90 rounded-md bg-linear-to-br from-yellow-200 to-yellow-500 shadow-inner overflow-hidden">
             <span className="absolute left-1/2 top-0 h-full w-px bg-yellow-800/40" />
             <span className="absolute left-1 top-0 h-full w-px bg-yellow-800/30" />

@@ -41,7 +41,8 @@ export default class TransactionSevice {
 
   public async create(amount: string, apikey: string, user: ITenant) {
     try {
-      const data = await api.post(constants.SERVER_PATH + "/transaction", {
+      const data = await fetch(constants.SERVER_PATH + "/transaction", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           "api-key": apikey,
@@ -65,10 +66,11 @@ export default class TransactionSevice {
           amount,
         }),
       });
-      return data.data;
+      return await data.json();
     } catch (error) {
       return {
         error: true,
+        message: "Erro ao testar",
       };
     }
   }

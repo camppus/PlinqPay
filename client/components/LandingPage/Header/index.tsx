@@ -29,7 +29,7 @@ export function Header() {
           </a>
           <a href="/auth">
             <Button size="sm" className="text-white">
-              Cadastre-se
+              Acessar
             </Button>
           </a>
           <Button

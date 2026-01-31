@@ -10,10 +10,13 @@ export class TaxController {
   })
   @Get()
   public getConfigs() {
+    const percent = Math.round(constants.TAX * 100);
+
     return {
       taxType: 'PERCENT',
-      value: constants.TAX * 100 + '%',
+      taxa: percent + '%',
       currency: 'AOA',
+      value: constants.TAX,
     };
   }
 }

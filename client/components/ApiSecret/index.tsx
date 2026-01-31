@@ -124,17 +124,30 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
         <span>{new Date(createdAt).toLocaleDateString("pt")}</span>
       </div>
 
-      <div className="flex justify-end items-center w-full place-items-end">
-        <Button disabled={processing} className=" text-white" onClick={async() => {
-          setProcessing(true)
-          const data = await new TransactionSevice("").create("100", publicKey, user)
-          if (data?.data) {
-            toast.info("Pagamento criado com sucesso", {
-              description: "Acesse a aba principal e veja os detalhes"
-            })
-          }
-          setProcessing(false)
-        }}>
+      <div className="flex justify-end items-center w-full place-items-end mt-2">
+        <Button
+          disabled={processing}
+          className=" text-white"
+          onClick={async () => {
+            if (!isActive) {
+              toast.info("Chave não esta ativa");
+              return;
+            }
+            setProcessing(true);
+            const data = await new TransactionSevice("").create(
+              "100",
+              publicKey,
+              user,
+            );
+            console.log(data);
+            if (data?.data) {
+              toast.info("Pagamento criado com sucesso", {
+                description: "Acesse a aba principal e veja os detalhes",
+              });
+            }
+            setProcessing(false);
+          }}
+        >
           {!processing ? "Testar" : <Loader2 className="animate-spin" />}
         </Button>
       </div>

@@ -88,6 +88,8 @@ export class TransactionController {
     }
     console.log(data)
     await this.service.update(data);
-    return 'success';
+    return {
+      sucess : true
+    }
   }
 }

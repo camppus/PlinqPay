@@ -56,6 +56,10 @@ export default class TrasanctionService {
       this.apiKeyRepo,
       this.notifier,
     );
-    const updated = await updater.execute(data);
+    try {
+      await updater.execute(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

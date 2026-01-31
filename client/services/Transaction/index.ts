@@ -1,4 +1,6 @@
+import constants from "@/constants";
 import api from "../api";
+import { ITenant } from "@/types";
 
 export default class TransactionSevice {
   constructor(private readonly token: string) {
@@ -33,6 +35,40 @@ export default class TransactionSevice {
     } catch (error: any) {
       return {
         message: error?.response?.data?.message,
+      };
+    }
+  }
+
+  public async create(amount: string, apikey: string, user: ITenant) {
+    try {
+      const data = await api.post(constants.SERVER_PATH + "/transaction", {
+        headers: {
+          "Content-Type": "application/json",
+          "api-key": apikey,
+        },
+        body: JSON.stringify({
+          externalId: "trx_123456",
+          callbackUrl: "https://meusite.com/webhook",
+          method: "REFERENCE",
+          client: {
+            name: user.title,
+            email: user.email,
+            phone: user.phone,
+          },
+          items: [
+            {
+              title: "Teste de pagamento",
+              price: amount,
+              quantity: 1,
+            },
+          ],
+          amount,
+        }),
+      });
+      return data.data;
+    } catch (error) {
+      return {
+        error: true,
       };
     }
   }

@@ -2,7 +2,7 @@ import { ITransactionRepositorie } from '../repositories/@types';
 import { CreateTransactionDTO } from '../dto/create.dto';
 import { Paymentprocessor } from '@/infra/Getaway';
 import { Price, PriceValidator } from '@/objectValues/Price';
-import { TaxtCalculatorFactorie } from '@/objectValues/Tax/taxcalulator';
+import { TaxCalculatorFactory } from '@/objectValues/Tax/taxcalulator';
 import { ApiSecretKeys } from '@prisma/client';
 import { NotificationsService } from '@/domains/notifications/notification.service';
 import Assignature from '@/lib/shared/Assignature';
@@ -21,7 +21,7 @@ export class CreatePaymentUseCase {
     });
 
     new PriceValidator(prices, data.amount);
-    const taxtCalculator = new TaxtCalculatorFactorie('PERCENT');
+    const taxtCalculator = new TaxCalculatorFactory('PERCENT');
     const precification = taxtCalculator.calc(data.amount);
     const getwayResponse = await this.processor.pay(
       precification.amount.toString(),
@@ -42,7 +42,7 @@ export class CreatePaymentUseCase {
       },
       transaction: data,
     });
-    
+
     await this.notifier.create({
       companieId: apikey.companieId,
       entitieId: createdPayment.id,

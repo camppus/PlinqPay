@@ -25,7 +25,7 @@ import { transactionsMock } from "@/constants/mocks/transacctionmock";
 import { useUser } from "@/context/UserContext";
 import { isArrayMappble } from "@/lib/utils";
 import { ITransaction } from "@/types";
-import { ArrowLeft, ArrowRight, FolderRoot, Hand, Loader2 } from "lucide-react";
+import { FolderRoot, Hand, Loader2 } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
 import {
@@ -152,7 +152,7 @@ export default function Home() {
                 💡 <strong>IMPORTANTE :</strong> A sua conta precisa verificada
                 para poder execer qualquer acção. Aguarde a verificação do seu
                 perfil, isso pode levar no máximo 24hr ou consulte a equipe de
-                atendimento pelo whatsap <strong>+244 957777993</strong>
+                atendimento pelo whatsap <strong>+244 </strong>
               </p>
             </div>
           )}
@@ -166,7 +166,7 @@ export default function Home() {
             <Wallet
               bankName={"Registre seu cartão"}
               iban={""}
-              userName={"Não cadastrado"}
+              userName={"Não registrado"}
             />
           )}
           {!user.wallet && (

@@ -53,7 +53,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           <div className="animate-pulse scale-150">
             <Logo />
           </div>
-          <p className="text-xs">From @fckdir</p>
+          <p className="text-xs">From plikpay</p>
         </div>
       ) : (
         <> {children}</>

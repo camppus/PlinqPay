@@ -1,7 +1,6 @@
 "use client";
 
-import { JSX, useEffect, useState } from "react";
-import { withdrawalsMock } from "@/constants/mocks/widhtdrals";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,12 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { IWithdrawal, PaymentStatus } from "@/types";
 import { formatCurrency, isArrayMappble } from "@/lib/utils";
-import { FaCheckCircle, FaClock, FaTimesCircle, FaEye } from "react-icons/fa";
-import clsx from "clsx";
 import { statusMap } from "@/components/Transactions";
 import { useUser } from "@/context/UserContext";
 import Stats from "@/components/Stats";
-import { Wallet } from "@/components/Wallet";
 import { IconDownload } from "@tabler/icons-react";
 import constants from "@/constants";
 import WithdrawlsSevice from "@/services/Widthdralls";
@@ -36,7 +32,6 @@ import Loader from "@/components/Loader";
 export default function WithdrawalsPage() {
   const [openSheet, setOpenSheet] = useState(false);
   const [amount, setAmount] = useState(0);
-  const [comprovanteUrl, setComprovanteUrl] = useState<string | null>(null);
   const { user } = useUser();
   const [page, setPage] = useState(1);
   const [lastPage, setLastPAge] = useState(1);
@@ -141,9 +136,24 @@ export default function WithdrawalsPage() {
                 >
                   <div>
                     <p className="font-medium">{formatCurrency(w.amount)}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(w.createdAt).toLocaleDateString("pt")}
-                    </p>
+                    <span className="flex flex-col gap-2">
+                      <small className="text-xs text-muted-foreground">
+                        {new Date(w.createdAt).toLocaleDateString("smallt")}
+                      </small>
+
+                      {w.approvedAt && (
+                        <small className="text-xs text-muted-foreground">
+                          Aprovado aos{" "}
+                          {new Date(w.approvedAt).toLocaleDateString("pt")}
+                        </small>
+                      )}
+                      {w.revokedAt && (
+                        <small className="text-xs text-muted-foreground">
+                          Rejeitado aos{" "}
+                          {new Date(w.revokedAt).toLocaleDateString("pt")}
+                        </small>
+                      )}
+                    </span>
                   </div>
                   {w.status == PaymentStatus.PAID && (
                     <div className="flex flex-col gap-2">
@@ -156,6 +166,11 @@ export default function WithdrawalsPage() {
                       </a>
                     </div>
                   )}
+                  {w.notes && (
+                    <div className="flex flex-col gap-2">
+                      <p className="text-sm">{w.notes}</p>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     <Badge variant={"outline"}>
                       {status.icon}{" "}
@@ -165,18 +180,6 @@ export default function WithdrawalsPage() {
                           ? "Pendente"
                           : "Rejeitado"}
                     </Badge>
-
-                    {/* Ver comprovante */}
-                    {w.fileUrl && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setComprovanteUrl(w.fileUrl!)}
-                        className="flex items-center gap-1"
-                      >
-                        <FaEye /> Ver
-                      </Button>
-                    )}
                   </div>
                 </li>
               );
@@ -236,27 +239,6 @@ export default function WithdrawalsPage() {
                 " Solicitar saque"
               )}
             </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
-
-      <Sheet
-        open={!!comprovanteUrl}
-        onOpenChange={() => setComprovanteUrl(null)}
-      >
-        <SheetContent side="right" className="w-96">
-          <SheetHeader>
-            <SheetTitle>Comprovante</SheetTitle>
-          </SheetHeader>
-          <div className="mt-4">
-            {comprovanteUrl ? (
-              <iframe
-                src={comprovanteUrl}
-                className="w-full h-96 rounded-md border"
-              />
-            ) : (
-              <p>Sem comprovante disponível</p>
-            )}
           </div>
         </SheetContent>
       </Sheet>

@@ -17,27 +17,29 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { IconShield, IconLoader } from "@tabler/icons-react";
+
 import {
-  IconChevronsLeft,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsRight,
-  IconShield,
-  IconLoader,
-} from "@tabler/icons-react";
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+
 import TenantService from "@/services/tenant";
 import Stats from "@/components/Stats";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, SearchIcon } from "lucide-react";
 
 export default function Users() {
   const [isLoad, setIsLoad] = useState(true);
   const [stats, setStats] = useState<Istats[]>([]);
   const [tenants, setTenants] = useState<ITenant[]>([]);
   const [filter, setFilter] = useState<
-    "all" | "active" | "verified" | "rejected"
+    "all" | "active" | "verified" | "pending"
   >("all");
+
+  const [search, setSearch] = useState("");
 
   const [page, setPage] = useState(1);
   const [lastPage, setLastPAge] = useState(1);
@@ -76,18 +78,41 @@ export default function Users() {
     }
   };
 
+  const filteredTenants = useMemo(() => {
+    if (!search.trim()) return tenants;
+
+    const value = search.toLowerCase();
+
+    return tenants.filter((t) =>
+      [t.id, t.title, t.email, t.phone]
+        .filter(Boolean)
+        .some((field) => field.toString().toLowerCase().includes(value)),
+    );
+  }, [search, tenants]);
+
   return (
     <section className="flex flex-col gap-4 w-full">
       {isLoad ? (
         <Loader />
       ) : (
         <>
-          {/* Stats */}
           <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
             {isArrayMappble(stats) &&
               stats.map((item, idx) => <Stats key={idx} data={item} />)}
           </div>
 
+          <div className="w-full flex justify-end px-4">
+            <InputGroup>
+              <InputGroupInput
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Buscar..."
+              />
+              <InputGroupAddon>
+                <SearchIcon />
+              </InputGroupAddon>
+            </InputGroup>
+          </div>
           <Tabs
             value={filter}
             onValueChange={(v) => setFilter(v as any)}
@@ -96,8 +121,9 @@ export default function Users() {
             <TabsList>
               <TabsTrigger value="all">Todos</TabsTrigger>
               <TabsTrigger value="active">Ativos</TabsTrigger>
-              <TabsTrigger value="rejected">Inativos </TabsTrigger>
+              <TabsTrigger value="pending">Inativos </TabsTrigger>
             </TabsList>
+
             <TabsContent
               value={filter}
               className="flex flex-col gap-4 overflow-auto"
@@ -117,8 +143,8 @@ export default function Users() {
                   </TableRow>
                 </TableHeader>
                 <TableBody className="border">
-                  {tenants.length ? (
-                    tenants.map((item, idx) => (
+                  {filteredTenants.length ? (
+                    filteredTenants.map((item, idx) => (
                       <TableRow key={idx}>
                         <TableCell colSpan={2}>
                           <Avatar>

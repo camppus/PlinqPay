@@ -152,7 +152,7 @@ export default function WithdrawalsPage() {
               return (
                 <li
                   key={w.id}
-                  className="py-2 flex md:flex-row flex-col justify-between md:items-center"
+                  className="py-2 flex md:gap-0 gap-4 md:flex-row flex-col justify-between md:items-center"
                 >
                   <div>
                     <p className="font-medium">{formatCurrency(w.amount)}</p>

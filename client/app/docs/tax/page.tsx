@@ -2,7 +2,7 @@
 
 import CodeBlock from "@/components/Code";
 
-const codeExample = `fetch('https://pliqpag-api.onrender.com/v1/tax', {
+const codeExample = `const res =  fetch('https://pliqpag-api.onrender.com/v1/tax', {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json'

@@ -54,4 +54,15 @@ export default class WithdrawlsSevice {
       };
     }
   }
+
+  public async getTax() {
+    try {
+      const res = await api.put(`/tax`);
+      return res.data;
+    } catch (error: any) {
+      return {
+        message: error?.response?.data?.message,
+      };
+    }
+  }
 }

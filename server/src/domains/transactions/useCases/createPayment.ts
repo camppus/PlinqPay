@@ -23,6 +23,7 @@ export class CreatePaymentUseCase {
     new PriceValidator(prices, data.amount);
     const taxtCalculator = new TaxCalculatorFactory('PERCENT');
     const precification = taxtCalculator.calc(data.amount);
+    
     const getwayResponse = await this.processor.pay(
       precification.amount.toString(),
     );

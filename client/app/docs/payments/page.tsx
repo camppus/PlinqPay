@@ -45,7 +45,9 @@ export default function Payemtent() {
           <span className="rounded bg-green-600 px-2 py-1 text-xs font-semibold text-white">
             POST
           </span>
-          <code className="text-sm">https://pliqpag-api.onrender.com/v1/transaction</code>
+          <code className="text-sm">
+            https://pliqpag-api.onrender.com/v1/transaction
+          </code>
         </div>
       </div>
 
@@ -74,7 +76,10 @@ export default function Payemtent() {
         </div>{" "}
         <div className="rounded-lg border-l-4 border-red-500 bg-red-50 p-4 dark:bg-red-950">
           <p className="text-sm text-red-900 dark:text-red-200">
-            💡 <strong>NOTA :</strong> O campo <code>callbackUrl</code> deve ser o endpoint do teu backend do tipo POST onde serão enviados os dados do pagamento sempre que houver uma mudança nele como Confirmação , Cancelamento etc.
+            💡 <strong>NOTA :</strong> O campo <code>callbackUrl</code> deve ser
+            o endpoint do teu backend do tipo POST onde serão enviados os dados
+            do pagamento sempre que houver uma mudança nele como Confirmação ,
+            Cancelamento etc.
           </p>
         </div>
         <CodeBlock
@@ -87,8 +92,8 @@ const response = await fetch('https://pliqpag-api.onrender.com/v1/transaction', 
     'api-key': 'SUA CHAVE DE API'
   },
   body: JSON.stringify({
-    externalId: 'ID do pagamento no teu sistema (Único) ',
-    callbackUrl: 'https://meusite.com/webhook' //Deve ser o endpoint do teu backend do tipo POST,
+    externalId: 'ID do pagamento no teu sistema (Único)' // ID do pagamento no teu sistema,
+    callbackUrl: 'https://meusite.com/webhook' // Deve ser o endpoint do teu backend do tipo POST,
     method: 'REFERENCE',
     client: {
       name: 'João Silva',
@@ -98,11 +103,11 @@ const response = await fetch('https://pliqpag-api.onrender.com/v1/transaction', 
     items: [
       {
         title: 'Curso de NestJS',
-        price: 5000,
+        price: 500,
         quantity: 2
       }
     ],
-    amount: 1
+    amount: 1000 // limite 100.000
   })
 });
   `}

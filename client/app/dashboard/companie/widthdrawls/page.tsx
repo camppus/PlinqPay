@@ -30,6 +30,12 @@ import { toast } from "sonner";
 import Loader from "@/components/Loader";
 
 export default function WithdrawalsPage() {
+  const [tax, setTax] = useState({
+    taxType: "PERCENT",
+    taxa: "7%",
+    currency: "AOA",
+    value: 0.07,
+  });
   const [openSheet, setOpenSheet] = useState(false);
   const [amount, setAmount] = useState(0);
   const { user } = useUser();
@@ -59,8 +65,11 @@ export default function WithdrawalsPage() {
   useEffect(() => {
     async function get() {
       const token = localStorage.getItem("token") as string;
-      const data = await new WithdrawlsSevice(token).getAlls(page);
-      console.log(data);
+      const [data, taxRequest] = await Promise.all([
+        new WithdrawlsSevice(token).getAlls(page),
+        new WithdrawlsSevice(token).getTax(),
+      ]);
+      setTax(taxRequest);
       if (data?.pagination) {
         setLastPAge(data?.pagination?.lastPage);
       }
@@ -103,6 +112,17 @@ export default function WithdrawalsPage() {
           }}
         />
       </div>
+      <span className="w-full my-2">
+        <Stats
+          data={{
+            title: "Taxa Actual",
+            subtitle: `A taxa actual é de ${tax.taxa}`,
+            description: "Esta é uma taxa simbólica para a plikpay",
+            amount: user.totalDisponible,
+            isCoin: false,
+          }}
+        />
+      </span>
       <Button
         disabled={user.totalDisponible <= 0}
         className=" text-white"

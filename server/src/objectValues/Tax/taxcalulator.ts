@@ -28,16 +28,18 @@ export class TaxCalculatorFactory {
         'O valor da transação deve ser maior que zero',
       );
     }
-
     const tax = this.strategy.getTax();
     if (amount <= tax) {
       throw new BadRequestException(
         'O valor da transação deve ser maior que a taxa aplicada',
       );
     }
-
     const total = this.strategy.calc(amount);
-
+    if (total >= 10_000) {
+      throw new BadRequestException({
+        message: 'Limite de 100.000,00 kz por trasnsação',
+      });
+    }
     return {
       amount,
       tax,

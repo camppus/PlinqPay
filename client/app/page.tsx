@@ -331,7 +331,7 @@ export default function Home() {
               <Button
                 size={"lg"}
                 variant={"outline"}
-                className=" text-blue-500 rounded-full hover:bg-white bg-white"
+                className=" text-blue-500 dark:text-white rounded-full hover:bg-white bg-white"
               >
                 Vai , clica neste botão <ArrowRight />{" "}
               </Button>

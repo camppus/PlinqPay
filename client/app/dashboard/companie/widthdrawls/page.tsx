@@ -222,6 +222,7 @@ export default function WithdrawalsPage() {
               Saldo disponível:{" "}
               {Number(user.totalDisponible).toLocaleString("pt")}, 00 kz
             </p>
+            <p>Saque Mínimo: {Number(5000).toLocaleString("pt")}, 00 kz</p>
             <Input
               type="number"
               placeholder="Valor a sacar"

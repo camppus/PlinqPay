@@ -5,6 +5,6 @@ export class CreateWidthrawlDto {
   @IsNumber()
   @ApiProperty()
   @IsPositive()
-  @Min(10_000)
+  @Min(5_000)
   amount: number;
 }

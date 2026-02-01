@@ -41,7 +41,7 @@ export class CreateWidthDrawUseCase {
     await this.notifier.create({
       companieId: tenantId,
       entitieId: widhtraw.id,
-      message: `Saque criado ${Number(data.amount).toLocaleString('pt')},00 kz`,
+      message: `Saque pendente ${Number(data.amount).toLocaleString('pt')},00 kz`,
       type: 'WITHDRAWALS',
     });
     return {

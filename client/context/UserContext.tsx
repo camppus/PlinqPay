@@ -44,6 +44,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       router.push("/auth");
     }
     get();
+
+    const interval = setInterval(async () => {
+      await get();
+    }, 60_000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   return (

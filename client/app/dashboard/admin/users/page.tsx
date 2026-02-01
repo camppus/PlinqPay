@@ -101,140 +101,123 @@ export default function Users() {
               stats.map((item, idx) => <Stats key={idx} data={item} />)}
           </div>
 
-          <div className="w-full flex justify-end px-4">
-            <InputGroup>
-              <InputGroupInput
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Buscar..."
-              />
-              <InputGroupAddon>
-                <SearchIcon />
-              </InputGroupAddon>
-            </InputGroup>
-          </div>
-          <Tabs
-            value={filter}
-            onValueChange={(v) => setFilter(v as any)}
-            className="mt-10 flex-col gap-6 px-6"
-          >
-            <TabsList>
-              <TabsTrigger value="all">Todos</TabsTrigger>
-              <TabsTrigger value="active">Ativos</TabsTrigger>
-              <TabsTrigger value="pending">Inativos </TabsTrigger>
-            </TabsList>
-
-            <TabsContent
-              value={filter}
-              className="flex flex-col gap-4 overflow-auto"
-            >
-              <Table className="rounded-lg overflow-hidden">
-                <TableHeader className="bg-muted sticky top-0 z-10">
-                  <TableRow>
-                    <TableHead colSpan={2}>Perfil</TableHead>
-                    <TableHead>Empresa</TableHead>
-                    <TableHead>Contatos</TableHead>
-                    <TableHead>Saldo</TableHead>
-                    <TableHead>Faturado</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Parceiro desde</TableHead>
-                    <TableHead>Estado</TableHead>
-                    <TableHead>Detalhes</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody className="border">
-                  {filteredTenants.length ? (
-                    filteredTenants.map((item, idx) => (
-                      <TableRow key={idx}>
-                        <TableCell colSpan={2}>
-                          <Avatar>
-                            <AvatarFallback>
-                              {item.title.slice(0, 2)}
-                            </AvatarFallback>
-                          </Avatar>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <h1>{item.title}</h1>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <small>{item.email}</small>
-                            <small>{item.phone}</small>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          {Number(item.totalDisponible).toLocaleString("pt")},00
-                          Kz
-                        </TableCell>
-                        <TableCell>
-                          {Number(item.totalErned).toLocaleString("pt")},00 Kz
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">
-                            {item.isVerified ? (
-                              <IconShield className="text-green-500" />
-                            ) : (
-                              <IconLoader className="text-amber-500" />
-                            )}
-                            {item.isVerified ? "Verificado" : "Pendente"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {new Date(item.createdAt).toLocaleDateString("pt")}
-                        </TableCell>
-                        <TableCell>
-                          <Switch
-                            checked={item.isVerified}
-                            onCheckedChange={async (checked) =>
-                              await handleStatusChange(item.id, checked)
-                            }
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Link href={`/dashboard/admin/users/${item.id}`}>
-                            <Button variant={"outline"}>Detalhes</Button>
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={8} className="h-24 text-center">
-                        Sem resulttado encotrado
+          <span className="flex flex-col gap-5 mt-5">
+            <div className="w-full flex justify-end px-4">
+              <InputGroup className="lg:w-[20%] w-full">
+                <InputGroupInput
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Buscar ..."
+                />
+                <InputGroupAddon>
+                  <SearchIcon />
+                </InputGroupAddon>
+              </InputGroup>
+            </div>
+            <Table className="rounded-lg overflow-hidden">
+              <TableHeader className="bg-muted sticky top-0 z-10">
+                <TableRow>
+                  <TableHead colSpan={2}>Perfil</TableHead>
+                  <TableHead>Empresa</TableHead>
+                  <TableHead>Contatos</TableHead>
+                  <TableHead>Saldo</TableHead>
+                  <TableHead>Faturado</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Parceiro desde</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Detalhes</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="border">
+                {filteredTenants.length ? (
+                  filteredTenants.map((item, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell colSpan={2}>
+                        <Avatar>
+                          <AvatarFallback>
+                            {item.title.slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <h1>{item.title}</h1>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <small>{item.email}</small>
+                          <small>{item.phone}</small>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {Number(item.totalDisponible).toLocaleString("pt")},00
+                        Kz
+                      </TableCell>
+                      <TableCell>
+                        {Number(item.totalErned).toLocaleString("pt")},00 Kz
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          {item.isVerified ? (
+                            <IconShield className="text-green-500" />
+                          ) : (
+                            <IconLoader className="text-amber-500" />
+                          )}
+                          {item.isVerified ? "Verificado" : "Pendente"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(item.createdAt).toLocaleDateString("pt")}
+                      </TableCell>
+                      <TableCell>
+                        <Switch
+                          checked={item.isVerified}
+                          onCheckedChange={async (checked) =>
+                            await handleStatusChange(item.id, checked)
+                          }
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Link href={`/dashboard/admin/users/${item.id}`}>
+                          <Button variant={"outline"}>Detalhes</Button>
+                        </Link>
                       </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>{" "}
-              <span className="flex gap-3 mt-2 justify-center">
-                <Button
-                  disabled={page <= 1 || isLoad}
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                  variant="outline"
-                  className="rounded-full"
-                  size="icon"
-                >
-                  <ArrowLeft />
-                </Button>
-                <span className="flex items-center px-2">
-                  {page} / {lastPage}
-                </span>
-                <Button
-                  disabled={page >= lastPage || isLoad}
-                  onClick={() =>
-                    setPage((prev) => Math.min(prev + 1, lastPage))
-                  }
-                  variant="outline"
-                  className="rounded-full"
-                  size="icon"
-                >
-                  <ArrowRight />
-                </Button>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={8} className="h-24 text-center">
+                      Sem resulttado encotrado
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>{" "}
+            <span className="flex gap-3 mt-2 justify-center">
+              <Button
+                disabled={page <= 1 || isLoad}
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                variant="outline"
+                className="rounded-full"
+                size="icon"
+              >
+                <ArrowLeft />
+              </Button>
+              <span className="flex items-center px-2">
+                {page} / {lastPage}
               </span>
-            </TabsContent>
-          </Tabs>
+              <Button
+                disabled={page >= lastPage || isLoad}
+                onClick={() => setPage((prev) => Math.min(prev + 1, lastPage))}
+                variant="outline"
+                className="rounded-full"
+                size="icon"
+              >
+                <ArrowRight />
+              </Button>
+            </span>
+          </span>
         </>
       )}
     </section>

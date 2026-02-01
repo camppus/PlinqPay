@@ -101,8 +101,8 @@ export default function Users() {
               stats.map((item, idx) => <Stats key={idx} data={item} />)}
           </div>
 
-          <span className="flex flex-col gap-5 mt-5">
-            <div className="w-full flex justify-end px-4">
+          <span className="flex flex-col gap-5 mt-5  px-4">
+            <div className="w-full flex justify-end">
               <InputGroup className="lg:w-[20%] w-full">
                 <InputGroupInput
                   value={search}

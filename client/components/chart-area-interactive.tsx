@@ -43,38 +43,49 @@ const chartConfig = {
 
 export function AdminFinanceChart({ transactions, withdraws }: Props) {
   const chartData = React.useMemo(() => {
-    const map = new Map<string, { in: number; out: number }>();
+    const events: {
+      date: string;
+      time: number;
+      in: number;
+      out: number;
+    }[] = [];
 
     transactions
       .filter((t) => t.status === "PAID")
       .forEach((t) => {
-        const date = new Date(t.createdAt).toISOString().split("T")[0];
-        if (!map.has(date)) map.set(date, { in: 0, out: 0 });
-        map.get(date)!.in += toNumber(t.total);
+        events.push({
+          date: new Date(t.createdAt).toLocaleDateString("pt"),
+          time: new Date(t.createdAt).getTime(),
+          in: toNumber(t.total),
+          out: 0,
+        });
       });
 
     withdraws
       .filter((w) => w.status === "APPROVED" || w.status === "PAID")
       .forEach((w) => {
-        const date = new Date(w.createdAt).toISOString().split("T")[0];
-        if (!map.has(date)) map.set(date, { in: 0, out: 0 });
-        map.get(date)!.out += toNumber(w.amount);
+        events.push({
+          date: new Date(w.createdAt).toLocaleDateString("pt"),
+          time: new Date(w.createdAt).getTime(),
+          in: 0,
+          out: toNumber(w.amount),
+        });
       });
+
+    events.sort((a, b) => a.time - b.time);
 
     let available = 0;
 
-    return Array.from(map.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([date, values]) => {
-        available += values.in - values.out;
+    return events.map((e) => {
+      available += e.in - e.out;
 
-        return {
-          date,
-          in: values.in,
-          out: values.out,
-          available,
-        };
-      });
+      return {
+        date: e.date,
+        in: e.in,
+        out: e.out,
+        available,
+      };
+    });
   }, [transactions, withdraws]);
 
   return (
@@ -85,7 +96,7 @@ export function AdminFinanceChart({ transactions, withdraws }: Props) {
       </CardHeader>
 
       <CardContent className="pt-4">
-        <ChartContainer config={chartConfig} className="h-[260px] w-full">
+        <ChartContainer config={chartConfig} className="h-65 w-full">
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="fillIn" x1="0" y1="0" x2="0" y2="1">

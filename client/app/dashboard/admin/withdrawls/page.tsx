@@ -222,7 +222,9 @@ export default function Withdrawals() {
                             status: String(status),
                           });
                           toast.info(
-                            data?.message ?? "Erro ao actualizar o saque",
+                            data?.updated
+                              ? "Saque modificado"
+                              : "Erro ao actualizar o saque",
                           );
                           console.log(data);
                           setProcessing(false);

@@ -22,7 +22,7 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
   const [visible, setVisible] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [active, setActive] = useState(isActive);
-
+  const isAdmin = user.role == Role.SUPERCOMPANIE;
   async function updateStatus() {
     const token = localStorage.getItem("token") as string;
     const resApi = await new ApiKeyService(token).toogle(id);
@@ -41,19 +41,21 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
           <h3 className="font-semibold">{title}</h3>
         </div>
 
-        <Switch
-          checked={active}
-          onCheckedChange={async (e) => {
-            const data = await updateStatus();
-            if (data?.message) {
-              toast.info(data?.message);
-              return;
-            }
-            setActive(e);
-            const status = data?.status;
-            toast.info(`Chave ${status ? "activada" : "desactivada"}`);
-          }}
-        />
+        {!isAdmin && (
+          <Switch
+            checked={active}
+            onCheckedChange={async (e) => {
+              const data = await updateStatus();
+              if (data?.message) {
+                toast.info(data?.message);
+                return;
+              }
+              setActive(e);
+              const status = data?.status;
+              toast.info(`Chave ${status ? "activada" : "desactivada"}`);
+            }}
+          />
+        )}
       </div>
 
       <div className="mt-2">
@@ -63,7 +65,9 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
       </div>
 
       <div className="mt-4 space-y-2">
-        <p className="text-xs text-muted-foreground">Public Key</p>
+        <p className="text-xs text-muted-foreground">
+          Public Key (use esta chave para criar pagamentos){" "}
+        </p>
         <div className="flex items-center gap-2 rounded-md border bg-muted px-3 py-1 font-mono text-xs">
           <span className="flex-1 truncate">
             {visible ? publicKey : "********************"}
@@ -90,34 +94,37 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
           </span>
         </div>
       </div>
-      <div className="mt-3">
-        <p className="text-xs text-muted-foreground mb-2">Secret Key</p>
-        <div className="flex items-center gap-2 rounded-md border bg-muted px-3 py-1 font-mono text-xs">
-          <span className="flex-1 truncate">
-            {visible ? secretKey : "********************"}
-          </span>
 
-          <span className=" flex items-center gap-2">
-            <span onClick={() => setVisible(!visible)}>
-              {visible ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
+      {!isAdmin && (
+        <div className="mt-3">
+          <p className="text-xs text-muted-foreground mb-2">Secret Key</p>
+          <div className="flex items-center gap-2 rounded-md border bg-muted px-3 py-1 font-mono text-xs">
+            <span className="flex-1 truncate">
+              {visible ? secretKey : "********************"}
             </span>
-            <Button
-              onClick={() => {
-                toast.info("Chave copiado");
-                navigator.clipboard.writeText(secretKey ?? "");
-              }}
-              size={"icon"}
-              variant={"outline"}
-            >
-              <IconCopy />
-            </Button>
-          </span>
+
+            <span className="flex items-center gap-2">
+              <span onClick={() => setVisible(!visible)}>
+                {visible ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </span>
+              <Button
+                onClick={() => {
+                  toast.info("Chave copiado");
+                  navigator.clipboard.writeText(secretKey ?? "");
+                }}
+                size={"icon"}
+                variant={"outline"}
+              >
+                <IconCopy />
+              </Button>
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
         <span>Criada em</span>
@@ -145,13 +152,19 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
                 description: "Acesse a aba principal e veja os detalhes",
               });
             } else {
-              const message = Array.isArray(data?.message) ? data?.message[0] : data?.mesage
-              toast.info(message ?? "Erro ao criar registrar pagamento")
+              const message = Array.isArray(data?.message)
+                ? data?.message[0]
+                : data?.mesage;
+              toast.info(message ?? "Erro ao criar registrar pagamento");
             }
             setProcessing(false);
           }}
         >
-          {!processing ? "Testar com 100 kz" : <Loader2 className="animate-spin" />}
+          {!processing ? (
+            "Testar com 100 kz"
+          ) : (
+            <Loader2 className="animate-spin" />
+          )}
         </Button>
       </div>
     </div>

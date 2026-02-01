@@ -335,10 +335,7 @@ export default function Home() {
             ) : (
               <span className="flex flex-col gap-5">
                 <div className="flex items-center justify-between">
-                  <h1 className="opacity-80">Trasanções</h1>
-                  <p className="text-xs opacity-80">
-                    {page} de {lastPage}{" "}
-                  </p>
+                  <h1 className="opacity-80">Últimas transações</h1>
                 </div>
 
                 <span className="flex flex-col gap-3">
@@ -346,7 +343,7 @@ export default function Home() {
                     <RecentTransaction data={item} key={idx} />
                   ))}
                   <p className="text-xs mt-5 text-center dark:opacity-90">
-                    Aqui aparece apenas as 20 transações recentes , o restante
+                    Aqui aparece apenas as 20 transações recente , o restante
                     podes consultar no teu sistema!
                   </p>
                 </span>

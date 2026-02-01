@@ -152,7 +152,7 @@ export default function WithdrawalsPage() {
               return (
                 <li
                   key={w.id}
-                  className="py-2 flex justify-between items-center"
+                  className="py-2 flex md:flex-row flex-col justify-between items-center"
                 >
                   <div>
                     <p className="font-medium">{formatCurrency(w.amount)}</p>
@@ -175,6 +175,7 @@ export default function WithdrawalsPage() {
                       )}
                     </span>
                   </div>
+
                   {w.status == PaymentStatus.PAID && (
                     <div className="flex flex-col gap-2">
                       <p className="font-medium">Comprovativo</p>

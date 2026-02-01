@@ -152,11 +152,11 @@ export default function WithdrawalsPage() {
               return (
                 <li
                   key={w.id}
-                  className="py-2 flex md:flex-row flex-col justify-between items-center"
+                  className="py-2 flex md:flex-row flex-col justify-between md:items-center"
                 >
                   <div>
                     <p className="font-medium">{formatCurrency(w.amount)}</p>
-                    <span className="flex flex-col gap-2">
+                    <span className="flex md:flex-col gap-4 md:gap-2">
                       <small className="text-xs text-muted-foreground">
                         {new Date(w.createdAt).toLocaleDateString("smallt")}
                       </small>

@@ -45,7 +45,7 @@ export default function Payemtent() {
           <span className="rounded bg-green-600 px-2 py-1 text-xs font-semibold text-white">
             POST
           </span>
-          <code className="text-sm">/v1/transaction</code>
+          <code className="text-sm">https://pliqpag-api.onrender.com/v1/transaction</code>
         </div>
       </div>
 
@@ -56,16 +56,27 @@ export default function Payemtent() {
           <li>Você cria uma transação informando os dados do cliente</li>
           <li>O sistema gera uma referência de pagamento</li>
           <li>O cliente realiza o pagamento</li>
-          <li>Sua aplicação recebe o status via callback</li>
+          <li>Sua aplicação recebe o status via callbackURL POST</li>
         </ol>
       </div>
 
       <div className="space-y-3">
         <h2 className="text-xl font-bold">Exemplo de requisição</h2>
-
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
           Utilize o exemplo abaixo para criar um pagamento por referência.
         </p>
+        <div className="rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4 dark:bg-blue-950">
+          <p className="text-sm text-blue-900 dark:text-blue-200">
+            💡 <strong>NOTA :</strong> O campo <code>externalId</code> deve ser
+            único no seu sistema para evitar pagamentos duplicados e para que o
+            seu sistema saiba qual é o pagamento que precisa ser modificado
+          </p>
+        </div>{" "}
+        <div className="rounded-lg border-l-4 border-red-500 bg-red-50 p-4 dark:bg-red-950">
+          <p className="text-sm text-red-900 dark:text-red-200">
+            💡 <strong>NOTA :</strong> O campo <code>callbackUrl</code> deve ser o endpoint do teu backend do tipo POST onde serão enviados os dados do pagamento sempre que houver uma mudança nele como Confirmação , Cancelamento etc.
+          </p>
+        </div>
         <CodeBlock
           language="typescript"
           code={`
@@ -76,8 +87,8 @@ const response = await fetch('https://pliqpag-api.onrender.com/v1/transaction', 
     'api-key': 'SUA CHAVE DE API'
   },
   body: JSON.stringify({
-    externalId: 'trx_123456',
-    callbackUrl: 'https://meusite.com/webhook',
+    externalId: 'ID do pagamento no teu sistema (Único) ',
+    callbackUrl: 'https://meusite.com/webhook' //Deve ser o endpoint do teu backend do tipo POST,
     method: 'REFERENCE',
     client: {
       name: 'João Silva',
@@ -96,13 +107,6 @@ const response = await fetch('https://pliqpag-api.onrender.com/v1/transaction', 
 });
   `}
         />
-      </div>
-
-      <div className="rounded-lg border-l-4 border-blue-500 bg-blue-50 p-4 dark:bg-blue-950">
-        <p className="text-sm text-blue-900 dark:text-blue-200">
-          💡 <strong>Dica:</strong> O campo <code>externalId</code> deve ser
-          único no seu sistema para evitar pagamentos duplicados.
-        </p>
       </div>
     </section>
   );

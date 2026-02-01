@@ -151,7 +151,7 @@ export function ApiKeyCard({ data }: { data: IApiSecretKey }) {
             setProcessing(false);
           }}
         >
-          {!processing ? "Testar com 100kz" : <Loader2 className="animate-spin" />}
+          {!processing ? "Testar com 100 kz" : <Loader2 className="animate-spin" />}
         </Button>
       </div>
     </div>

@@ -32,11 +32,6 @@ export default class IsApiKeyAbleToProcessPaymentGuard implements CanActivate {
   }
 
   private async validateIfIsAdmin(apiKey: string, ip: string) {
-    this.logger.fatal(
-      'ACESSING PAYMENTPROCESSOR -> ',
-      ip,
-      this.getDateMessage(),
-    );
     if (!apiKey) {
       this.logger.fatal('MiSSING API_kEY -> ', ip, this.getDateMessage());
       throw new BadRequestException({

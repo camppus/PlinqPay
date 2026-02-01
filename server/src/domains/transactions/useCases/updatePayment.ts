@@ -43,7 +43,6 @@ export class UpdatePayment {
     }
 
     const transaction = await this.repo.getDetails(data.out_trade_no);
-    this.logger.debug(transaction);
     if (!transaction || !transaction?.client || !transaction.items) {
       throw new NotFoundException({
         message: 'Transação nẽo encontrada',
@@ -57,9 +56,6 @@ export class UpdatePayment {
         message: 'Entidade não pode receber pagamentos',
       });
     }
-    this.logger.debug('API_SIGN => ', data.sign);
-    this.logger.debug('TRANSACTION_SIGN => ', transaction.signature);
-
     if (transaction.status == status) {
       throw new BadRequestException({
         message: 'Transação de status inválido',

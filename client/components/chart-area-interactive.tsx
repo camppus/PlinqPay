@@ -50,27 +50,23 @@ export function AdminFinanceChart({ transactions, withdraws }: Props) {
       out: number;
     }[] = [];
 
-    transactions
-      .filter((t) => t.status === "PAID")
-      .forEach((t) => {
-        events.push({
-          date: new Date(t.createdAt).toLocaleDateString("pt"),
-          time: new Date(t.createdAt).getTime(),
-          in: toNumber(t.total),
-          out: 0,
-        });
+    transactions.forEach((t) => {
+      events.push({
+        date: new Date(t.createdAt).toLocaleDateString("pt"),
+        time: new Date(t.createdAt).getTime(),
+        in: toNumber(t.total),
+        out: 0,
       });
+    });
 
-    withdraws
-      .filter((w) => w.status === "APPROVED" || w.status === "PAID")
-      .forEach((w) => {
-        events.push({
-          date: new Date(w.createdAt).toLocaleDateString("pt"),
-          time: new Date(w.createdAt).getTime(),
-          in: 0,
-          out: toNumber(w.amount),
-        });
+    withdraws.forEach((w) => {
+      events.push({
+        date: new Date(w.createdAt).toLocaleDateString("pt"),
+        time: new Date(w.createdAt).getTime(),
+        in: 0,
+        out: toNumber(w.amount),
       });
+    });
 
     events.sort((a, b) => a.time - b.time);
 

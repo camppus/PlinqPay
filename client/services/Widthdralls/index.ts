@@ -57,7 +57,7 @@ export default class WithdrawlsSevice {
 
   public async getTax() {
     try {
-      const res = await api.put(`/tax`);
+      const res = await api.get(`/tax`);
       return res.data;
     } catch (error: any) {
       return {

@@ -118,7 +118,7 @@ export default function WithdrawalsPage() {
             title: "Taxa Actual",
             subtitle: `A taxa actual é de ${tax.taxa}`,
             description: "Esta é uma taxa simbólica para a plikpay",
-            amount: user.totalDisponible,
+            amount: Number(tax.taxa ?? 0),
             isCoin: false,
           }}
         />

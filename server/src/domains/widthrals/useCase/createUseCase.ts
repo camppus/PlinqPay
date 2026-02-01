@@ -4,6 +4,7 @@ import { ITenatsRepositories } from '@/domains/tenants/repositories/@type';
 import { IWalletRepositorie } from '@/domains/wallets/repositories/@type';
 import { IWidthdrawsRepositories } from '../repositories/@types';
 import { NotificationsService } from '@/domains/notifications/notification.service';
+import { Withdrawals } from '@prisma/client';
 
 export class CreateWidthDrawUseCase {
   constructor(
@@ -14,9 +15,10 @@ export class CreateWidthDrawUseCase {
   ) {}
 
   public async exute(data: CreateWidthrawlDto, tenantId: string) {
-    const [tenant, wallet] = await Promise.all([
+    const [tenant, wallet, WITHDRAWALS] = await Promise.all([
       this.tenantRepo.getByUnique(tenantId),
       this.walletRepo.getByUnique(tenantId),
+      this.widthrawlRepo.getAllBytenant(1, 100, tenantId),
     ]);
     if (!tenant) {
       throw new BadRequestException({
@@ -30,13 +32,22 @@ export class CreateWidthDrawUseCase {
       });
     }
 
-    const saldo = Math.round(Number(tenant.data.totalDisponible) * 100);
+    const saldo = Number(tenant.data.totalDisponible);
     if (saldo < data.amount) {
       throw new BadRequestException({
         message: 'Saldo insuficiente',
       });
     }
+    const dataWitdhdraws = WITHDRAWALS.data as any as Withdrawals[];
+    const hasPending = dataWitdhdraws.filter((i) => {
+      return i.status == 'PENDING';
+    }).length;
 
+    if (hasPending > 0) {
+      throw new BadRequestException({
+        message: 'Precisas esperar o último pedido',
+      });
+    }
     const widhtraw = await this.widthrawlRepo.create(data, tenantId, wallet);
     await this.notifier.create({
       companieId: tenantId,

@@ -24,7 +24,6 @@ export class UpdateWidthdralDto {
   @IsOptional()
   @IsString()
   @ApiProperty()
-  @IsUrl()
   fileUrl: string | undefined;
 
   @IsOptional()

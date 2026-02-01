@@ -308,10 +308,7 @@ export default function Withdrawals() {
                             {processing ? (
                               <Loader2 className="animate-spin" />
                             ) : (
-                              <>
-                                {!status && "Actualizar"}
-                                {status == "APPROVED" ? "Aprovar" : "Reprovar"}
-                              </>
+                              "Actualizar"
                             )}
                           </Button>
                           <Button type="button" variant={"outline"}>

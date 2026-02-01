@@ -18,7 +18,7 @@ export class CreateWidthDrawUseCase {
     const [tenant, wallet, WITHDRAWALS] = await Promise.all([
       this.tenantRepo.getByUnique(tenantId),
       this.walletRepo.getByUnique(tenantId),
-      this.widthrawlRepo.getAllBytenant(1, 100, tenantId),
+      this.widthrawlRepo.getAllBytenantPendings(tenantId),
     ]);
     if (!tenant) {
       throw new BadRequestException({
@@ -33,21 +33,27 @@ export class CreateWidthDrawUseCase {
     }
 
     const saldo = Number(tenant.data.totalDisponible);
-    if (saldo < data.amount) {
-      throw new BadRequestException({
-        message: 'Saldo insuficiente',
-      });
-    }
-    const dataWitdhdraws = WITHDRAWALS.data as any as Withdrawals[];
-    const hasPending = dataWitdhdraws.filter((i) => {
-      return i.status == 'PENDING';
-    }).length;
+    console.log(data, tenant);
 
-    if (hasPending > 0) {
+    if (WITHDRAWALS > 0) {
       throw new BadRequestException({
         message: 'Precisas esperar o último pedido',
       });
     }
+    const amount = Number(data.amount);
+
+    if (!amount || amount <= 0) {
+      throw new BadRequestException({
+        message: 'Valor inválido',
+      });
+    }
+
+    if (saldo < amount) {
+      throw new BadRequestException({
+        message: 'Saldo insuficiente',
+      });
+    }
+
     const widhtraw = await this.widthrawlRepo.create(data, tenantId, wallet);
     await this.notifier.create({
       companieId: tenantId,

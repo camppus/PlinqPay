@@ -141,4 +141,15 @@ export class PrismaWidthDrawlRepo implements IWidthdrawsRepositories {
       total: data.length,
     };
   }
+  public async getAllBytenantPendings(id: string): Promise<number> {
+    const [total] = await Promise.all([
+      this.prisma.withdrawals.count({
+        where: {
+          companieId: id,
+          status: 'PENDING',
+        },
+      }),
+    ]);
+    return total;
+  }
 }

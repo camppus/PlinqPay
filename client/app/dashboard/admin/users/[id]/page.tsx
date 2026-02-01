@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { statusMap } from "@/components/Transactions";
 import Link from "next/link";
+import Stats from "@/components/Stats";
 
 export default function UserProfile() {
   const { id } = useParams();
@@ -138,6 +139,27 @@ export default function UserProfile() {
           )}
         </TabsContent>
         <TabsContent value="profile">
+          <div className="grid md:grid-cols-2 gap-4 mb-2">
+            <Stats
+              data={{
+                title: "Saldo Disponível",
+                subtitle: "Atual",
+                description: "Total disponível na minha conta",
+                amount: user.totalDisponible,
+                isCoin: true,
+              }}
+            />
+
+            <Stats
+              data={{
+                title: "Total Faturado",
+                subtitle: "Acumulado",
+                description: "Valor total faturado por mim na plinkpay",
+                amount: user.totalErned,
+                isCoin: true,
+              }}
+            />
+          </div>
           <span className=" flex flex-col gap-3">
             <Wallet
               bankName={wallet?.bank ?? ""}

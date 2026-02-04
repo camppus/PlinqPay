@@ -62,7 +62,6 @@ export default class TrasanctionService {
     const response = await getter.getById(id);
     const isAdmin = tenant?.data?.role === 'SUPERCOMPANIE';
     const isOwner = tenantId === response?.companieId;
-    console.log(isAdmin, isOwner);
     if (!isAdmin && !isOwner) {
       throw new ForbiddenException(
         'Apenas o admin e o proprietário podem ver detalhes do pagamento',

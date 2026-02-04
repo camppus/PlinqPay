@@ -32,12 +32,15 @@ export function Hero() {
               <ArrowUpCircle className="text-blue-500 rotate-45" fill="white" />
             </Button>
           </a>
-          <Button
-            variant={"outline"}
-            className="w-full opacity-80 hover:opacity-100"
-          >
-            Por que usar ?
-          </Button>
+          <a href="/docs">
+            <Button
+              variant={"outline"}
+              className="w-full opacity-80 hover:opacity-100"
+            >
+              Por que usar ?
+            </Button>
+            \
+          </a>
         </span>
 
         <span className="grid grid-cols-2 gap-4">

@@ -47,6 +47,11 @@ export default class TrasanctionService {
   public async getDetails(id: string, tenantId: string) {
     const getter = new GetPaymentUseCase(this.transactionRepo);
     const response = await getter.getById(id);
+    console.log(response?.companie?.id, tenantId);
+
+    const isAdmin = response?.companie?.role == 'SUPERCOMPANIE';
+    if (!isAdmin) {
+    }
     return response;
   }
 

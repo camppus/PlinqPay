@@ -15,6 +15,7 @@ export type TransactionModel = Prisma.TransactionGetPayload<{
         phone: true;
       };
     };
+    companie: true;
     webhooksDelivery: true;
     items: {
       select: {

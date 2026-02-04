@@ -5,7 +5,7 @@ import { IToken } from '@/types';
 
 export default class AuthMiddleare implements NestMiddleware {
   private readonly jwt = new JWT();
-  private readonly allowedOrigin = 'https://pliqpay.onrender.com';
+  private readonly allowedOrigin = 'https://plinqpay.com';
 
   use(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization'];

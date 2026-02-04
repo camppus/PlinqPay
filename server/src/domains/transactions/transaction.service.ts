@@ -4,11 +4,16 @@ import { CreateTransactionDTO } from './dto/create.dto';
 import { CreatePaymentUseCase } from './useCases/createPayment';
 import { PrismaTransactionRepositorie } from './repositories/repos/PrismaTransactionRepositorie';
 import { ApiSecretKeys } from '@prisma/client';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { GetPaymentUseCase } from './useCases/getPayment';
 import { UpdatePaymentDTO } from './dto/update.dto';
 import { UpdatePayment } from './useCases/updatePayment';
 import { NotificationsService } from '../notifications/notification.service';
+import { TenantsService } from '../tenants/tenants.service';
 
 @Injectable()
 export default class TrasanctionService {
@@ -16,6 +21,7 @@ export default class TrasanctionService {
     private readonly apiKeyRepo: PrismaAPiKeyRepositorie,
     private readonly transactionRepo: PrismaTransactionRepositorie,
     private readonly notifier: NotificationsService,
+    private readonly tenant: TenantsService,
   ) {}
 
   public async create(data: CreateTransactionDTO, publickApiKey: string) {
@@ -46,16 +52,22 @@ export default class TrasanctionService {
 
   public async getDetails(id: string, tenantId: string) {
     const getter = new GetPaymentUseCase(this.transactionRepo);
+    const tenant = await this.tenant.getByUnique(tenantId);
+
+    if (!tenant) {
+      throw new NotFoundException({
+        message: 'usuário nãao enontrado',
+      });
+    }
     const response = await getter.getById(id);
-    const isAdmin = response?.companie?.role === 'SUPERCOMPANIE';
+    const isAdmin = tenant?.data?.role === 'SUPERCOMPANIE';
     const isOwner = tenantId === response?.companieId;
     console.log(isAdmin, isOwner);
-    console.log(response);
-    /* if (!isAdmin && !isOwner) {
+    if (!isAdmin && !isOwner) {
       throw new ForbiddenException(
         'Apenas o admin e o proprietário podem ver detalhes do pagamento',
       );
-    } */
+    }
     return response;
   }
 

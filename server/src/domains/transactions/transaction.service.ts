@@ -50,11 +50,12 @@ export default class TrasanctionService {
     const isAdmin = response?.companie?.role === 'SUPERCOMPANIE';
     const isOwner = tenantId === response?.companieId;
     console.log(isAdmin, isOwner);
-    if (!isAdmin && !isOwner) {
+    console.log(response);
+    /* if (!isAdmin && !isOwner) {
       throw new ForbiddenException(
         'Apenas o admin e o proprietário podem ver detalhes do pagamento',
       );
-    }
+    } */
     return response;
   }
 

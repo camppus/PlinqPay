@@ -4,7 +4,7 @@ import { CreateTransactionDTO } from './dto/create.dto';
 import { CreatePaymentUseCase } from './useCases/createPayment';
 import { PrismaTransactionRepositorie } from './repositories/repos/PrismaTransactionRepositorie';
 import { ApiSecretKeys } from '@prisma/client';
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { GetPaymentUseCase } from './useCases/getPayment';
 import { UpdatePaymentDTO } from './dto/update.dto';
 import { UpdatePayment } from './useCases/updatePayment';
@@ -47,10 +47,12 @@ export default class TrasanctionService {
   public async getDetails(id: string, tenantId: string) {
     const getter = new GetPaymentUseCase(this.transactionRepo);
     const response = await getter.getById(id);
-    console.log(response?.companie?.id, tenantId);
-
     const isAdmin = response?.companie?.role == 'SUPERCOMPANIE';
-    if (!isAdmin) {
+    if (!isAdmin && tenantId != response?.companieId) {
+      throw new ForbiddenException({
+        message:
+          'Apenas o admin e o proprietário podem ver detalhes do pagamento',
+      });
     }
     return response;
   }

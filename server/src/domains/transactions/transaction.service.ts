@@ -47,12 +47,13 @@ export default class TrasanctionService {
   public async getDetails(id: string, tenantId: string) {
     const getter = new GetPaymentUseCase(this.transactionRepo);
     const response = await getter.getById(id);
-    const isAdmin = response?.companie?.role == 'SUPERCOMPANIE';
-    if (!isAdmin && tenantId != response?.companieId) {
-      throw new ForbiddenException({
-        message:
-          'Apenas o admin e o proprietário podem ver detalhes do pagamento',
-      });
+    const isAdmin = response?.companie?.role === 'SUPERCOMPANIE';
+    const isOwner = tenantId === response?.companieId;
+    console.log(isAdmin, isOwner);
+    if (!isAdmin && !isOwner) {
+      throw new ForbiddenException(
+        'Apenas o admin e o proprietário podem ver detalhes do pagamento',
+      );
     }
     return response;
   }

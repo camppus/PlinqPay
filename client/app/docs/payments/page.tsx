@@ -3,7 +3,7 @@
 import CodeBlock from "@/components/Code";
 
 export default function Payemtent() {
-  const codeExample = `fetch('https://pliqpag-api.onrender.com/v1/transaction', {
+  const codeExample = `fetch('https://api.plinqpay.com/v1/transaction', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -46,7 +46,7 @@ export default function Payemtent() {
             POST
           </span>
           <code className="text-sm">
-            https://pliqpag-api.onrender.com/v1/transaction
+            https://api.plinqpay.com/v1/transaction
           </code>
         </div>
       </div>
@@ -85,7 +85,7 @@ export default function Payemtent() {
         <CodeBlock
           language="typescript"
           code={`
-const response = await fetch('https://pliqpag-api.onrender.com/v1/transaction', {
+const response = await fetch('https://api.plinqpay.com/v1/transaction', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',

@@ -9,9 +9,7 @@ export default function DocLayout() {
   return (
     <main className="min-h-screen flex flex-col gap-3">
       <strong className="text-blue-500 ">Introdução</strong>
-      <h1>
-        Comece aqui!
-      </h1>
+      <h1>Comece aqui!</h1>
       <p>Pegue seu café e aprenda sobre a PlinqPay!</p>
       <p className="leading-7 dark:text-neutral-400">
         Nesta documentação você encontrará tudo o que precisa para integrar com
@@ -50,7 +48,7 @@ export default function DocLayout() {
       <CodeBlock
         language="typescript"
         code={`
-const response = await fetch('https://pliqpag-api.onrender.com/v1/transaction', {
+const response = await fetch('https://api.plinqpay.com/v1/transaction', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',

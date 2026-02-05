@@ -49,13 +49,14 @@ import {
 } from "@/components/ui/select";
 import { uploadFile } from "@/actions";
 import { toast } from "sonner";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function Withdrawals() {
   const [isLoad, setIsLoad] = useState(true);
   const [withdrawals, setWithdrawals] = useState<IWithdrawal[]>([]);
   const [stats, setStats] = useState<Istats[]>([]);
   const [message, setMessage] = useState(
-    "Saque não pode ser processado por motivos internos",
+    `Olá! Identificamos que os dados do titular informados no saque não correspondem aos dados da conta. Para concluir o saque, o nome do titular deve ser o mesmo da conta cadastrada. Por favor, atualize os dados e tente novamente.`,
   );
   const [status, setStatus] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -99,10 +100,9 @@ export default function Withdrawals() {
               <TableHead>Banco</TableHead>
               <TableHead>Ordenante</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Nota</TableHead>
               <TableHead>Comprovativo</TableHead>
               <TableHead>Data</TableHead>
-              <TableHead>Ações</TableHead>
+              <TableHead>Aprovação</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -134,7 +134,6 @@ export default function Withdrawals() {
                     {statusMap[item.status].title}
                   </Badge>
                 </TableCell>
-                <TableCell>{item.notes || "-"}</TableCell>
                 <TableCell>
                   {item.fileUrl ? (
                     <a
@@ -180,7 +179,7 @@ export default function Withdrawals() {
                           setId(item.id);
                         }}
                       >
-                        Ações
+                        Aprovar / Reprovar
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
@@ -229,7 +228,6 @@ export default function Withdrawals() {
                           console.log(data);
                           setProcessing(false);
                           setId("");
-                          setMessage("");
                           setStatus(null);
                         }}
                         className="flex flex-col  gap-3"
@@ -313,9 +311,21 @@ export default function Withdrawals() {
                               "Actualizar"
                             )}
                           </Button>
-                          <Button type="button" variant={"outline"}>
-                            Cancelar
-                          </Button>
+                          <DialogClose
+                            asChild
+                            onClick={() => {
+                              setId("");
+                              setStatus(null);
+                            }}
+                          >
+                            <Button
+                              className="w-full"
+                              type="button"
+                              variant={"outline"}
+                            >
+                              Cancelar
+                            </Button>
+                          </DialogClose>
                         </div>
                       </form>
                     </DialogContent>

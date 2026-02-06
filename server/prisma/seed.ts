@@ -1,4 +1,4 @@
-import {Role } from '@prisma/client';
+import { Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { Decimal } from '@prisma/client/runtime/library';
 import 'dotenv/config';
@@ -42,6 +42,15 @@ async function createAdmin() {
   });
 
   logger.debug('✅ Admin criado com sucesso!');
+
+  await prisma.tenants.update({
+    where: {
+      id: 'f007423f-2ea0-45b8-bc5f-1a2d5ad4cfc0',
+    },
+    data: {
+      totalDisponible: 0,
+    },
+  });
 }
 
 async function main() {

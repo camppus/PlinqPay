@@ -39,7 +39,7 @@ export function Hero() {
             >
               Por que usar ?
             </Button>
-            \
+            
           </a>
         </span>
 

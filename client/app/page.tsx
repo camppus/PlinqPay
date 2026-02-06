@@ -200,7 +200,7 @@ export default function Home() {
 
           <span className="relative lg:text-5xl text-4xl opacity-90 hover:opacity-100 font-bold flex  flex-col   gap-4   lg:items-center h-full">
             <p>Integre como quiser! </p>
-            <p>Code , vide-code , no-code!</p>
+            <p>Code , vibe-code , no-code!</p>
           </span>
           <p className="lg:w-full md:w-[40%]">
             Desenvolva, automatize ou conecte sem complicações. Nossa API se

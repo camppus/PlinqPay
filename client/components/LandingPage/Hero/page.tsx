@@ -87,7 +87,7 @@ export function Hero() {
     "
         >
           <img
-            src="/dash.jpg"
+            src="/dash.png"
             alt=""
             className="
         w-full dark:opacity-50

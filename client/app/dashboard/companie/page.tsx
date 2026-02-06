@@ -104,19 +104,36 @@ export default function Home() {
       });
     }
   };
-  const bancosAngola = [
-    { value: "BNA", label: "Banco Nacional de Angola (BNA)" },
-    { value: "BPC", label: "Banco de Poupança e Crédito (BPC)" },
-    { value: "BIC", label: "Banco BIC" },
-    { value: "BFA", label: "Banco de Fomento Angola (BFA)" },
-    { value: "Banco Económico", label: "Banco Económico" },
-    {
-      value: "BAI",
-      label: "Banco Angolano de Investimentos (BAI)",
-    },
-    { value: "Banco Sol", label: "Banco Sol" },
-    { value: "StandardBank", label: "Standard Bank Angola" },
-  ];
+const bancosAngola = [
+  { value: "BAI", label: "Banco Angolano de Investimentos, S.A. (BAI)" },
+  { value: "BMF", label: "Banco BAI Micro Finanças, S.A. (BMF)" },
+  { value: "BIC", label: "Banco BIC, S.A. (BIC)" },
+  { value: "BCGTA", label: "Banco Caixa Geral Angola, S.A. (BCGTA)" },
+  { value: "BCA", label: "Banco Comercial Angolano, S.A. (BCA)" },
+  { value: "BCH", label: "Banco Comercial do Huambo, S.A. (BCH)" },
+  { value: "BCI", label: "Banco de Comércio e Indústria, S.A. (BCI)" },
+  { value: "BDA", label: "Banco de Desenvolvimento de Angola, S.A. (BDA)" },
+  { value: "BFA", label: "Banco de Fomento Angola, S.A. (BFA)" },
+  { value: "BIR", label: "Banco de Investimento Rural, S.A. (BIR)" },
+  { value: "BNI", label: "Banco de Negócios Internacional, S.A. (BNI)" },
+  { value: "BPC", label: "Banco de Poupança e Crédito, S.A. (BPC)" },
+  { value: "BE", label: "Banco Económico, S.A. (BE)" },
+  { value: "KEVE", label: "Banco Keve, S.A. (KEVE)" },
+  { value: "BKI", label: "Banco Kwanza Investimento, S.A. (BKI)" },
+  { value: "BPG", label: "Banco Prestígio, S.A. (BPG)" },
+  { value: "BPA", label: "Banco Millennium Atlântico, S.A. (BPA)" },
+  { value: "BPAN", label: "Banco Pungo Andongo, S.A. (BPAN)" },
+  { value: "BSOL", label: "Banco Sol, S.A. (BSOL)" },
+  { value: "BVB", label: "Banco Valor, S.A. (BVB)" },
+  { value: "VTB", label: "Banco VTB África, S.A. (VTB)" },
+  { value: "ECO", label: "Ecobank de Angola, S.A. (ECO)" },
+  { value: "FNB", label: "Finibanco Angola, S.A. (FNB)" },
+  { value: "SBA", label: "Standard Bank de Angola, S.A. (SBA)" },
+  { value: "SCBA", label: "Standard Chartered Bank de Angola, S.A. (SCBA)" },
+  { value: "BCS", label: "Credisul – Banco de Crédito do Sul, S.A. (BCS)" },
+  { value: "BancoPostal", label: "Banco Postal, S.A." },
+  { value: "BancoChina", label: "Banco da China – Sucursal em Luanda" }
+];
 
   useEffect(() => {
     async function get() {

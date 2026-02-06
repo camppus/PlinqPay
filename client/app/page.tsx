@@ -123,9 +123,9 @@ export default function Home() {
         <div className="flex  justify-between">
           <Striped alt={"50"} />
           <span className="flex-1 flex lg:flex-row flex-col justify-between items-center gap-5 px-4">
-            <div className="flex relative lg:text-3xl text-2xl lg:text-start lg:w-[35%]  lg:mb-0 mb-4 text-center lg:h-full">
-              <div className="lg:text-4xl text-3xl md:pt-6 pt-3">
-                <div className="font-bold dark:flex hidden  ">
+            <div className="flex relative lg:text-3xl text-2xl lg:text-start lg:w-[35%]  lg:mb-0 mb-4 text-center ">
+              <div className="text-2xl md:pt-6  flex justify-center items-center pt-3">
+                <div className="dark:flex hidden  ">
                   <ShinyText
                     text="Estamos em grandes projectos como"
                     speed={2}
@@ -145,7 +145,7 @@ export default function Home() {
               </div>
               <span className="absolute hidden lg:flex  z-455 h-full border right-0 top-0  border-dashed"></span>
             </div>
-            <div className="lg:w-[60%] w-full">
+            <div className="lg:w-[70%] w-full">
               <InfiniteImageScroller items={enterprises} />
             </div>
           </span>
@@ -153,7 +153,7 @@ export default function Home() {
         </div>
       </span>
 
-      <span className=" flex flex-col gap-5 lg:px-55 pt-20 px-5">
+      <span className=" flex flex-col gap-5 lg:px-55 pt-20 px-5 my-20">
         <div className="text-center lg:text-5xl text-4xl">
           <div className="font-bold dark:flex hidden  justify-center items-center">
             <ShinyText
@@ -226,7 +226,7 @@ export default function Home() {
           </Badge>
 
           <span className="relative md:w-[50%] w-full lg:text-5xl text-4xl font-bold flex  flex-col   gap-4   lg:items-center h-full">
-            Histórias reais de quem usa a Pliqpay no dia a dia.
+            Histórias reais de quem usa a Plinqpay no dia a dia.
           </span>
           <p>
             Veja relatos de clientes que simplificaram pagamentos e gerenciaram

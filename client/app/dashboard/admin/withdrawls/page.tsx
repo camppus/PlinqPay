@@ -137,7 +137,7 @@ export default function Withdrawals() {
                 <TableCell>
                   {item.fileUrl ? (
                     <a
-                      href={`/${item.fileUrl}`}
+                      href={`${item.fileUrl}`}
                       target="_blank"
                       className="text-blue-500 underline"
                     >

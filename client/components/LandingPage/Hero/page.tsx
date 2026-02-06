@@ -91,7 +91,7 @@ export function Hero() {
             alt=""
             className="
         w-full dark:opacity-50
-        object-cover
+        object-left
         h-full  dark:grayscale-100
         rounded-sm
       "

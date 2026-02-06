@@ -1,3 +1,4 @@
+import DotGrid from "@/components/DotGrid";
 import { FloatingLanguageImages } from "@/components/LandingPage/FLoating";
 import Footer from "@/components/LandingPage/Footer";
 import { Header, Striped } from "@/components/LandingPage/Header";
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { InfiniteImageScroller } from "@/components/ui/infinite-moving-cards";
 import ShinyText from "@/components/ui/ShinyText";
+import { IconMail, IconPhone } from "@tabler/icons-react";
 import {
   ArrowRight,
   ArrowUpCircle,
@@ -276,18 +278,33 @@ export default function Home() {
               Na Pliqpay, você conta com diferentes canais para receber
               atendimento rápido e eficiente.
             </p>
-            <Button variant={"link"} className="text-blue-500 w-40">
-              Entre em contacto <ArrowRight />
-            </Button>
+            <a href="mailto:plinkpay@suporte.com" target="_blank">
+              <Button variant={"link"} className="text-blue-500 w-40">
+                Entre em contacto <ArrowRight />
+              </Button>
+            </a>
+
+            <div className="flex flex-col gap-3">
+              <span className="flex items-center bg-transparent border rounded-sm p-4 gap-2">
+                <IconMail /> <p>plinkpay@suporte.com</p>
+              </span>
+              <span className="flex items-center bg-transparent border rounded-sm p-4 gap-2">
+                <IconPhone /> <code>930 094 302</code>{" "}
+                <small>Watsapp apenas</small>
+              </span>
+              <span className="flex items-center bg-transparent border rounded-sm p-4 gap-2">
+                <IconMail /> <p>plinkpay@replay.com</p>
+              </span>
+            </div>
           </div>
         </article>
       </span>
       <span className="grid lg:grid-cols-2 lg:px-55 mt-20 py-20 px-6 gap-10 border-y  border-dashed relative">
-        <span className="absolute h-full left-[50%] top-0 border border-dashed"></span>
+        <span className="absolute h-full left-[50%] top-0 lg:border border-dashed"></span>
         <article className="">
           <div className="flex flex-col gap-6  ">
             <h1 className="lg:text-5xl text-4xl font-bold ">
-              Tem dúvidas? Relaxa, nós temos as respostas.
+              Tem dúvidas? Relaxa, nós temos as respostas.t 
             </h1>
             <p>
               Selecionamos algumas dúvidas que recebemos com frequência sobre

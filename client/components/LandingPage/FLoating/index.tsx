@@ -50,7 +50,6 @@ export function FloatingLanguageImages() {
           key={i}
           className={`
             absolute ${lang.className}
-            animate-pulse
             bg-background/70 backdrop-blur
             border 
             p-3 shadow-md flex items-center gap-4 scale-90

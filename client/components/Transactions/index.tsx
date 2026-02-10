@@ -77,8 +77,8 @@ export function RecentTransaction({ data }: { data: ITransaction }) {
           <h1
             className={`text-lg font-medium opacity-60 text-${status.color}-500`}
           >
-            {status.color.includes("red") ? "-" : "+"} {data.total.toFixed(2)}{" "}
-            kz
+            {status.color.includes("red") ? "-" : "+"}{" "}
+            {Number(data.total).toFixed(2)} kz
           </h1>
           <Badge variant="outline" className="flex items-center gap-1">
             {status.icon} <span>{status.title}</span>
@@ -248,7 +248,7 @@ export function TransacttionDetails({ id }: { id: string }) {
               <li key={item.id} className="py-2 flex justify-between">
                 <span>{item.title.slice(0, 10)}..</span>
                 <span>{item.quantity}</span>
-                <span>{(item.price * item.quantity).toFixed(2)} kz</span>
+                <span>{Number(item.price * item.quantity).toFixed(2)} kz</span>
               </li>
             ))}
         </ul>

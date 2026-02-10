@@ -35,7 +35,7 @@ export class TaxCalculatorFactory {
 
   return {
     amount,
-    tax,
+    tax  : taxa * 100,
     subtotal: amount,
     total,
     taxtType: 'PERCENT',

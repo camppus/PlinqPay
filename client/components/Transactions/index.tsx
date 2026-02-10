@@ -227,7 +227,7 @@ export function TransacttionDetails({ id }: { id: string }) {
         <div className="p-4 rounded-xl border bg-background shadow-sm">
           <p className="text-xs text-muted-foreground">Taxa</p>
           <p className="text-lg font-semibold">
-            {transaction.tax.toLocaleString("pt")},00 kz
+            {transaction.tax}%
           </p>
         </div>
         <div className="p-4 rounded-xl border bg-background shadow-sm col-span-2">

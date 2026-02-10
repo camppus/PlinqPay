@@ -35,10 +35,10 @@ export class CreatePaymentUseCase {
       companieId: apikey.companieId,
       getawayInfo: getwayResponse,
       precification: {
-        amount: precification.amount,
+        amount: precification.total,
         tax: precification.tax,
-        subtotal: precification.amount - precification.tax,
-        total: precification.amount,
+        subtotal: precification.subtotal,
+        total: precification.total,
         taxtType: precification.taxtType,
       },
       transaction: data,

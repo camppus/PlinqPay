@@ -38,6 +38,8 @@ export class TaxCalculatorFactory {
       subtotal, 
       total,
       taxtType: 'PERCENT',
+      amount,
+      subtotal,
     };
   }
   

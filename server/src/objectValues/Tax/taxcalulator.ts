@@ -17,7 +17,7 @@ export class TaxCalculatorFactory {
     }
     const percent = new PercentTaxCalculator()
     const tax = percent.getTax();
-    const taxValue = this.strategy.calc(amount);
+    const taxValue = percent.calc(amount);
     
     if (amount <= tax) {
       throw new BadRequestException(

@@ -10,32 +10,38 @@ export class TaxCalculatorFactory {
   constructor(private readonly taxType: TaxType) {}
 
   public calc(amount: number): ITaxCalculator {
-    if (amount <= 0) {
-      throw new BadRequestException(
-        'O valor da transação deve ser maior que zero',
-      );
-    }
-    const percent = new PercentTaxCalculator()
-    const tax = percent.getTax();
-    const taxValue = percent.calc(amount);
-    
-    if (amount <= tax) {
-      throw new BadRequestException(
-        'O valor da transação deve ser maior que a taxa aplicada',
-      );
-    }
-    const total = amount - taxValue;
-    if (total >= 10_000) {
-      throw new BadRequestException({
-        message: 'Limite de 100.000,00 kz por trasnsação',
-      });
-    }
-    return {
-      amount,
-      tax,
-      subtotal: amount,
-      total,
-      taxtType: 'FIXED',
-    };
+  const taxa = 0.03;
+
+  if (amount <= 0) {
+    throw new BadRequestException(
+      'O valor da transação deve ser maior que zero',
+    );
   }
+
+  if (amount > 10_000) {
+    throw new BadRequestException(
+      'Limite de 10.000,00 kz por transação',
+    );
+  }
+
+  const tax = amount * taxa;
+  const total = amount - tax;
+
+  if (total <= 0) {
+    throw new BadRequestException(
+      'O valor final não pode ser menor ou igual a zero',
+    );
+  }
+
+  return {
+    amount,
+    tax,
+    subtotal: amount,
+    total,
+    taxtType: 'PERCENT',
+  };
+}
+
+  
+
 }

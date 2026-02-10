@@ -7,20 +7,7 @@ type TaxType = 'FIXED' | 'PERCENT';
 
 export class TaxCalculatorFactory {
   private readonly strategy: TaxCalculatorStrategie;
-
-  private readonly taxMap: Record<TaxType, TaxCalculatorStrategie> = {
-    FIXED: new PercentTaxCalculator(),
-    PERCENT: new PercentTaxCalculator(),
-  };
-
-  constructor(private readonly taxType: TaxType) {
-    const strategy = this.taxMap[taxType];
-    if (!strategy) {
-      throw new BadRequestException('Estratégia de cálculo de taxa inválida');
-    }
-
-    this.strategy = strategy;
-  }
+  constructor(private readonly taxType: TaxType) {}
 
   public calc(amount: number): ITaxCalculator {
     if (amount <= 0) {
@@ -28,13 +15,15 @@ export class TaxCalculatorFactory {
         'O valor da transação deve ser maior que zero',
       );
     }
-    const tax = this.strategy.getTax();
+    const percent = new PercentTaxCalculator()
+    const tax = percent.getTax();
+    
     if (amount <= tax) {
       throw new BadRequestException(
         'O valor da transação deve ser maior que a taxa aplicada',
       );
     }
-    const total = this.strategy.calc(amount);
+    const total = percent.calc(amount);
     if (total >= 10_000) {
       throw new BadRequestException({
         message: 'Limite de 100.000,00 kz por trasnsação',

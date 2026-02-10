@@ -21,10 +21,12 @@ export class TaxCalculatorFactory {
       'Limite de 10.000,00 kz por transação',
     );
   }
+
   const TAXA = 0.03;
-  const taxValue = amount * TAXA;
-  const taxPercent = TAXA * 100;
-  const total = amount - taxValue;
+  const taxPercent = TAXA * 100;     
+  const taxValue = data.amount * TAXA;
+  const subtotal = data.amount - taxValue;
+  const total = subtotal; 
 
   if (total <= 0) {
     throw new BadRequestException(
@@ -33,12 +35,11 @@ export class TaxCalculatorFactory {
   }
 
   return {
-  amount,
-  taxValue,    
-  taxPercent, 
-  subtotal: amount,
-  total,
-  taxtType: 'PERCENT',
+      amount,
+      tax : taxPercent, 
+      subtotal,
+      total : amount,
+      taxtType: 'PERCENT',
   };
 }
 

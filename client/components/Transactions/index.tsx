@@ -221,7 +221,7 @@ export function TransacttionDetails({ id }: { id: string }) {
         <div className="p-4 rounded-xl border bg-background shadow-sm">
           <p className="text-xs text-muted-foreground">Subtotal</p>
           <p className="text-lg font-semibold">
-            {transaction.subtotal.toFixed(2)} kz
+            {Number(transaction.subtotal).toFixed(2)} kz
           </p>
         </div>
         <div className="p-4 rounded-xl border bg-background shadow-sm">
@@ -230,7 +230,7 @@ export function TransacttionDetails({ id }: { id: string }) {
         </div>
         <div className="p-4 rounded-xl border bg-background shadow-sm col-span-2">
           <p className="text-xs text-muted-foreground">Total</p>
-          <p className="text-xl font-bold">{transaction.total.toFixed(2)} kz</p>
+          <p className="text-xl font-bold">{Number(transaction.total).toFixed(2)} kz</p>
         </div>
       </div>
 
@@ -246,7 +246,7 @@ export function TransacttionDetails({ id }: { id: string }) {
           {isArrayMappble(transaction.items) &&
             transaction.items.map((item) => (
               <li key={item.id} className="py-2 flex justify-between">
-                <span>{item.title.slice(0, 10)}..</span>
+                <span className="text-xs truncate">{item.title}</span>
                 <span>{item.quantity}</span>
                 <span>{Number(item.price * item.quantity).toFixed(2)} kz</span>
               </li>

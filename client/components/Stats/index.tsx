@@ -18,7 +18,7 @@ export default function Stats({ data }: { data: Istats }) {
         <CardDescription>{data.title}</CardDescription>
         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
           {Number(data.amount).toFixed(2)}
-          {data.isCoin && "kz"}
+          {data.isCoin && " kz"}
         </CardTitle>
         <CardAction>
           <Badge variant="outline">

@@ -24,6 +24,7 @@ export class TaxCalculatorFactory {
 
     const TAXA = 0.03;               
     const taxPercent = TAXA * 100;  
+    const taxValue = amount * TAXA;
     const subtotal = amount - taxValue;
     const total = amount;       
 

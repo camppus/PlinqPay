@@ -120,13 +120,11 @@ export default function Page() {
                           </div>
                         </span>
                       </TableCell>
-                      <TableCell>
-                        {Number(item.total).toLocaleString("pt")} kz
-                      </TableCell>
+                      <TableCell>{Number(item.total).toFixed(2)} kz</TableCell>
                       <TableCell>{item.reference}</TableCell>
                       <TableCell>{item.tax} %</TableCell>
                       <TableCell>
-                        {Number(item.subtotal).toLocaleString("pt")} kz
+                        {Number(item.subtotal).toFixed(2)} kz
                       </TableCell>
                       <TableCell>
                         <Badge variant={"outline"}>

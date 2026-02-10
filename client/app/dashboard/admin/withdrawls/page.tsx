@@ -123,7 +123,7 @@ export default function Withdrawals() {
                   </span>
                 </TableCell>
                 <TableCell>
-                  {Number(item.amount).toLocaleString("pt")} kz
+                  {Number(item.amount).toFixed(2)} kz
                 </TableCell>
                 <TableCell>{item?.wallet?.iban}</TableCell>
                 <TableCell>{item?.wallet?.bank}</TableCell>

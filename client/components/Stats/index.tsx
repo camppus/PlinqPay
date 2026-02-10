@@ -17,7 +17,7 @@ export default function Stats({ data }: { data: Istats }) {
       <CardHeader>
         <CardDescription>{data.title}</CardDescription>
         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-          {Number(data.amount).toLocaleString("pt")}
+          {Number(data.amount).toFixed(2)}
           {data.isCoin && "kz"}
         </CardTitle>
         <CardAction>

@@ -203,12 +203,12 @@ export default function UserProfile() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      {Number(item.total).toLocaleString("pt")} kz
+                      {Number(item.total).toFixed(2)} kz
                     </TableCell>
                     <TableCell>{item.reference}</TableCell>
                     <TableCell>{item.tax} %</TableCell>
                     <TableCell>
-                      {Number(item.subtotal).toLocaleString("pt")} kz
+                      {Number(item.subtotal).toFixed(2)} kz
                     </TableCell>
                     <TableCell>
                       <Badge variant={"outline"}>
@@ -256,7 +256,7 @@ export default function UserProfile() {
                     {new Date(item.createdAt).toLocaleString("pt")}
                   </TableCell>
                   <TableCell>
-                    {Number(item.amount).toLocaleString("pt")} kz
+                    {Number(item.amount).toFixed(2)} kz
                   </TableCell>
                   <TableCell>
                     <Badge variant={"outline"}>

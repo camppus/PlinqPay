@@ -151,11 +151,10 @@ export default function Users() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {Number(item.totalDisponible).toLocaleString("pt")},00
-                        Kz
+                        {Number(item.totalDisponible).toFixed(2)}  Kz
                       </TableCell>
                       <TableCell>
-                        {Number(item.totalErned).toLocaleString("pt")},00 Kz
+                        {Number(item.totalErned).toFixed(2)} Kz
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">

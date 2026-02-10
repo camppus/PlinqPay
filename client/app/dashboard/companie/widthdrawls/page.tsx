@@ -241,9 +241,9 @@ export default function WithdrawalsPage() {
           <div className="space-y-4 mt-4 px-2">
             <p>
               Saldo disponível:{" "}
-              {Number(user.totalDisponible).toLocaleString("pt")} kz
+              {Number(user.totalDisponible).toFixed(2)} kz
             </p>
-            <p>Saque Mínimo: {Number(5000).toLocaleString("pt")} kz</p>
+            <p>Saque Mínimo: {Number(5000).toFixed(2)} kz</p>
             <Input
               type="number"
               placeholder="Valor a sacar"

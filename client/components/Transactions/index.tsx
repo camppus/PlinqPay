@@ -78,7 +78,7 @@ export function RecentTransaction({ data }: { data: ITransaction }) {
             className={`text-lg font-medium opacity-60 text-${status.color}-500`}
           >
             {status.color.includes("red") ? "-" : "+"}{" "}
-            {data.total.toLocaleString("pt")},00 kz
+            {data.total.toLocaleString("pt")} kz
           </h1>
           <Badge variant="outline" className="flex items-center gap-1">
             {status.icon} <span>{status.title}</span>
@@ -221,19 +221,17 @@ export function TransacttionDetails({ id }: { id: string }) {
         <div className="p-4 rounded-xl border bg-background shadow-sm">
           <p className="text-xs text-muted-foreground">Subtotal</p>
           <p className="text-lg font-semibold">
-            {transaction.subtotal.toLocaleString("pt")},00 kz
+            {transaction.subtotal.toLocaleString("pt")} kz
           </p>
         </div>
         <div className="p-4 rounded-xl border bg-background shadow-sm">
           <p className="text-xs text-muted-foreground">Taxa</p>
-          <p className="text-lg font-semibold">
-            {transaction.tax}%
-          </p>
+          <p className="text-lg font-semibold">{transaction.tax}%</p>
         </div>
         <div className="p-4 rounded-xl border bg-background shadow-sm col-span-2">
           <p className="text-xs text-muted-foreground">Total</p>
           <p className="text-xl font-bold">
-            {transaction.total.toLocaleString("pt")},00 kz
+            {transaction.total.toLocaleString("pt")} kz
           </p>
         </div>
       </div>
@@ -253,7 +251,7 @@ export function TransacttionDetails({ id }: { id: string }) {
                 <span>{item.title.slice(0, 10)}..</span>
                 <span>{item.quantity}</span>
                 <span>
-                  {(item.price * item.quantity).toLocaleString("pt")},00 kz
+                  {(item.price * item.quantity).toLocaleString("pt")} kz
                 </span>
               </li>
             ))}

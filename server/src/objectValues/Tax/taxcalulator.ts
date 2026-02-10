@@ -9,7 +9,7 @@ export class TaxCalculatorFactory {
   private readonly strategy: TaxCalculatorStrategie;
 
   private readonly taxMap: Record<TaxType, TaxCalculatorStrategie> = {
-    FIXED: new FixedTaxCalculator(),
+    FIXED: new PercentTaxCalculator(),
     PERCENT: new PercentTaxCalculator(),
   };
 

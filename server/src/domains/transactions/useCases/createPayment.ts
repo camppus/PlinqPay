@@ -25,7 +25,7 @@ export class CreatePaymentUseCase {
     const precification = taxtCalculator.calc(data.amount);
     
     const getwayResponse = await this.processor.pay(
-      precification.amount.toString(),
+      precification.total.toString(),
     );
 
     const signature = new Assignature().assignature(apikey.secretKey, data);

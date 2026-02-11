@@ -246,7 +246,7 @@ export function TransacttionDetails({ id }: { id: string }) {
           {isArrayMappble(transaction.items) &&
             transaction.items.map((item) => (
               <li key={item.id} className="py-2 flex justify-between">
-                <span className="text-xs truncate">{item.title}</span>
+                <span className="text-xs truncate md:w-auto w-30 text-wrap">{item.title}</span>
                 <span>{item.quantity}</span>
                 <span>{Number(item.price * item.quantity).toFixed(2)} kz</span>
               </li>

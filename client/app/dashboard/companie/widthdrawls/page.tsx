@@ -189,7 +189,7 @@ export default function WithdrawalsPage() {
                   )}
                   {w.notes && (
                     <div className="flex flex-col gap-2">
-                      <p className="text-sm">{w.notes}</p>
+                      <p className="text-sm">{w.status == PaymentStatus.PAID ? null : w.notes}</p>
                     </div>
                   )}
                   <div className="flex items-center gap-2">

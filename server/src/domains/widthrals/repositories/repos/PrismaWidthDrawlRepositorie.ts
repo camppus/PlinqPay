@@ -152,4 +152,19 @@ export class PrismaWidthDrawlRepo implements IWidthdrawsRepositories {
     ]);
     return total;
   }
+
+  public async getRecents(id: string): Promise<Withdrawals | null> {
+    const data = await this.prisma.withdrawals.findFirst({
+      where: {
+        companieId: id,
+      },
+      orderBy: [
+        {
+          createdAt: 'desc',
+        },
+      ],
+      take: 1,
+    });
+    return data;
+  }
 }

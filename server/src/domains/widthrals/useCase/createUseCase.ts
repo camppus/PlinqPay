@@ -14,12 +14,19 @@ export class CreateWidthDrawUseCase {
     private readonly notifier: NotificationsService,
   ) {}
 
+  private readonly limitPerDay = 1;
+
   public async exute(data: CreateWidthrawlDto, tenantId: string) {
-    const [tenant, wallet, WITHDRAWALS] = await Promise.all([
+    const [tenant, wallet, WITHDRAWALS, hasRecent] = await Promise.all([
       this.tenantRepo.getByUnique(tenantId),
       this.walletRepo.getByUnique(tenantId),
       this.widthrawlRepo.getAllBytenantPendings(tenantId),
+      this.widthrawlRepo.getRecents(tenantId),
     ]);
+
+    if (hasRecent) {
+      this.validateLimits(hasRecent);
+    }
     if (!tenant) {
       throw new BadRequestException({
         messge: 'Empresa não encontrada',
@@ -65,5 +72,36 @@ export class CreateWidthDrawUseCase {
       data: widhtraw,
       message: 'Criado com sucesso',
     };
+  }
+  private validateLimits(withdrawal: Withdrawals) {
+    const today = new Date();
+
+    const startOfDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      0,
+      0,
+      0,
+    );
+
+    const endOfDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      23,
+      59,
+      59,
+    );
+
+    const withdrawDate = new Date(withdrawal.createdAt);
+
+    const isToday = withdrawDate >= startOfDay && withdrawDate <= endOfDay;
+
+    if (isToday) {
+      throw new ConflictException(
+        `Já existe um saque hoje. Limite: ${this.limitPerDay} por dia`,
+      );
+    }
   }
 }

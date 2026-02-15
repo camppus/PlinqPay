@@ -16,4 +16,5 @@ export interface IWidthdrawsRepositories {
     id: string,
   ): Promise<IPAginationGet<Withdrawals[]>>;
   getAllBytenantPendings(id: string): Promise<number>;
+  getRecents(id: string): Promise<Withdrawals | null>;
 }

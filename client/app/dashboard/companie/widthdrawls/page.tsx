@@ -32,9 +32,9 @@ import Loader from "@/components/Loader";
 export default function WithdrawalsPage() {
   const [tax, setTax] = useState({
     taxType: "PERCENT",
-    taxa: "7%",
+    taxa: "3%",
     currency: "AOA",
-    value: 0.07,
+    value: 0.03,
   });
   const [openSheet, setOpenSheet] = useState(false);
   const [amount, setAmount] = useState(0);
@@ -243,7 +243,7 @@ export default function WithdrawalsPage() {
               Saldo disponível:{" "}
               {Number(user.totalDisponible).toFixed(2)} kz
             </p>
-            <p>Saque Mínimo: {Number(5000).toFixed(2)} kz</p>
+            <p>Saque Mínimo: {Number(10000).toFixed(2)} kz</p>
             <Input
               type="number"
               placeholder="Valor a sacar"

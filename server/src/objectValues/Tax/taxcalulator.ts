@@ -16,9 +16,9 @@ export class TaxCalculatorFactory {
       );
     }
 
-    if (amount > 10_000) {
+    if (amount > 100_000) {
       throw new BadRequestException(
-        'Limite de 10.000,00 kz por transação',
+        'Limite de 100.000,00 kz por transação',
       );
     }
 

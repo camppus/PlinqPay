@@ -15,10 +15,10 @@ export class CreatePaymentUseCase {
   ) {}
 
   public async pay(data: CreateTransactionDTO, apikey: ApiSecretKeys) {
-    /* return {
+    return {
       message : "Internal server Error",
       status : 500
-    } */
+    }
 
     data.method = this.processor.getMethod();
     const prices: Price[] = data.items.map((item) => {

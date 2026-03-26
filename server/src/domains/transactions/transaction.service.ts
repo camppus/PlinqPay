@@ -25,7 +25,8 @@ export default class TrasanctionService {
   ) {}
 
   public async create(data: CreateTransactionDTO, publickApiKey: string) {
-    const processor = new Paymentprocessor(data.method);
+    return null;
+    /* const processor = new Paymentprocessor(data.method);
     const paymentUseCase = new CreatePaymentUseCase(
       this.transactionRepo,
       processor,
@@ -37,7 +38,7 @@ export default class TrasanctionService {
     const { data: createPayment } = await paymentUseCase.pay(data, apikey);
     return {
       data: createPayment,
-    };
+    }; */
   }
 
   public async getByTenant(page: number, tenantId: string) {

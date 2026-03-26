@@ -45,7 +45,6 @@ export class CreatePaymentUseCase {
       },
       transaction: data,
     });
-    return null
     await this.notifier.create({
       companieId: apikey.companieId,
       entitieId: createdPayment.id,

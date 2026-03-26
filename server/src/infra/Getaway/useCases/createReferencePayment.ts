@@ -21,6 +21,7 @@ export default class ReferencePayment implements PaymentStrategie {
   private readonly privateKey = process.env.PRIVATE_KEY as string;
 
   public async pay(amount: string): Promise<IGetawayReponse> {
+    this.loger.debug(this.paternId, this.privateKey)
     const bizContentData = {
       cashier_type: 'SDK',
       payer_ip: '123.25.68.9',

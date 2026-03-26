@@ -25,7 +25,6 @@ export default class TrasanctionService {
   ) {}
 
   public async create(data: CreateTransactionDTO, publickApiKey: string) {
-    return null;
     const processor = new Paymentprocessor(data.method);
     const paymentUseCase = new CreatePaymentUseCase(
       this.transactionRepo,

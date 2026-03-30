@@ -150,6 +150,7 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
     const totalPages = Math.ceil(total / limit);
     const totalIn = Number(totalPayments._sum.amount ?? 0);
     const totalMade = Number(totalPayments._sum.subtotal ?? 0);
+    const monthlySold = Number(monthly._sum.subtotal ?? 0);
     const stats = [
       {
         title: 'Faturamento Total',
@@ -170,7 +171,7 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
         subtitle: 'O que ganhamos',
         description:
           'Valor ganho neste mês',
-        amount: monthly,
+        amount: monthlySold,
         isCoin: true,
       },
     ];

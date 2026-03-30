@@ -73,15 +73,30 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
     limit: number,
   ): Promise<IPAginationGet<Transaction>> {
     const offset = (page - 1) * limit;
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    
     const [
+      monthly,
       payments,
       total,
       totalPayments,
       totalWithdraws,
-      totalPendings,
-      widhraws,
-      canceled,
+      widhraws
     ] = await Promise.all([
+      this.prisma.transaction.aggregate({
+        _sum: {
+          subtotal: true,
+        },
+        where: {
+          status: 'PAID',
+          createdAt: {
+            gte: startOfMonth,
+            lt: endOfMonth,
+          },
+        },
+      }),
       this.prisma.transaction.findMany({
         take: limit,
         skip: offset,
@@ -123,14 +138,6 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
           },
         },
       }),
-      this.prisma.transaction.aggregate({
-        _sum: {
-          amount: true,
-        },
-        where: {
-          status: 'PENDING',
-        },
-      }),
       this.prisma.withdrawals.findMany({
         take: 50,
         orderBy: [
@@ -138,20 +145,11 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
             createdAt: 'desc',
           },
         ],
-      }),
-      this.prisma.transaction.aggregate({
-        _sum: {
-          amount: true,
-        },
-        where: {
-          status: 'FAILED',
-        },
-      }),
+      })
     ]);
     const totalPages = Math.ceil(total / limit);
     const totalIn = Number(totalPayments._sum.amount ?? 0);
     const totalMade = Number(totalPayments._sum.subtotal ?? 0);
-    const totalOut = Number(totalWithdraws._sum.amount ?? 0);
     const stats = [
       {
         title: 'Faturamento Total',
@@ -168,32 +166,11 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
         isCoin: true,
       },
       {
-        title: 'Pendências',
-        subtitle: 'Pagamentos a confirmar',
-        description: 'Valor de pagamentos ainda pendentes',
-        amount: Number(totalPendings._sum.amount ?? 0),
-        isCoin: true,
-      },
-      {
-        title: 'Comissões / Ganhos',
+        title: 'Comissões Mensal',
         subtitle: 'O que ganhamos',
         description:
-          'Diferença entre o total recebido e o valor líquido dos clientes',
-        amount: totalIn - totalMade,
-        isCoin: true,
-      },
-      {
-        title: 'Saldo Disponível',
-        subtitle: 'O que sobra',
-        description: 'Entradas menos saques',
-        amount: totalIn - totalOut,
-        isCoin: true,
-      },
-      {
-        title: 'Cancelados',
-        subtitle: 'Perdas',
-        description: 'Valor de pagamentos que foram cancelados',
-        amount: Number(canceled._sum.amount),
+          'Valor ganho neste mês',
+        amount: monthly,
         isCoin: true,
       },
     ];

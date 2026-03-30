@@ -90,7 +90,9 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
           subtotal: true,
         },
         where: {
-          status: 'PAID',
+          status: {
+            in: ['APPROVED', 'PAID'],
+          },
           createdAt: {
             gte: startOfMonth,
             lt: endOfMonth,

@@ -153,7 +153,7 @@ export class PrismaTransactionRepositorie implements ITransactionRepositorie {
     const totalPages = Math.ceil(total / limit);
     const totalIn = Number(totalPayments._sum.amount ?? 0);
     const totalMade = Number(totalPayments._sum.subtotal ?? 0);
-    const totalFee = transactions.reduce((acc, tx) => {
+    const totalFee = monthly.reduce((acc, tx) => {
       return acc + (Number(tx.total) - Number(tx.subtotal));
     }, 0);
     const stats = [

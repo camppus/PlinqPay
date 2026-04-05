@@ -42,7 +42,7 @@ useEffect(() => {
         if (Notification.permission === "granted" && title && body) {
           new Notification(title, {
             body,
-            icon: "/P.png",
+            icon:  "https://plinqpay.com/P.png",
           });
         }
       }

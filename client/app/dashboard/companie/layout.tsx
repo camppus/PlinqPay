@@ -30,16 +30,18 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
 useEffect(() => {
   async function get() {
     const token = localStorage.getItem("token") as string;
-    const data = await new NotificationService(token).getUnread();
-    const newUnread = data?.data ?? 0;
-    const sale = data?.sale 
+    const response = await new NotificationService(token).getUnread();
+    const payload = response?.data;
+    const newUnread = payload?.value ?? 0;
+    const title = payload?.title;
+    const body = payload?.body;
     setUnread((prev) => {
       if (canPlaySound && newUnread !== prev) {
         const audio = new Audio("/song.mp3");
         audio.play();
-        if (Notification.permission === "granted") {
-          new Notification("Nova venda realizada!", {
-            body: `${sale?.client} comprou ${sale.product} ${Number(sale.amount)} Kz`,
+        if (Notification.permission === "granted" && title && body) {
+          new Notification(title, {
+            body,
             icon: "/P.png",
           });
         }

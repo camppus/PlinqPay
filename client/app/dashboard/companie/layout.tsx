@@ -17,27 +17,40 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
   const [canPlaySound, setCanPlaySound] = useState(false);
   const [once, setOnce] = useState(false);
   const { user } = useUser();
-  useEffect(() => {
-    async function get() {
-      const token = localStorage.getItem("token") as string;
-      const data = await new NotificationService(token).getUnread();
-      if (canPlaySound && data?.data != unred && !once) {
+  
+  async function requestPermission() {
+  if (!("Notification" in window)) return;
+
+  if (Notification.permission === "default") {
+    await Notification.requestPermission();
+  }
+}
+  
+
+useEffect(() => {
+  async function get() {
+    const token = localStorage.getItem("token") as string;
+    const data = await new NotificationService(token).getUnread();
+    const newUnread = data?.data ?? 0;
+    setUnread((prev) => {
+      if (canPlaySound && newUnread !== prev) {
         const audio = new Audio("/song.mp3");
         audio.play();
-        setOnce(true);
+        if (Notification.permission === "granted") {
+          new Notification("Nova notificação 🚀", {
+            body: `Você tem ${newUnread} notificações não lidas`,
+            icon: "/icon.png",
+          });
+        }
       }
-      setUnread(data?.data ?? 0);
-    }
-
-    get();
-    const interval = setInterval(async () => {
-      await get();
-    }, constants.TIMEOUT_LOADER);
-
-    return () => {
-      clearInterval(interval);
-    };
-  });
+      return newUnread;
+    });
+  }
+  get();
+  const interval = setInterval(get, constants.TIMEOUT_LOADER);
+  return () => clearInterval(interval);
+}, [canPlaySound]);
+  
 
   useEffect(() => {
     const enableSound = () => {
@@ -46,6 +59,7 @@ export default function ComapnieLayout({ children }: { children: ReactNode }) {
     };
 
     window.addEventListener("click", enableSound);
+    requestPermission();
     return () => window.removeEventListener("click", enableSound);
   }, []);
 

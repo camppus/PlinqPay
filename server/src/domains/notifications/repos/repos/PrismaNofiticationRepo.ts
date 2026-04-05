@@ -84,12 +84,71 @@ export class PrismaNotificationRepository implements INotificationRepositorie {
 
     return { updated: true };
   }
-  async getUnread(tenantId: string): Promise<number> {
-    return await this.prisma.notification.count({
-      where: {
-        isRead: false,
-        companieId: tenantId,
-      },
-    });
+  async getUnread(tenantId: string): Promise<any> {
+    const [lastSell , unread] = await Promise.all(
+      [
+        this.prisma.transaction.findFirst({
+          where: {
+            companieId: tenantId,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          include: {
+            client: true,
+            items: true,
+          },
+        }),
+        this.prisma.notification.count({
+          where: {
+            isRead: false,
+            companieId: tenantId,
+          },
+        })
+      ]
+    )
+    const { title, body } = this.buildSaleNotification(unread, lastSell);
+    return {
+      value : unread,
+      title,
+      body
+    }
   }
+
+private  buildSaleNotification(unread: number, sale: any) {
+  if (!sale) {
+    return {
+      title: "🔔 Notificações",
+      body: `Você tem ${unread} notificações não lidas`,
+    };
+  }
+
+  const clientName = sale.client?.name ?? "Cliente";
+  const total = Number(sale.total).toLocaleString("pt-AO") + " Kz";
+
+  const items = sale.items ?? [];
+
+  let productsText = "";
+
+  if (items.length === 1) {
+    productsText = items[0].title;
+  } else if (items.length > 1) {
+    productsText = `${items[0].title} +${items.length - 1} item(s)`;
+  } else {
+    productsText = "um produto";
+  }
+
+  const isPaid = sale.status === "PAID";
+
+  const title = isPaid
+    ? "💰 Venda concluída!"
+    : "⏳ Pagamento pendente";
+
+  const body = isPaid
+    ? `${clientName} comprou ${productsText} por ${total}`
+    : `${clientName} iniciou um pagamento de ${total}`;
+
+  return { title, body };
+}
+  
 }

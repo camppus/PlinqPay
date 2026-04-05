@@ -11,5 +11,5 @@ export interface INotificationRepositorie {
     tenantId: string,
   ): Promise<IPAginationGet<Notification>>;
   read(tenantId: string): Promise<{ updated: boolean }>;
-  getUnread(tenantId: string): Promise<number>;
+  getUnread(tenantId: string): Promise<any>;
 }

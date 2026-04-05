@@ -32,14 +32,15 @@ useEffect(() => {
     const token = localStorage.getItem("token") as string;
     const data = await new NotificationService(token).getUnread();
     const newUnread = data?.data ?? 0;
+    const sale = data?.sale 
     setUnread((prev) => {
       if (canPlaySound && newUnread !== prev) {
         const audio = new Audio("/song.mp3");
         audio.play();
         if (Notification.permission === "granted") {
-          new Notification("Nova notificação 🚀", {
-            body: `Você tem ${newUnread} notificações não lidas`,
-            icon: "/icon.png",
+          new Notification("Nova venda realizada!", {
+            body: `${sale?.client} comprou ${sale.product} ${Number(sale.amount)} Kz`,
+            icon: "/P.png",
           });
         }
       }

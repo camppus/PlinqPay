@@ -12,6 +12,9 @@ PlinqPay é uma **plataforma SaaS de gateway de pagamento** que permite aos clie
 
 ---
 
+URL : https://plinqpay.com/
+CRIADO POR : FRANCISCO LOMBO DIAKOMAS
+
 ## 1️⃣ Objetivos do Projeto
 
 - Facilitar o acesso a APIs de pagamento locais

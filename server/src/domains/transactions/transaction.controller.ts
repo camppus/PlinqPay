@@ -80,13 +80,7 @@ export class TransactionController {
   })
   @HttpCode(200)
   @Header('Content-Type', 'text/plain')
-  async update(@Body() data: UpdatePaymentDTO, @Query('key') key: string) {
-    if (key !== this.notifySecret) {
-      throw new ForbiddenException(
-        'Aceso negado informa o query key com a chave secreta',
-      );
-    }
-    console.log(data)
+  async update(@Body() data: UpdatePaymentDTO) {
     await this.service.update(data);
     return {
       sucess : true

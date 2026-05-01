@@ -98,5 +98,6 @@ export class CreateTransactionDTO {
   @IsInt()
   @IsPositive()
   @IsNotEmpty()
+  @Min(5_000 )
   amount: number;
 }

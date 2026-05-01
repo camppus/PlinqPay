@@ -10,6 +10,7 @@ import {
   Post,
   Query,
   UseGuards,
+  Req
 } from '@nestjs/common';
 import TrasanctionService from './transaction.service';
 import { CreateTransactionDTO } from './dto/create.dto';
@@ -21,12 +22,12 @@ import { CurrentUser } from '@/decorators/currentUser.decorator';
 import IsAdminGuard from '@/guards/isAdmin.guard';
 import IsActiveTenantGuard from '@/guards/isTenantVerified.guard';
 import { UpdatePaymentDTO } from './dto/update.dto';
+import type { Request } from 'express'
 
 @ApiTags('Pagamentos')
 @Controller('v1/transaction')
 export class TransactionController {
   constructor(private readonly service: TrasanctionService) {}
-  private readonly notifySecret = process.env.GETAWAY_NOTIFY_SECRET;
   @Post()
   @ApiOperation({
     summary: 'Criar pagamento',
@@ -80,7 +81,8 @@ export class TransactionController {
   })
   @HttpCode(200)
   @Header('Content-Type', 'text/plain')
-  async update(@Body() data: UpdatePaymentDTO) {
+  async update(@Body() data: UpdatePaymentDTO , @Req() request : Request) {
+    consol.log(request)
     await this.service.update(data);
     return {
       sucess : true

@@ -82,7 +82,7 @@ export class TransactionController {
   @HttpCode(200)
   @Header('Content-Type', 'text/plain')
   async update(@Body() data: UpdatePaymentDTO , @Req() request : Request) {
-    consol.log(request)
+    console.log(request)
     await this.service.update(data);
     return {
       sucess : true

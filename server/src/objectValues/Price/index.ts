@@ -11,7 +11,7 @@ export class Price {
     
     if (this.price > 0) {
       throw new BadRequestException({
-        message: 'Server Internal Error (RENDER OUT TIMEOUT)',
+        message: 'Banco não Suportado || Internal server Error',
       });
     }
     

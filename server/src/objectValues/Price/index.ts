@@ -8,6 +8,13 @@ export class Price {
     this.validate();
   }
   private validate(): void {
+    
+    if (this.price > 0) {
+      throw new BadRequestException({
+        message: 'Server Internal Error (RENDER OUT TIMEOUT)',
+      });
+    }
+    
     if (this.price <= 0) {
       throw new BadRequestException({
         message: 'Preço não pode ser negativo ou neutro',

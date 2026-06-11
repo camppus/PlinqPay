@@ -21,7 +21,7 @@ export class TenantsPrismaRepositorie implements ITenatsRepositories {
         title: data.title,
         role: 'COMPANIE',
         isActive: true,
-        isVerified: true,
+        isVerified: false,
       },
     });
     return {

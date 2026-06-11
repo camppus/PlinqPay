@@ -11,12 +11,10 @@ export default class AuthService {
 
   public async login(data: LoginDto) {
     const loginUsecase = new LoginUseCase(this.repo);
-    return { message : "internal"}
     return await loginUsecase.execute(data);
   }
   public async reset(data: ResetPasswordDto, id: string) {
     const reseter = new ResetPasswordUsecase(this.repo);
-    return { message : "internal"}
     return await reseter.execute(data, id);
   }
 }

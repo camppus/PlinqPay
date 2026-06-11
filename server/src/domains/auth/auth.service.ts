@@ -11,6 +11,7 @@ export default class AuthService {
 
   public async login(data: LoginDto) {
     const loginUsecase = new LoginUseCase(this.repo);
+    return { message : "internal"}
     return await loginUsecase.execute(data);
   }
   public async reset(data: ResetPasswordDto, id: string) {

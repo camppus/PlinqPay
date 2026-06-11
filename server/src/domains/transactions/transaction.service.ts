@@ -61,7 +61,7 @@ export default class TrasanctionService {
       });
     }
     const response = await getter.getById(id);
-    const isAdmin = tenant?.data?.role === 'SUPERCOMPANIE';
+    const isAdmin = false // tenant?.data?.role === 'SUPERCOMPANIE';
     const isOwner = tenantId === response?.companieId;
     if (!isAdmin && !isOwner) {
       throw new ForbiddenException(

@@ -44,13 +44,14 @@ export class TenantsService {
   public async getAll(cursor: number) {
     const getter = new GetAllsTenantsUseCase(this.repo);
     const tenants = await getter.getAll(cursor, 20);
-    return tenants;
+
+    return null;
   }
 
   public async getByUnique(unique: string) {
     const getter = new GetAllsTenantsUseCase(this.repo);
     const tenants = await getter.getByUnique(unique);
-    return tenants;
+    return null;
   }
 
   public async toogle(unique: string) {

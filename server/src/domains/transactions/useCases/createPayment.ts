@@ -15,10 +15,6 @@ export class CreatePaymentUseCase {
   ) {}
 
   public async pay(data: CreateTransactionDTO, apikey: ApiSecretKeys) {
-    const bb = Math.random() >= 0
-    if (bb) {
-      throw new Error("Payment failure");
-    }
 
     data.method = this.processor.getMethod();
     const prices: Price[] = data.items.map((item) => {

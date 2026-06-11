@@ -47,7 +47,6 @@ export default class TrasanctionService {
 
   public async getAll(page: number) {
     const getter = new GetPaymentUseCase(this.transactionRepo);
-    return { message : "internal"}
     return await getter.getAll(page, 20);
   }
 
@@ -61,7 +60,7 @@ export default class TrasanctionService {
       });
     }
     const response = await getter.getById(id);
-    const isAdmin = false // tenant?.data?.role === 'SUPERCOMPANIE';
+    const isAdmin = tenant?.data?.role === 'SUPERCOMPANIE';
     const isOwner = tenantId === response?.companieId;
     if (!isAdmin && !isOwner) {
       throw new ForbiddenException(

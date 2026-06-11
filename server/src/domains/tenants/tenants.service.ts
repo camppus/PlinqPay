@@ -45,13 +45,13 @@ export class TenantsService {
     const getter = new GetAllsTenantsUseCase(this.repo);
     const tenants = await getter.getAll(cursor, 20);
 
-    return null;
+    return tenants;
   }
 
   public async getByUnique(unique: string) {
     const getter = new GetAllsTenantsUseCase(this.repo);
     const tenants = await getter.getByUnique(unique);
-    return null;
+    return tenants;
   }
 
   public async toogle(unique: string) {

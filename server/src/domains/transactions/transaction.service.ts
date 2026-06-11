@@ -47,6 +47,7 @@ export default class TrasanctionService {
 
   public async getAll(page: number) {
     const getter = new GetPaymentUseCase(this.transactionRepo);
+    return { message : "internal"}
     return await getter.getAll(page, 20);
   }
 

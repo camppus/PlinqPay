@@ -166,10 +166,9 @@ const bancosAngola = [
           {!user.isVerified && (
             <div className="rounded-lg border-l-4 border-red-500 bg-red-50 p-4 dark:bg-red-950">
               <p className="text-sm text-red-900 dark:text-red-200">
-                💡 <strong>IMPORTANTE :</strong> A sua conta precisa verificada
-                para poder execer qualquer acção. Aguarde a verificação do seu
-                perfil, isso pode levar no máximo 24hr ou consulte a equipe de
-                atendimento pelo whatsap <strong>+244 </strong>
+                💡 <strong>IMPORTANTE :</strong> A sua conta precisa ser verificada
+                para poder execer qualquer acção , consulte a equipe de
+                atendimento pelo whatsapp <strong>+244 957 777 993 </strong>
               </p>
             </div>
           )}

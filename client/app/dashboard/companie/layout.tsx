@@ -141,9 +141,12 @@ useEffect(() => {
                   setACtive(idx);
                   return;
                 }
+                 
                 toast.info("Aguarde a verificação", {
                   description:
-                    "Aguarde a verificação para poder navegar no sistema",
+                    "💡 A sua conta precisa ser verificada
+                      para poder execer qualquer acção na plataforma , consulte a equipe de
+                      atendimento pelo whatsapp +244 957 777 993",
                 });
                 e.preventDefault();
               }}

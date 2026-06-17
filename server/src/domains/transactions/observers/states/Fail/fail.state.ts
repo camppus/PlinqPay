@@ -16,8 +16,8 @@ export class Fail implements ITransactionState {
       });
     }
 
-    await this.updateStatus(data);
     await this.handleWebHooks(data);
+    await this.updateStatus(data);
 
     const callbackhandler = new CallBackHandler();
     await callbackhandler.notfy({
@@ -47,7 +47,9 @@ export class Fail implements ITransactionState {
     ]);
 
     if (hasFailNotification) {
-      return;
+     throw new BadGatewayException({
+        message: 'Pagamento já foi falhado',
+      });
     }
 
     await this.createDeliveryWebhok(data);

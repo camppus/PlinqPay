@@ -13,9 +13,6 @@ export class UpdatePayment {
 
   private readonly statusMap: Record<string, PaymentStatus> = {
     TRADE_SUCCESS: 'PAID',
-    TRADE_FINISHED: 'PAID',
-    REFUND_SUCCESS: 'PAID',
-    TRANSFER_SUCCESS: 'PAID',
     TRADE_CLOSED: 'FAILED',
     REFUND_FAIL: 'FAILED',
     TRANSFER_FAIL: 'FAILED',

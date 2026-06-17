@@ -41,13 +41,12 @@ export class Paid implements ITransactionState {
       this.repo.webhookDelivery.findFirst({
         where: {
           transactionId: data.id,
-
           event: 'SUCCESS',
         },
       }),
     ]);
     if (hasPaidNotification) {
-      return;
+      throw new Error("Pagamento já foi efectuado")
     }
     await this.createDeliveryWebhok(data);
   }

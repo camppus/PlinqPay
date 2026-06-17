@@ -13,9 +13,7 @@ export class UpdatePayment {
 
   private readonly statusMap: Record<string, PaymentStatus> = {
     TRADE_SUCCESS: 'PAID',
-    TRADE_CLOSED: 'FAILED',
-    REFUND_FAIL: 'FAILED',
-    TRANSFER_FAIL: 'FAILED',
+    TRADE_CLOSED: 'FAILED'
   };
 
   private nofiers: Record<'PAID' | 'FAILED', ITransactionState>;
@@ -33,12 +31,12 @@ export class UpdatePayment {
 
   public async execute(data: UpdatePaymentDTO) {
     const status = this.mapPaypayStatus(data.status);
-    if (status == 'PENDING') {
+
+    if(!status){
       throw new BadRequestException({
-        message: 'Pagamento pendente não sofre mudanças manuais',
+        message: 'O pagamento precisa transcionar de status',
       });
     }
-
     const transaction = await this.repo.getDetails(data.out_trade_no);
     if (!transaction || !transaction?.client || !transaction.items) {
       throw new NotFoundException({

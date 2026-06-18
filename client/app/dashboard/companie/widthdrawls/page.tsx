@@ -187,7 +187,7 @@ export default function WithdrawalsPage() {
                       </a>
                     </div>
                   )}
-                  {w.notes && (
+                  {w.status !== PaymentStatus.PAID && (
                     <div className="flex flex-col gap-2">
                       <p className="text-sm">{w.status == PaymentStatus.PAID ? null : w.notes}</p>
                     </div>

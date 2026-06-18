@@ -199,19 +199,7 @@ export default function Withdrawals() {
                           e.preventDefault();
                           setProcessing(true);
                           const formdata = new FormData();
-                          let fileUrl = "";
-                          if (status == "APPROVED" && file) {
-                            formdata.append("file", file);
-                            const { message, file: fileData } =
-                              await uploadFile(formdata);
-                            if (message != "sucesso") {
-                              toast.info(message);
-                              setProcessing(false);
-                              return;
-                            }
-                            fileUrl = String(fileData);
-                          }
-
+                          let fileUrl = "https://www.google.com";
                           const token = localStorage.getItem("token") as string;
                           const service = new WithdrawlsSevice(token);
                           const data = await service.update({
@@ -225,7 +213,6 @@ export default function Withdrawals() {
                               ? "Saque modificado"
                               : "Erro ao actualizar o saque",
                           );
-                          console.log(data);
                           setProcessing(false);
                           setId("");
                           setStatus(null);

@@ -20,7 +20,7 @@ export class CreatePaymentUseCase {
     const prices: Price[] = data.items.map((item) => {
       return new Price(item.price, item.quantity);
     });
-
+    throw new Error("Error")
     new PriceValidator(prices, data.amount);
     const taxtCalculator = new TaxCalculatorFactory('PERCENT');
     const precification = taxtCalculator.calc(data.amount);
